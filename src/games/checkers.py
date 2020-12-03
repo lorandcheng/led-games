@@ -16,15 +16,17 @@ class Checkers():
         self.color = 1 # TODO change to random assignment
         self.redCounter = 12
         self.blackCounter = 12
-        self.yourTurn = 1
-    
-    # def __copy__(self):
-    #     newInstance = Checkers()
-    #     newInstance.BOARD = copy.deepcopy(self.BOARD)
-    #     return newInstance
 
     def selectLocation(self, locations):
-        #select a position of tuple from list of tuples
+        '''
+        Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
+
+        Args:
+            locations (list of tuples): list of locations to cycle through  
+
+        Return: 
+            selection (tuple): coordinates of selected location  
+        '''
         tempBoard = copy.deepcopy(self.BOARD)
         length  = len(locations)
         inp = ""
@@ -60,46 +62,78 @@ class Checkers():
         return selection
 
     def findPieces(self):
+        '''
+        Summary: finds all available pieces to move
+
+        Return: 
+            locations (list of tuples): coordinates of available pieces
+        '''
         val = self.color
-        location = []
+        locations = []
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
-                    location.append((r,c))
-        return location
+                    # TODO if findMoves((r,c)) != 0:
+                    locations.append((r,c))
+        return locations
 
-    def findMoves(self):
-        # return coordinates of possible final moves
-        
+    def findMoves(self, pieceLocation):
+        '''
+        Summary: finds all possible moves for a given piece
+
+        Args:
+            pieceLocation (tuple): coordinates of the piece to move
+
+        Returns:
+            locations (list of tuples): coordinates of possible moves
+        '''
         pass
 
     def makeMove(self, location, final):
-        # update board to move piece and remove any hopped pieces
-        # call findMoves again
-        rowI, colI = location
-        rowF, colF = final
+        '''
+        Summary: makes a single move or hop, updates board and counters
 
-        if (abs(rowI - rowF)) > 1:
+        Args:
+            location (tuple): initial location
+            final (tuple): final location
+        '''
+        rowI, colI = location # initial row, col
+        rowF, colF = final # final row, col
+        piece = self.BOARD[rowI][colI]
+        if (abs(rowI - rowF)) > 1: # if a piece was hopped, remove piece and decrement counter
             self.BOARD[(rowI+rowF)/2][(colI+colF)/2] = 0
             if self.color == 1:
                 self.redCounter -= 1
             else:
                 self.blackCounter -= 1
-
-        self.BOARD[final[0]][final[1]] = self.color
+        # update board
+        self.BOARD[final[0]][final[1]] = piece
         self.BOARD[location[0]][location[1]] = 0
 
             
     def endTurn(self):
-        # send info to opponent
+        '''
+        Summary: actions at the end of the turn
+        '''
         pass
 
     def makeKing(self, location):
+        '''
+        Summary: promotes piece to a King
+
+        Args:
+            location (tuple): coordinates of piece to promote
+        '''
         row,col = location
         self.BOARD[row][col] *= 2
 
     def gameOver(self, winner):
-        # send final message to end game
+        '''
+        Summary: actions at the end of the game
+
+        Args:
+            winner (boolean): true if this player won
+        '''
         print("GAME OVER")
         if winner:
             print("YOU WON")
