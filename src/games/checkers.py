@@ -1,4 +1,4 @@
-
+import os
 class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
@@ -45,6 +45,7 @@ class Checkers():
             print("YOU LOST")
 
     def printBoard(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
         print('+---+---+---+---+---+---+---+---+')
         for r in range(8):
             row = '|'
@@ -62,6 +63,12 @@ class Checkers():
             print(row)
             print('+---+---+---+---+---+---+---+---+')
     
+    def switchColor(self):
+        if self.color == 1
+            self.color = -1
+        elif self.color == -1
+            self.color = 1
+
     def main(self):
         self.printBoard()
         while self.redCounter > 0 and self.blackCounter > 0:
@@ -70,7 +77,10 @@ class Checkers():
             possibleMoves = self.findMoves(pieceLocation)
             moveLocation = self.selectLocation(possibleMoves)
             makeMove(pieceLocation, moveLocation)
+            switchColor()
         if self.color == 1 and self.blackCounter > 0:
+            self.gameOver(True)
+        elif self.color == 0 and self.redCounter > 0:
             self.gameOver(True)
         else:
             self.gameOver(False)
