@@ -70,6 +70,10 @@ class Checkers():
                     row += ' b |'
                 elif self.BOARD[r][c] == -1:
                     row += ' r |'
+                elif self.BOARD[r][c] == '*':
+                    row += ' * |'
+                elif self.BOARD[r][c] == 'X':
+                    row += ' X |'
                 else:
                     row += '   |'
             print(row)
@@ -88,17 +92,14 @@ class Checkers():
             pieceLocation = self.selectLocation(pieces)
             possibleMoves = self.findMoves(pieceLocation)
             moveLocation = self.selectLocation(possibleMoves)
-            makeMove(pieceLocation, moveLocation)
-            switchColor()
+            self.makeMove(pieceLocation, moveLocation)
+            self.switchColor()
         if self.color == 1 and self.blackCounter > 0:
             self.gameOver(True)
         elif self.color == 0 and self.redCounter > 0:
             self.gameOver(True)
         else:
             self.gameOver(False)
-
-
-
 
 if __name__ == '__main__':
     game = Checkers()
