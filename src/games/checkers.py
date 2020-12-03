@@ -93,9 +93,9 @@ class Checkers():
             print('+---+---+---+---+---+---+---+---+')
     
     def switchColor(self):
-        if self.color == 1
+        if self.color == 1:
             self.color = -1
-        elif self.color == -1
+        elif self.color == -1:
             self.color = 1
 
     def main(self):
