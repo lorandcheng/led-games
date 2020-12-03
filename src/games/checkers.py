@@ -1,11 +1,13 @@
+
+# Standard library imports
 import copy
 import os
 import random 
 import sys
+# Third party imports
+import paho.mqtt.client as mqtt
 
-sys.path.append('./io')
-from mqttClient import mqttClient
-class Checkers(mqttClient):
+class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
         self.BOARD = [
@@ -21,7 +23,11 @@ class Checkers(mqttClient):
         self.color = 1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
-        super().__init__()
+        self.client = mqtt.Client()
+        self.client.on_connect = self.onConnect
+        self.client.on_message = self.onMessage
+        self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+        self.client.loop_start()
 
     def selectLocation(self, locations):
         '''
@@ -175,6 +181,12 @@ class Checkers(mqttClient):
                     row += '   |'
             print(row)
             print('+---+---+---+---+---+---+---+---+')
+    
+    def onConnect(self, client, userdata, flags, rc):
+        pass
+
+    def onMessage(self, client, userdata, msg):
+        pass
 
     def switchColor(self):
         if self.color == 1
