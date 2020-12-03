@@ -4,7 +4,7 @@ import random
 import sys
 
 sys.path.append('./io')
-from mqtt import mqttClient
+from mqttClient import mqttClient
 class Checkers(mqttClient):
     def __init__(self):
         # -1 red,  0 empty,  1 black
@@ -22,7 +22,6 @@ class Checkers(mqttClient):
         self.redCounter = 12
         self.blackCounter = 12
         super().__init__()
-        print(super().getName())
 
     def selectLocation(self, locations):
         '''
