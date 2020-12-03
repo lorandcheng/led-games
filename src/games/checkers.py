@@ -1,5 +1,4 @@
 import os
-
 class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
@@ -70,14 +69,27 @@ class Checkers():
     def makeMove(self, location, final):
         # update board to move piece and remove any hopped pieces
         # call findMoves again
-        pass
+        rowI, colI = location
+        rowF, colF = final
 
+        if (abs(rowI - rowF)) > 1:
+            self.BOARD[(rowI+rowF)/2][(colI+colF)/2] = 0
+            if self.BOARD[rowI][colI] == 1:
+                self.redCounter -= 1
+            else:
+                self.blackCounter -= 1
+
+        self.BOARD[final[0]][final[1]] = self.color
+        self.BOARD[location[0]][location[1]] = 0
+
+            
     def endTurn(self):
         # send info to opponent
         pass
 
     def makeKing(self, location):
-        pass
+        row,col = location
+        self.BOARD[row][col] *= 2
 
     def gameOver(self, winner):
         # send final message to end game
@@ -88,6 +100,7 @@ class Checkers():
             print("YOU LOST")
 
     def printBoard(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
         print('+---+---+---+---+---+---+---+---+')
         for r in range(8):
             row = '|'
@@ -105,6 +118,12 @@ class Checkers():
             print(row)
             print('+---+---+---+---+---+---+---+---+')
     
+    def switchColor(self):
+        if self.color == 1
+            self.color = -1
+        elif self.color == -1
+            self.color = 1
+
     def main(self):
         self.printBoard()
         while self.redCounter > 0 and self.blackCounter > 0:
@@ -113,7 +132,10 @@ class Checkers():
             possibleMoves = self.findMoves(pieceLocation)
             moveLocation = self.selectLocation(possibleMoves)
             makeMove(pieceLocation, moveLocation)
+            switchColor()
         if self.color == 1 and self.blackCounter > 0:
+            self.gameOver(True)
+        elif self.color == 0 and self.redCounter > 0:
             self.gameOver(True)
         else:
             self.gameOver(False)
