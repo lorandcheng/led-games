@@ -188,12 +188,6 @@ class Checkers():
     def onMessage(self, client, userdata, msg):
         pass
 
-    def switchColor(self):
-        if self.color == 1
-            self.color = -1
-        elif self.color == -1
-            self.color = 1
-
     def main(self):
         self.printBoard(self.BOARD)
         while self.redCounter > 0 and self.blackCounter > 0:
@@ -216,10 +210,3 @@ class Checkers():
             self.gameOver(True)
         else:
             self.gameOver(False)
-
-
-
-
-if __name__ == '__main__':
-    game = Checkers()
-    game.main()
