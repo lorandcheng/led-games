@@ -19,9 +19,7 @@ class Checkers():
 
     def selectLocation(self, locations):
         #select a position of tuple from list of tuples
-
-
-        
+  
         length  = locations.len()
         inp = ""
         while inp != "e":
