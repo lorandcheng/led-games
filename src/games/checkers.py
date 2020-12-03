@@ -46,7 +46,8 @@ class Checkers():
         pass
 
     def makeKing(self, location):
-        pass
+        row,col = location
+        self.BOARD[row][col] *= 2
 
     def gameOver(self, winner):
         # send final message to end game
