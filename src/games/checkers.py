@@ -1,6 +1,11 @@
-import os
 import copy
-class Checkers:
+import os
+import random 
+import sys
+
+sys.path.append('./io')
+from mqtt import mqttClient
+class Checkers(mqttClient):
     def __init__(self):
         # -1 red,  0 empty,  1 black
         self.BOARD = [
@@ -13,9 +18,11 @@ class Checkers:
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
-        self.color = 1 # TODO change to random assignment
+        self.color = 1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
+        super().__init__()
+        print(super().getName())
 
     def selectLocation(self, locations):
         '''
