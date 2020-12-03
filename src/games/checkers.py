@@ -26,8 +26,6 @@ class Checkers():
     def selectLocation(self, locations):
         #select a position of tuple from list of tuples
         tempBoard = copy.deepcopy(self.BOARD)
-        tempBoard[0][0] = "Y"
-        print(self.BOARD)
         length  = len(locations)
         inp = ""
         index = 0
@@ -103,7 +101,7 @@ class Checkers():
             print("YOU LOST")
 
     def printBoard(self, board):
-        # os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls' if os.name == 'nt' else 'clear')
         print('\n+---+---+---+---+---+---+---+---+')
         for r in range(8):
             row = '|'
