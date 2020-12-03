@@ -2,7 +2,7 @@
 class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
-        BOARD = [
+        self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
             [-1,  0, -1,  0, -1,  0, -1,  0], 
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
@@ -37,7 +37,24 @@ class Checkers():
         pass
 
     def printBoard(self):
+        print('+---+---+---+---+---+---+---+---+')
         for r in range(8):
+            row = '|'
             for c in range(8):
-                print()
+                if self.BOARD[r][c] == 2:
+                    row += ' B |'
+                elif self.BOARD[r][c] == -2:
+                    row += ' R |'
+                elif self.BOARD[r][c] == 1:
+                    row += ' b |'
+                elif self.BOARD[r][c] == -1:
+                    row += ' r |'
+                else:
+                    row += '   |'
+            print(row)
+            print('+---+---+---+---+---+---+---+---+')
     
+
+if __name__ == '__main__':
+    game = Checkers()
+    game.printBoard()
