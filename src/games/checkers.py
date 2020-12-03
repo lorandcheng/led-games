@@ -183,7 +183,7 @@ class Checkers():
             print('+---+---+---+---+---+---+---+---+')
     
     def onConnect(self, client, userdata, flags, rc):
-        pass
+        print("Connection returned " + str(rc))
 
     def onMessage(self, client, userdata, msg):
         pass
