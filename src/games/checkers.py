@@ -16,6 +16,10 @@ class Checkers():
         self.redCounter = 12
         self.blackCounter = 12
 
+    def selectLocation(self):
+        #select location with mouse
+        pass
+
     def findMoves(self, location):
         # return coordinates of possible final moves
         pass
