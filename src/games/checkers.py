@@ -5,7 +5,9 @@ import os
 import random 
 import sys
 # Third party imports
-import paho.mqtt.client as mqtt
+
+# Other file imports
+#from main.py import receive callback, send function
 
 class Checkers():
     def __init__(self):
@@ -23,11 +25,7 @@ class Checkers():
         self.color = 1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
-        self.client = mqtt.Client()
-        self.client.on_connect = self.onConnect
-        self.client.on_message = self.onMessage
-        self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
-        self.client.loop_start()
+        
 
     def selectLocation(self, locations):
         '''
@@ -182,11 +180,7 @@ class Checkers():
             print(row)
             print('+---+---+---+---+---+---+---+---+')
     
-    def onConnect(self, client, userdata, flags, rc):
-        print("Connection returned " + str(rc))
 
-    def onMessage(self, client, userdata, msg):
-        pass
 
     def main(self):
         self.printBoard(self.BOARD)
