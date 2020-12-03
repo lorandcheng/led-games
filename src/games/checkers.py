@@ -25,7 +25,7 @@ class Checkers():
 
     def selectLocation(self, locations):
         #select a position of tuple from list of tuples
-        tempBoard = copy.copy(self.BOARD)
+        tempBoard = copy.deepcopy(self.BOARD)
         tempBoard[0][0] = "Y"
         print(self.BOARD)
         length  = len(locations)
@@ -51,7 +51,7 @@ class Checkers():
             selection = (row, column)
         tempBoard = copy.copy(self.BOARD) 
         tempBoard[row][column] = "X"
-        # self.printBoard(tempBoard)
+        self.printBoard(tempBoard)
         print(self.BOARD)
         return selection
 
