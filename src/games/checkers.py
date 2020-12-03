@@ -58,7 +58,19 @@ class Checkers():
             print(row)
             print('+---+---+---+---+---+---+---+---+')
     
+    def main(self):
+        self.printBoard()
+        while self.redCounter > 0 and self.blackCounter > 0:
+            pieces = self.findPieces()
+            pieceLocation = self.selectLocation(pieces)
+            possibleMoves = self.findMoves(pieceLocation)
+            moveLocation = self.selectLocation(possibleMoves)
+
+
+
+
+
 
 if __name__ == '__main__':
     game = Checkers()
-    game.printBoard()
+    game.main()
