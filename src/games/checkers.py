@@ -29,12 +29,19 @@ class Checkers():
         length  = len(locations)
         inp = ""
         index = 0
+        row, column = locations[index]
+        for r,c in locations:
+            tempBoard[r][c] = "*"
+        tempBoard[row][column] = "X"
+        self.printBoard(tempBoard)
         while inp != "e":
             inp = input()
             if inp == 'a':
                 index -= 1
             elif inp == 'd':
                 index += 1
+            elif inp == 'e':
+                pass
             else:
                 print("invalid input")
             if index >= length:
