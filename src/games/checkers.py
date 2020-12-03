@@ -50,7 +50,6 @@ class Checkers():
         tempBoard = copy.copy(self.BOARD) 
         tempBoard[row][column] = "X"
         self.printBoard(tempBoard)
-        print(self.BOARD)
         return selection
 
     def findPieces(self):
