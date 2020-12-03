@@ -15,12 +15,24 @@ class Checkers():
         self.color = 1 # TODO change to random assignment
         self.redCounter = 12
         self.blackCounter = 12
+        self.yourTurn = 1
 
     def selectLocation(self):
-        #select location with mouse
-        pass
+        #select a position of tuple from list of tuples
 
-    def findMoves(self, location):
+
+        return location
+
+    def findPieces(self):
+        val = self.color
+        location = []
+        for r in range(8):
+            for c in range(8):
+                if val * self.BOARD[r][c] > 0:
+                    location.append((r,c))
+        return location
+
+    def findMoves(self):
         # return coordinates of possible final moves
         pass
 
