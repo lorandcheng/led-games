@@ -1,6 +1,6 @@
 import os
 import copy
-class Checkers():
+class Checkers:
     def __init__(self):
         # -1 red,  0 empty,  1 black
         self.BOARD = [
