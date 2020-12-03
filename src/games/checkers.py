@@ -141,6 +141,12 @@ class Checkers():
             print("YOU LOST")
 
     def printBoard(self, board):
+        '''
+        Summary: prints the given board
+
+        Args:
+            board (2D list): the board stored in a 2D array
+        '''
         os.system('cls' if os.name == 'nt' else 'clear')
         print('\n+---+---+---+---+---+---+---+---+')
         for r in range(8):
@@ -162,12 +168,6 @@ class Checkers():
                     row += '   |'
             print(row)
             print('+---+---+---+---+---+---+---+---+')
-    
-    def switchColor(self):
-        if self.color == 1:
-            self.color = -1
-        elif self.color == -1:
-            self.color = 1
 
     def main(self):
         self.printBoard(self.BOARD)
@@ -177,10 +177,10 @@ class Checkers():
             possibleMoves = self.findMoves(pieceLocation)
             moveLocation = self.selectLocation(possibleMoves)
             self.makeMove(pieceLocation, moveLocation)
-            self.switchColor()
+            self.color *= -1
         if self.color == 1 and self.blackCounter > 0:
             self.gameOver(True)
-        elif self.color == 0 and self.redCounter > 0:
+        elif self.color == -1 and self.redCounter > 0:
             self.gameOver(True)
         else:
             self.gameOver(False)
