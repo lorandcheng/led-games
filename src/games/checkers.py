@@ -51,7 +51,11 @@ class Checkers():
 
     def gameOver(self, winner):
         # send final message to end game
-        pass
+        print("GAME OVER")
+        if winner:
+            print("YOU WON")
+        else:
+            print("YOU LOST")
 
     def printBoard(self):
         print('+---+---+---+---+---+---+---+---+')
@@ -71,7 +75,22 @@ class Checkers():
             print(row)
             print('+---+---+---+---+---+---+---+---+')
     
+    def main(self):
+        self.printBoard()
+        while self.redCounter > 0 and self.blackCounter > 0:
+            pieces = self.findPieces()
+            pieceLocation = self.selectLocation(pieces)
+            possibleMoves = self.findMoves(pieceLocation)
+            moveLocation = self.selectLocation(possibleMoves)
+            makeMove(pieceLocation, moveLocation)
+        if self.color == 1 and self.blackCounter > 0:
+            self.gameOver(True)
+        else:
+            self.gameOver(False)
+
+
+
 
 if __name__ == '__main__':
     game = Checkers()
-    game.printBoard()
+    game.main()
