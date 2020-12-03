@@ -1,7 +1,8 @@
 from games import battleship, checkers
 
 def main():
-    pass
+    game = checkers.Checkers()
+    game.main()
 
 if __name__ == '__main__':
     main()

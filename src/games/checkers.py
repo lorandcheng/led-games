@@ -86,6 +86,7 @@ class Checkers():
 
         Returns:
             locations (list of tuples): coordinates of possible moves
+            -1: if there are no possible moves for the given piece
         '''
         pass
 
@@ -174,17 +175,20 @@ class Checkers():
         while self.redCounter > 0 and self.blackCounter > 0:
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
-            possibleMoves = self.findMoves(pieceLocation)
-            moveLocation = self.selectLocation(possibleMoves)
-            self.makeMove(pieceLocation, moveLocation)
+
+            while True:
+                possibleMoves = self.findMoves(pieceLocation)
+                if possibleMoves == -1:
+                    break
+                moveLocation = self.selectLocation(possibleMoves)
+                self.makeMove(pieceLocation, moveLocation)
+                pieceLocation = moveLocation
+
             self.color *= -1
+            
         if self.color == 1 and self.blackCounter > 0:
             self.gameOver(True)
         elif self.color == -1 and self.redCounter > 0:
             self.gameOver(True)
         else:
             self.gameOver(False)
-
-if __name__ == '__main__':
-    game = Checkers()
-    game.main()
