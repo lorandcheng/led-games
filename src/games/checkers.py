@@ -39,14 +39,27 @@ class Checkers():
     def makeMove(self, location, final):
         # update board to move piece and remove any hopped pieces
         # call findMoves again
-        pass
+        rowI, colI = location
+        rowF, colF = final
 
+        if (abs(rowI - rowF)) > 1:
+            self.BOARD[(rowI+rowF)/2][(colI+colF)/2] = 0
+            if self.BOARD[rowI][colI] == 1:
+                self.redCounter -= 1
+            else:
+                self.blackCounter -= 1
+
+        self.BOARD[final[0]][final[1]] = self.color
+        self.BOARD[location[0]][location[1]] = 0
+
+            
     def endTurn(self):
         # send info to opponent
         pass
 
     def makeKing(self, location):
-        pass
+        row,col = location
+        self.BOARD[row][col] *= 2
 
     def gameOver(self, winner):
         # send final message to end game
