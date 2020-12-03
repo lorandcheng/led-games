@@ -1,4 +1,5 @@
 import os
+import copy
 class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
@@ -16,15 +17,22 @@ class Checkers():
         self.redCounter = 12
         self.blackCounter = 12
         self.yourTurn = 1
+    
+    # def __copy__(self):
+    #     newInstance = Checkers()
+    #     newInstance.BOARD = copy.deepcopy(self.BOARD)
+    #     return newInstance
 
     def selectLocation(self, locations):
         #select a position of tuple from list of tuples
-  
-        length  = locations.len()
+        tempBoard = copy.copy(self.BOARD)
+        tempBoard[0][0] = "Y"
+        print(self.BOARD)
+        length  = len(locations)
         inp = ""
+        index = 0
         while inp != "e":
             inp = input()
-            index = 0
             if inp == 'a':
                 index -= 1
             elif inp == 'd':
@@ -35,19 +43,16 @@ class Checkers():
                 index = 0
             elif index <= -1:
                 index = length-1
-
-            row = locations[index[0]]
-            column = locations[index[1]]
-            
+            row, column = locations[index]
             for r,c in locations:
-                self.BOARD[r][c] == "*"
-            self.BOARD[row][column] == "X"
-            self.printBoard()
+                tempBoard[r][c] = "*"
+            tempBoard[row][column] = "X"
+            self.printBoard(tempBoard)
             selection = (row, column)
-
-        for r,c in locations:
-            self.BOARD[r][c] == "0"
-
+        tempBoard = copy.copy(self.BOARD) 
+        tempBoard[row][column] = "X"
+        # self.printBoard(tempBoard)
+        print(self.BOARD)
         return selection
 
     def findPieces(self):
@@ -72,7 +77,7 @@ class Checkers():
 
         if (abs(rowI - rowF)) > 1:
             self.BOARD[(rowI+rowF)/2][(colI+colF)/2] = 0
-            if self.BOARD[rowI][colI] == 1:
+            if self.color == 1:
                 self.redCounter -= 1
             else:
                 self.blackCounter -= 1
@@ -97,23 +102,23 @@ class Checkers():
         else:
             print("YOU LOST")
 
-    def printBoard(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print('+---+---+---+---+---+---+---+---+')
+    def printBoard(self, board):
+        # os.system('cls' if os.name == 'nt' else 'clear')
+        print('\n+---+---+---+---+---+---+---+---+')
         for r in range(8):
             row = '|'
             for c in range(8):
-                if self.BOARD[r][c] == 2:
+                if board[r][c] == 2:
                     row += ' B |'
-                elif self.BOARD[r][c] == -2:
+                elif board[r][c] == -2:
                     row += ' R |'
-                elif self.BOARD[r][c] == 1:
+                elif board[r][c] == 1:
                     row += ' b |'
-                elif self.BOARD[r][c] == -1:
+                elif board[r][c] == -1:
                     row += ' r |'
-                elif self.BOARD[r][c] == '*':
+                elif board[r][c] == '*':
                     row += ' * |'
-                elif self.BOARD[r][c] == 'X':
+                elif board[r][c] == 'X':
                     row += ' X |'
                 else:
                     row += '   |'
@@ -127,7 +132,7 @@ class Checkers():
             self.color = 1
 
     def main(self):
-        self.printBoard()
+        self.printBoard(self.BOARD)
         while self.redCounter > 0 and self.blackCounter > 0:
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
