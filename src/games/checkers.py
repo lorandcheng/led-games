@@ -1,3 +1,4 @@
+import os
 
 class Checkers():
     def __init__(self):
@@ -15,12 +16,24 @@ class Checkers():
         self.color = 1 # TODO change to random assignment
         self.redCounter = 12
         self.blackCounter = 12
+        self.yourTurn = 1
 
     def selectLocation(self):
-        #select location with mouse
-        pass
+        #select a position of tuple from list of tuples
 
-    def findMoves(self, location):
+
+        return location
+
+    def findPieces(self):
+        val = self.color
+        location = []
+        for r in range(8):
+            for c in range(8):
+                if val * self.BOARD[r][c] > 0:
+                    location.append((r,c))
+        return location
+
+    def findMoves(self):
         # return coordinates of possible final moves
         pass
 
@@ -51,7 +64,11 @@ class Checkers():
 
     def gameOver(self, winner):
         # send final message to end game
-        pass
+        print("GAME OVER")
+        if winner:
+            print("YOU WON")
+        else:
+            print("YOU LOST")
 
     def printBoard(self):
         print('+---+---+---+---+---+---+---+---+')
@@ -78,8 +95,11 @@ class Checkers():
             pieceLocation = self.selectLocation(pieces)
             possibleMoves = self.findMoves(pieceLocation)
             moveLocation = self.selectLocation(possibleMoves)
-
-
+            makeMove(pieceLocation, moveLocation)
+        if self.color == 1 and self.blackCounter > 0:
+            self.gameOver(True)
+        else:
+            self.gameOver(False)
 
 
 
