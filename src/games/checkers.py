@@ -22,6 +22,16 @@ class Checkers():
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
+        # self.BOARD = [
+        #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
+        #     [-1,  0, -1,  0, -1,  0, -1,  0], 
+        #     [ 0,  0,  0, -1,  0,  0,  0, -1], 
+        #     [ 0,  0, -1,  0, -1,  0,  0,  0], 
+        #     [ 0,  0,  0,  2,  0,  0,  0,  0], 
+        #     [ 1,  0, -1,  0, -1,  0,  1,  0], 
+        #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
+        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
+        # ]
         self.color = 1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
@@ -71,6 +81,30 @@ class Checkers():
         self.printBoard(tempBoard)
         return selection
 
+    def canJump(self, row, col):
+        locs= []
+        a = -1*self.color
+        b = 1
+        c = -1
+        d = self.color
+        checks = [(a,b),(a,c)]
+        if abs(self.BOARD[row][col]) == 2:
+            checks.append((d,b))
+            checks.append((d,c))
+
+        for r,k in checks:
+            if self.isOnBoard(row + r, col + k): #is the piece you might jump over on baord
+                if self.BOARD[row + r][col + k]*self.color < 0: # is piece opposing piece
+                    if self.isOnBoard(row + 2*r,col + 2*k): # is landing spot on board
+                        if self.BOARD[row + 2*r][col+ 2*k]*self.color == 0: # is landing spot empty
+                            locs.append((row + 2*r,col + 2*k))
+        if len(locs) == 0:
+            return 0
+        return locs
+
+
+        
+
     def findPieces(self):
         '''
         Summary: finds all available pieces to move
@@ -84,8 +118,21 @@ class Checkers():
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
                     # TODO if findMoves((r,c)) != 0:
+
                     locations.append((r,c))
         return locations
+
+    def isOnBoard(self, row, col):
+        if not(0 <= row <= 7):
+            return False
+        if not(0 <= col <= 7):
+            return False
+        return True
+
+    def isNotTaken(self, row, col):
+        if self.BOARD[row][col] == 0:
+            return True
+        return False
 
     def findMoves(self, pieceLocation):
         '''
@@ -95,12 +142,29 @@ class Checkers():
             pieceLocation (tuple): coordinates of the piece to move
 
         Returns:
-            locations (list of tuples): coordinates of possible moves
+            locs (list of tuples): coordinates of possible moves
             -1: if there are no possible moves for the given piece
         '''
-        pass
+        # sometimes
+        row,col = pieceLocation
+        locs = []
+        #edge
+        #piece to hop
+        if self.isOnBoard(row-self.color,col+1) and self.isNotTaken(row-self.color,col+1):
+            locs.append((row-self.color,col+1))
 
-    def makeMove(self, location, final):
+        if self.isOnBoard(row-self.color,col-1) and self.isNotTaken(row-self.color,col-1):
+            locs.append((row-self.color,col-1))
+
+
+        if abs(self.BOARD[row][col]) == 2: #king movements
+            pass
+        if len(locs) == 0:
+            return -1
+        else:
+            return locs
+
+    def makeMove(self, location, final): #TODO add make king
         '''
         Summary: makes a single move or hop, updates board and counters
 
@@ -204,3 +268,7 @@ class Checkers():
             self.gameOver(True)
         else:
             self.gameOver(False)
+
+if __name__ == '__main__':
+    game = Checkers()
+    print(game.canJump(4,3))
