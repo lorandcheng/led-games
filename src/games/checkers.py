@@ -2,7 +2,6 @@
 import copy
 import os
 import random 
-import sys
 # Third party imports
 
 # Other file imports
@@ -202,7 +201,7 @@ class Checkers():
         # return selected coordinates
         return (row, col)
 
-    def makeMove(self, location, final): #TODO add make king
+    def makeMove(self, location, final):
         '''
         Summary: makes a single move or hop, updates board and counters
 
@@ -234,17 +233,7 @@ class Checkers():
         '''
         Summary: actions at the end of the turn
         '''
-        pass
-
-    def makeKing(self, location):
-        '''
-        Summary: promotes piece to a King
-
-        Args:
-            location (tuple): coordinates of piece to promote
-        '''
-        row,col = location
-        self.BOARD[row][col] *= 2
+        self.color *= -1
 
     def gameOver(self, winner):
         '''
@@ -292,38 +281,33 @@ class Checkers():
             print("\nRED's turn to move")
         else:
             print("\nBLACK's turn to move")
-    
-
 
     def main(self):
+        '''
+        Summary: play a game of checkers
+        '''
+        # print initial setup
         self.printBoard(self.BOARD)
-        print("first print")
+        # play game until someone loses all pieces
         while self.redCounter > 0 and self.blackCounter > 0:
+            # select piece to move
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
-            
-            hasJumped = 0
-            hasMoved = 0
-            
-            while True:
-                possibleMoves = self.findJumps(pieceLocation)
-                if hasJumped == 0:
-                    if not possibleMoves:
-                        possibleMoves = self.findMoves(pieceLocation)
-                        hasMoved = 1
-                        hasJumped = 0
-                    else:
-                        hasJumped = 1
-                if possibleMoves == 0:
-                    break
+            # make move(s)
+            possibleJumps = self.findJumps(pieceLocation)
+            if possibleJumps:
+                while possibleJumps:
+                    moveLocation = self.selectLocation(possibleJumps)
+                    self.makeMove(pieceLocation, moveLocation)
+                    pieceLocation = moveLocation
+                    possibleJumps = self.findJumps(pieceLocation)
+            else:
+                possibleMoves = self.findMoves(pieceLocation)
                 moveLocation = self.selectLocation(possibleMoves)
                 self.makeMove(pieceLocation, moveLocation)
-                pieceLocation = moveLocation
-                if hasMoved:
-                    break
-
-            self.color *= -1
-            print("switch turns")
+            
+            # switch colors
+            self.endTurn()
             
         if self.color == 1 and self.blackCounter > 0:
             self.gameOver(True)
@@ -334,7 +318,13 @@ class Checkers():
 
 if __name__ == '__main__':
     '''
-    FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME
+    FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME:
+    python3 -m main
     '''
+
+    # comment out import controller at the top of the file
+    import sys
+    sys.path.append('..')
+    import controller
     game = Checkers()
     game.main()
