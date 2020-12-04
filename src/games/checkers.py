@@ -6,7 +6,7 @@ import sys
 # Third party imports
 
 # Other file imports
-#from main.py import receive callback, send function
+import controller
 
 class Checkers():
     def __init__(self):
@@ -38,7 +38,6 @@ class Checkers():
         self.redCounter = 12
         self.blackCounter = 12
         
-
     def selectLocation(self, locations):
         '''
         Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
@@ -47,62 +46,89 @@ class Checkers():
             locations (list of tuples): list of locations to cycle through  
 
         Return: 
-            selection (tuple): coordinates of selected location  
+            (row, col) (tuple): coordinates of selected location  
         '''
+
+        # copy board for display, initialize variables
         tempBoard = copy.deepcopy(self.BOARD)
-        length  = len(locations)
         inp = ""
         index = 0
-        row, column = locations[index]
+        row, col = locations[index]
+
+        # print first view
         for r,c in locations:
             tempBoard[r][c] = "*"
-        tempBoard[row][column] = "X"
+        tempBoard[row][col] = "X"
         self.printBoard(tempBoard)
-        while inp != "e":
-            inp = input()
-            if inp == 'a':
-                index -= 1
-            elif inp == 'd':
-                index += 1
-            elif inp == 'e':
-                pass
-            else:
-                print("invalid input")
-            if index >= length:
+
+        # allow user to loop through inputs and select location
+        while True:
+            inp = controller.getInput()
+            try:
+                index += inp
+            except TypeError:
+                break
+            if index > len(locations)-1:
                 index = 0
-            elif index <= -1:
-                index = length-1
-            row, column = locations[index]
+            elif index < 0:
+                index = len(locations)-1
+            row, col = locations[index]
+            # refresh view
             for r,c in locations:
                 tempBoard[r][c] = "*"
-            tempBoard[row][column] = "X"
+            tempBoard[row][col] = "X"
             self.printBoard(tempBoard)
-            selection = (row, column)
+
+        # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
-        tempBoard[row][column] = "X"
+        tempBoard[row][col] = "X"
         self.printBoard(tempBoard)
-        return selection
+        # return selected coordinates
+        return (row, col)
 
     def canJump(self, location):
-        
+        '''
+        Summary: checks to see if there are any jump moves for a given piece
+
+        Args:
+            location (tuple): coordinates of piece to check
+
+        Returns:
+            locs (list of tuples): if there are any jump moves available, returns coordinates of possible moves
+            0: returns zero if there are no possible moves
+        '''
+
         row, col = location
         locs= []
-        a = -1*self.color
-        b = 1
-        c = -1
-        d = self.color
-        checks = [(a,b),(a,c)]
-        self.printBoard(self.BOARD)
+        # if the piece is a king, check four diagonals, otherwise check only two in front
         if abs(self.BOARD[row][col]) == 2:
-            checks.append((d,b))
-            checks.append((d,c))
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+                ( 1 * self.color, -1),
+                ( 1 * self.color,  1)
+            ]
+        else:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+            ]
 
-        for r,k in checks:
-            if self.isOnBoard(row + r, col + k): #is the piece you might jump over on baord
-                if self.BOARD[row + r][col + k]*self.color < 0: # is piece opposing piece
-                    if self.isOnBoard(row + 2*r,col + 2*k): # is landing spot on board
-                        if self.BOARD[row + 2*r][col+ 2*k]*self.color == 0: # is landing spot empty
-                            locs.append((row + 2*r,col + 2*k))
+        # for each of the diagonals to check, verify:
+        #   - 1 square away is on the board
+        #   - 1 square away contains opponent
+        #   - 2 squares away is on the board
+        #   - 2 squares away is empty
+        for r,c in checks:
+            if (
+                self.isOnBoard(row + r, col + c)
+            and self.BOARD[row + r][col + c] * self.color < 0
+            and self.isOnBoard(row + 2 * r, col + 2 * c)
+            and self.BOARD[row + 2 * r][col + 2 * c] * self.color == 0
+            ): 
+                locs.append((row + 2 * r, col + 2 * c))
+
+        # return locations or 0 if none
         if len(locs) == 0:
             return 0
         return locs
@@ -275,6 +301,7 @@ class Checkers():
 
     def main(self):
         self.printBoard(self.BOARD)
+        print("first print")
         while self.redCounter > 0 and self.blackCounter > 0:
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
