@@ -33,7 +33,8 @@ class Checkers():
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
 
-        self.color = random.choice([-1, 1])
+        self.color = 1
+        # self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
         
@@ -264,7 +265,11 @@ class Checkers():
                     row += '   |'
             print(row)
             print('+---+---+---+---+---+---+---+---+')
-        print(str(self.color) + " Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter) )
+        print("Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter) )
+        if self.color == -1:
+            print("\nRED's turn to move")
+        else:
+            print("\nBLACK's turn to move")
     
 
 
