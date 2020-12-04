@@ -32,7 +32,7 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = 1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
+        self.color = -1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
         
@@ -138,14 +138,14 @@ class Checkers():
             return False
         return True
 
-    def isNotTaken(self, row, col):
+    def isEmpty(self, row, col):
         if self.BOARD[row][col] == 0:
             return True
         return False
 
-    def findMoves(self, pieceLocation):
+    def findMoves(self, row, col):
         '''
-        Summary: finds all possible moves for a given piece
+        Summary: finds all possible moves, jumping or non-jumping, for a given piece
 
         Args:
             pieceLocation (tuple): coordinates of the piece to move
@@ -154,22 +154,24 @@ class Checkers():
             locs (list of tuples): coordinates of possible moves
             -1: if there are no possible moves for the given piece
         '''
-        # sometimes
-        row,col = pieceLocation
+
         locs = []
-        #edge
-        #piece to hop
-        if self.isOnBoard(row-self.color,col+1) and self.isNotTaken(row-self.color,col+1):
+
+        if self.isOnBoard(row-self.color,col+1) and self.isEmpty(row-self.color,col+1):
             locs.append((row-self.color,col+1))
 
-        if self.isOnBoard(row-self.color,col-1) and self.isNotTaken(row-self.color,col-1):
+        if self.isOnBoard(row-self.color,col-1) and self.isEmpty(row-self.color,col-1):
             locs.append((row-self.color,col-1))
+        
+        if abs(self.BOARD[row][col]) == 2:
+            if self.isOnBoard(row+self.color,col+1) and self.isEmpty(row+self.color,col+1):
+                locs.append((row+self.color,col+1))
 
-
-        if abs(self.BOARD[row][col]) == 2: #king movements
+            if self.isOnBoard(row+self.color,col-1) and self.isEmpty(row+self.color,col-1):
+                locs.append((row+self.color,col-1))
             
         if len(locs) == 0:
-            return 0:
+            return 0
         else:
             return locs
 
@@ -280,4 +282,4 @@ class Checkers():
 
 if __name__ == '__main__':
     game = Checkers()
-    print(game.canJump(4,3))
+    print(game.findMoves(1,6))
