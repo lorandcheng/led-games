@@ -9,7 +9,16 @@ import controller
 
 class Checkers():
     def __init__(self):
-        # -1 red,  0 empty,  1 black
+        '''
+        Summary: Initializes attributes
+
+        Attributes:
+            self.BOARD: the gameboard
+            self.color: the color of this player
+            self.redCounter: score of red player
+            self.blackCounter: score of black player
+        '''
+        # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
             [-1,  0, -1,  0, -1,  0, -1,  0], 
@@ -20,7 +29,6 @@ class Checkers():
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
- 
         # self.BOARD = [
         #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0,  1,  0, -1,  0, -1,  0], 
@@ -31,7 +39,6 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-
         self.color = 1
         # self.color = random.choice([-1, 1])
         self.redCounter = 12
@@ -52,23 +59,22 @@ class Checkers():
             locations (list of tuples): coordinates of available pieces
         '''
         val = self.color
-        locations = []
+        locs = []
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
                     if self.findJumps((r,c)):
-                        locations.append((r,c))
+                        locs.append((r,c))
 
-        if len(locations):
-            return locations
+        if len(locs):
+            return locs
 
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
-                    # TODO if findMoves((r,c)) != 0:
                     if self.findMoves((r,c)):
-                        locations.append((r,c))
-        return locations
+                        locs.append((r,c))
+        return locs
 
     def findMoves(self, location):
         '''
@@ -242,6 +248,7 @@ class Checkers():
         Args:
             winner (boolean): true if this player won
         '''
+        self.printBoard(self.BOARD)
         print("GAME OVER")
         if winner:
             print("YOU WON")
@@ -281,13 +288,14 @@ class Checkers():
             print("\nRED's turn to move")
         else:
             print("\nBLACK's turn to move")
+        print("Use 'a' and 'd' to cycle, 'e' to select")
 
     def main(self):
         '''
         Summary: play a game of checkers
         '''
         # print initial setup
-        self.printBoard(self.BOARD)
+        # self.printBoard(self.BOARD)
         # play game until someone loses all pieces
         while self.redCounter > 0 and self.blackCounter > 0:
             # select piece to move

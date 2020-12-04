@@ -1,28 +1,49 @@
 # Standard library imports
 import time
-
+import os
 # Third party imports
-import paho.mqtt.client as mqtt
 
 # Module imports
 from games import battleship, checkers
+from mqtt import mqttInit
+import controller
 
-def onConnect(client, userdata, flags, rc):
-    print("Connection returned " + str(rc))
+GAMES = [
+    ('Checkers', checkers.Checkers()), 
+    ('Battleship', battleship.Battleship())
+]
 
-def onMessage(client, userdata, msg):
-        pass
-    # callback functions here
+def selectGame():
+    index = 0
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Use 'a' and 'd' to cycle, 'e' to select")
+        print('Choose a game:')
+        for i in range(len(GAMES)):
+            if i == index:
+                print('* ' + GAMES[i][0])
+            else:
+                print('  ' + GAMES[i][0])
+        inp = controller.getInput()
+        try:
+            index += inp
+        except TypeError:
+            break
+        if index > len(GAMES)-1:
+            index = 0
+        elif index < 0:
+            index = len(GAMES)-1
+    return index
+        
+
+def gameInit():
+    selection = selectGame()
+    game = GAMES[selection][1]
+    game.main()
 
 def main():
-    # mqtt stuff
-    client = mqtt.Client()
-    client.on_connect = onConnect
-    client.on_message = onMessage
-    client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
-    client.loop_start()
-    game = checkers.Checkers()
-    game.main()
+    mqttInit()
+    gameInit()
 
 
 
