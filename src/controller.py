@@ -14,7 +14,6 @@ def getInput():
         if input('Invalid input. Do you want to continue? y/n\n') == 'y':
             pass
         else:
-            print('raising')
             raise ValueError('Invalid input')
 
 if __name__ == '__main__':

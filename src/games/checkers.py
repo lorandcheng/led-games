@@ -37,7 +37,123 @@ class Checkers():
         # self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
-        
+
+    def isOnBoard(self, row, col):
+        if not(0 <= row <= 7):
+            return False
+        if not(0 <= col <= 7):
+            return False
+        return True
+
+    def findPieces(self):
+        '''
+        Summary: finds all available pieces to move
+
+        Return: 
+            locations (list of tuples): coordinates of available pieces
+        '''
+        val = self.color
+        locations = []
+        for r in range(8):
+            for c in range(8):
+                if val * self.BOARD[r][c] > 0:
+                    if self.findJumps((r,c)):
+                        locations.append((r,c))
+
+        if len(locations):
+            return locations
+
+        for r in range(8):
+            for c in range(8):
+                if val * self.BOARD[r][c] > 0:
+                    # TODO if findMoves((r,c)) != 0:
+                    if self.findMoves((r,c)):
+                        locations.append((r,c))
+        return locations
+
+    def findMoves(self, location):
+        '''
+        Summary: finds all possible moves 1 square away (non-jumping) for a given piece
+
+        Args:
+            location (tuple): coordinates of piece to check
+
+        Returns:
+            locs (list of tuples): if there are any moves available, returns coordinates of possible moves
+            0: returns zero if there are no possible moves
+        '''
+
+        row, col = location
+        locs = []
+        # if the piece is a king, check four diagonals, otherwise check only two in front
+        if abs(self.BOARD[row][col]) == 2:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+                ( 1 * self.color, -1),
+                ( 1 * self.color,  1)
+            ]
+        else:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+            ]
+
+        # for each of the diagonals to check, verify:
+        #   - 1 square away is on the board
+        #   - 1 square away is empty
+        for r,c in checks:
+            if (self.isOnBoard(row + r, col + c)
+            and self.BOARD[row + r][col + c] == 0):
+                locs.append((row + r, col + c))
+            
+        return 0 if len(locs) == 0 else locs
+
+    def findJumps(self, location):
+        '''
+        Summary: checks to see if there are any jump moves for a given piece
+
+        Args:
+            location (tuple): coordinates of piece to check
+
+        Returns:
+            locs (list of tuples): if there are any jump moves available, returns coordinates of possible moves
+            0: returns zero if there are no possible moves
+        '''
+
+        row, col = location
+        locs= []
+        # if the piece is a king, check four diagonals, otherwise check only two in front
+        if abs(self.BOARD[row][col]) == 2:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+                ( 1 * self.color, -1),
+                ( 1 * self.color,  1)
+            ]
+        else:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+            ]
+
+        # for each of the diagonals to check, verify:
+        #   - 1 square away is on the board
+        #   - 1 square away contains opponent
+        #   - 2 squares away is on the board
+        #   - 2 squares away is empty
+        # then add to locs any that pass all four
+        for r,c in checks:
+            if (
+                self.isOnBoard(row + r, col + c)
+            and self.BOARD[row + r][col + c] * self.color < 0
+            and self.isOnBoard(row + 2 * r, col + 2 * c)
+            and self.BOARD[row + 2 * r][col + 2 * c] * self.color == 0
+            ): 
+                locs.append((row + 2 * r, col + 2 * c))
+
+        return 0 if len(locs) == 0 else locs
+
     def selectLocation(self, locations):
         '''
         Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
@@ -85,126 +201,6 @@ class Checkers():
         self.printBoard(tempBoard)
         # return selected coordinates
         return (row, col)
-
-    def canJump(self, location):
-        '''
-        Summary: checks to see if there are any jump moves for a given piece
-
-        Args:
-            location (tuple): coordinates of piece to check
-
-        Returns:
-            locs (list of tuples): if there are any jump moves available, returns coordinates of possible moves
-            0: returns zero if there are no possible moves
-        '''
-
-        row, col = location
-        locs= []
-        # if the piece is a king, check four diagonals, otherwise check only two in front
-        if abs(self.BOARD[row][col]) == 2:
-            checks = [
-                (-1 * self.color, -1),
-                (-1 * self.color,  1),
-                ( 1 * self.color, -1),
-                ( 1 * self.color,  1)
-            ]
-        else:
-            checks = [
-                (-1 * self.color, -1),
-                (-1 * self.color,  1),
-            ]
-
-        # for each of the diagonals to check, verify:
-        #   - 1 square away is on the board
-        #   - 1 square away contains opponent
-        #   - 2 squares away is on the board
-        #   - 2 squares away is empty
-        for r,c in checks:
-            if (
-                self.isOnBoard(row + r, col + c)
-            and self.BOARD[row + r][col + c] * self.color < 0
-            and self.isOnBoard(row + 2 * r, col + 2 * c)
-            and self.BOARD[row + 2 * r][col + 2 * c] * self.color == 0
-            ): 
-                locs.append((row + 2 * r, col + 2 * c))
-
-        # return locations or 0 if none
-        if len(locs) == 0:
-            return 0
-        return locs
-
-
-        
-
-    def findPieces(self):
-        '''
-        Summary: finds all available pieces to move
-
-        Return: 
-            locations (list of tuples): coordinates of available pieces
-        '''
-        val = self.color
-        locations = []
-        for r in range(8):
-            for c in range(8):
-                if val * self.BOARD[r][c] > 0:
-                    if self.canJump((r,c)):
-                        locations.append((r,c))
-
-        if len(locations):
-            return locations
-
-        for r in range(8):
-            for c in range(8):
-                if val * self.BOARD[r][c] > 0:
-                    # TODO if findMoves((r,c)) != 0:
-                    if self.findMoves((r,c)):
-                        locations.append((r,c))
-        return locations
-
-    def isOnBoard(self, row, col):
-        if not(0 <= row <= 7):
-            return False
-        if not(0 <= col <= 7):
-            return False
-        return True
-
-    def isEmpty(self, row, col):
-        if self.BOARD[row][col] == 0:
-            return True
-        return False
-
-    def findMoves(self, location):
-        '''
-        Summary: finds all possible moves, jumping or non-jumping, for a given piece
-
-        Args:
-            pieceLocation (tuple): coordinates of the piece to move
-
-        Returns:
-            locs (list of tuples): coordinates of possible moves
-            -1: if there are no possible moves for the given piece
-        '''
-        row, col = location
-        locs = []
-
-        if self.isOnBoard(row-self.color,col+1) and self.isEmpty(row-self.color,col+1):
-            locs.append((row-self.color,col+1))
-
-        if self.isOnBoard(row-self.color,col-1) and self.isEmpty(row-self.color,col-1):
-            locs.append((row-self.color,col-1))
-        
-        if abs(self.BOARD[row][col]) == 2:
-            if self.isOnBoard(row+self.color,col+1) and self.isEmpty(row+self.color,col+1):
-                locs.append((row+self.color,col+1))
-
-            if self.isOnBoard(row+self.color,col-1) and self.isEmpty(row+self.color,col-1):
-                locs.append((row+self.color,col-1))
-            
-        if len(locs) == 0:
-            return 0
-        else:
-            return locs
 
     def makeMove(self, location, final): #TODO add make king
         '''
@@ -310,7 +306,7 @@ class Checkers():
             hasMoved = 0
             
             while True:
-                possibleMoves = self.canJump(pieceLocation)
+                possibleMoves = self.findJumps(pieceLocation)
                 if hasJumped == 0:
                     if not possibleMoves:
                         possibleMoves = self.findMoves(pieceLocation)
