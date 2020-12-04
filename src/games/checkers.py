@@ -1,4 +1,3 @@
-
 # Standard library imports
 import copy
 import os
@@ -12,7 +11,6 @@ import sys
 class Checkers():
     def __init__(self):
         # -1 red,  0 empty,  1 black
-
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
             [-1,  0, -1,  0, -1,  0, -1,  0], 
@@ -24,7 +22,6 @@ class Checkers():
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
  
-
         # self.BOARD = [
         #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0,  1,  0, -1,  0, -1,  0], 
@@ -35,7 +32,8 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = -1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
+
+        self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
         
@@ -307,5 +305,8 @@ class Checkers():
             self.gameOver(False)
 
 if __name__ == '__main__':
+    '''
+    FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME
+    '''
     game = Checkers()
     game.main()

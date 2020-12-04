@@ -1,5 +1,11 @@
-from games import battleship, checkers
+# Standard library imports
+import time
+
+# Third party imports
 import paho.mqtt.client as mqtt
+
+# Module imports
+from games import battleship, checkers
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
@@ -15,9 +21,8 @@ def main():
     client.on_message = onMessage
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
-    
     game = checkers.Checkers()
-    # game.main()
+    game.main()
 
 
 
