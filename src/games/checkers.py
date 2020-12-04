@@ -117,9 +117,18 @@ class Checkers():
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
-                    # TODO if findMoves((r,c)) != 0:
+                    if self.canJump(r,c):
+                        locations.append((r,c))
 
-                    locations.append((r,c))
+        if len(locations):
+            return locations
+
+        for r in range(8):
+            for c in range(8):
+                if val * self.BOARD[r][c] > 0:
+                    # TODO if findMoves((r,c)) != 0:
+                    if self.findMoves(r,c):
+                        locations.append((r,c))
         return locations
 
     def isOnBoard(self, row, col):
@@ -158,9 +167,9 @@ class Checkers():
 
 
         if abs(self.BOARD[row][col]) == 2: #king movements
-            pass
+            
         if len(locs) == 0:
-            return -1
+            return 0:
         else:
             return locs
 
