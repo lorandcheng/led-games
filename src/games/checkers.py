@@ -1,18 +1,24 @@
-
 # Standard library imports
 import copy
 import os
 import random 
-import sys
 # Third party imports
 
 # Other file imports
-#from main.py import receive callback, send function
+import controller
 
 class Checkers():
     def __init__(self):
-        # -1 red,  0 empty,  1 black
+        '''
+        Summary: Initializes attributes
 
+        Attributes:
+            self.BOARD: the gameboard
+            self.color: the color of this player
+            self.redCounter: score of red player
+            self.blackCounter: score of black player
+        '''
+        # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
             [-1,  0, -1,  0, -1,  0, -1,  0], 
@@ -23,8 +29,6 @@ class Checkers():
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
- 
-
         # self.BOARD = [
         #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0,  1,  0, -1,  0, -1,  0], 
@@ -35,81 +39,17 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = -1 # TODO change to random assignment, e.g. self.color = random.choice([-1, 1])
+        self.color = 1
+        # self.color = random.choice([-1, 1])
         self.redCounter = 12
         self.blackCounter = 12
-        
 
-    def selectLocation(self, locations):
-        '''
-        Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
-
-        Args:
-            locations (list of tuples): list of locations to cycle through  
-
-        Return: 
-            selection (tuple): coordinates of selected location  
-        '''
-        tempBoard = copy.deepcopy(self.BOARD)
-        length  = len(locations)
-        inp = ""
-        index = 0
-        row, column = locations[index]
-        for r,c in locations:
-            tempBoard[r][c] = "*"
-        tempBoard[row][column] = "X"
-        self.printBoard(tempBoard)
-        while inp != "e":
-            inp = input()
-            if inp == 'a':
-                index -= 1
-            elif inp == 'd':
-                index += 1
-            elif inp == 'e':
-                pass
-            else:
-                print("invalid input")
-            if index >= length:
-                index = 0
-            elif index <= -1:
-                index = length-1
-            row, column = locations[index]
-            for r,c in locations:
-                tempBoard[r][c] = "*"
-            tempBoard[row][column] = "X"
-            self.printBoard(tempBoard)
-            selection = (row, column)
-        tempBoard = copy.deepcopy(self.BOARD) 
-        tempBoard[row][column] = "X"
-        self.printBoard(tempBoard)
-        return selection
-
-    def canJump(self, location):
-        
-        row, col = location
-        locs= []
-        a = -1*self.color
-        b = 1
-        c = -1
-        d = self.color
-        checks = [(a,b),(a,c)]
-        self.printBoard(self.BOARD)
-        if abs(self.BOARD[row][col]) == 2:
-            checks.append((d,b))
-            checks.append((d,c))
-
-        for r,k in checks:
-            if self.isOnBoard(row + r, col + k): #is the piece you might jump over on baord
-                if self.BOARD[row + r][col + k]*self.color < 0: # is piece opposing piece
-                    if self.isOnBoard(row + 2*r,col + 2*k): # is landing spot on board
-                        if self.BOARD[row + 2*r][col+ 2*k]*self.color == 0: # is landing spot empty
-                            locs.append((row + 2*r,col + 2*k))
-        if len(locs) == 0:
-            return 0
-        return locs
-
-
-        
+    def isOnBoard(self, row, col):
+        if not(0 <= row <= 7):
+            return False
+        if not(0 <= col <= 7):
+            return False
+        return True
 
     def findPieces(self):
         '''
@@ -119,69 +59,155 @@ class Checkers():
             locations (list of tuples): coordinates of available pieces
         '''
         val = self.color
-        locations = []
+        locs = []
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
-                    if self.canJump((r,c)):
-                        locations.append((r,c))
+                    if self.findJumps((r,c)):
+                        locs.append((r,c))
 
-        if len(locations):
-            return locations
+        if len(locs):
+            return locs
 
         for r in range(8):
             for c in range(8):
                 if val * self.BOARD[r][c] > 0:
-                    # TODO if findMoves((r,c)) != 0:
                     if self.findMoves((r,c)):
-                        locations.append((r,c))
-        return locations
-
-    def isOnBoard(self, row, col):
-        if not(0 <= row <= 7):
-            return False
-        if not(0 <= col <= 7):
-            return False
-        return True
-
-    def isEmpty(self, row, col):
-        if self.BOARD[row][col] == 0:
-            return True
-        return False
+                        locs.append((r,c))
+        return locs
 
     def findMoves(self, location):
         '''
-        Summary: finds all possible moves, jumping or non-jumping, for a given piece
+        Summary: finds all possible moves 1 square away (non-jumping) for a given piece
 
         Args:
-            pieceLocation (tuple): coordinates of the piece to move
+            location (tuple): coordinates of piece to check
 
         Returns:
-            locs (list of tuples): coordinates of possible moves
-            -1: if there are no possible moves for the given piece
+            locs (list of tuples): if there are any moves available, returns coordinates of possible moves
+            0: returns zero if there are no possible moves
         '''
+
         row, col = location
         locs = []
-
-        if self.isOnBoard(row-self.color,col+1) and self.isEmpty(row-self.color,col+1):
-            locs.append((row-self.color,col+1))
-
-        if self.isOnBoard(row-self.color,col-1) and self.isEmpty(row-self.color,col-1):
-            locs.append((row-self.color,col-1))
-        
+        # if the piece is a king, check four diagonals, otherwise check only two in front
         if abs(self.BOARD[row][col]) == 2:
-            if self.isOnBoard(row+self.color,col+1) and self.isEmpty(row+self.color,col+1):
-                locs.append((row+self.color,col+1))
-
-            if self.isOnBoard(row+self.color,col-1) and self.isEmpty(row+self.color,col-1):
-                locs.append((row+self.color,col-1))
-            
-        if len(locs) == 0:
-            return 0
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+                ( 1 * self.color, -1),
+                ( 1 * self.color,  1)
+            ]
         else:
-            return locs
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+            ]
 
-    def makeMove(self, location, final): #TODO add make king
+        # for each of the diagonals to check, verify:
+        #   - 1 square away is on the board
+        #   - 1 square away is empty
+        for r,c in checks:
+            if (self.isOnBoard(row + r, col + c)
+            and self.BOARD[row + r][col + c] == 0):
+                locs.append((row + r, col + c))
+            
+        return 0 if len(locs) == 0 else locs
+
+    def findJumps(self, location):
+        '''
+        Summary: checks to see if there are any jump moves for a given piece
+
+        Args:
+            location (tuple): coordinates of piece to check
+
+        Returns:
+            locs (list of tuples): if there are any jump moves available, returns coordinates of possible moves
+            0: returns zero if there are no possible moves
+        '''
+
+        row, col = location
+        locs= []
+        # if the piece is a king, check four diagonals, otherwise check only two in front
+        if abs(self.BOARD[row][col]) == 2:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+                ( 1 * self.color, -1),
+                ( 1 * self.color,  1)
+            ]
+        else:
+            checks = [
+                (-1 * self.color, -1),
+                (-1 * self.color,  1),
+            ]
+
+        # for each of the diagonals to check, verify:
+        #   - 1 square away is on the board
+        #   - 1 square away contains opponent
+        #   - 2 squares away is on the board
+        #   - 2 squares away is empty
+        # then add to locs any that pass all four
+        for r,c in checks:
+            if (
+                self.isOnBoard(row + r, col + c)
+            and self.BOARD[row + r][col + c] * self.color < 0
+            and self.isOnBoard(row + 2 * r, col + 2 * c)
+            and self.BOARD[row + 2 * r][col + 2 * c] * self.color == 0
+            ): 
+                locs.append((row + 2 * r, col + 2 * c))
+
+        return 0 if len(locs) == 0 else locs
+
+    def selectLocation(self, locations):
+        '''
+        Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
+
+        Args:
+            locations (list of tuples): list of locations to cycle through  
+
+        Return: 
+            (row, col) (tuple): coordinates of selected location  
+        '''
+
+        # copy board for display, initialize variables
+        tempBoard = copy.deepcopy(self.BOARD)
+        inp = ""
+        index = 0
+        row, col = locations[index]
+
+        # print first view
+        for r,c in locations:
+            tempBoard[r][c] = "*"
+        tempBoard[row][col] = "X"
+        self.printBoard(tempBoard)
+
+        # allow user to loop through inputs and select location
+        while True:
+            inp = controller.getInput()
+            try:
+                index += inp
+            except TypeError:
+                break
+            if index > len(locations)-1:
+                index = 0
+            elif index < 0:
+                index = len(locations)-1
+            row, col = locations[index]
+            # refresh view
+            for r,c in locations:
+                tempBoard[r][c] = "*"
+            tempBoard[row][col] = "X"
+            self.printBoard(tempBoard)
+
+        # display final selection
+        tempBoard = copy.deepcopy(self.BOARD) 
+        tempBoard[row][col] = "X"
+        self.printBoard(tempBoard)
+        # return selected coordinates
+        return (row, col)
+
+    def makeMove(self, location, final):
         '''
         Summary: makes a single move or hop, updates board and counters
 
@@ -213,17 +239,7 @@ class Checkers():
         '''
         Summary: actions at the end of the turn
         '''
-        pass
-
-    def makeKing(self, location):
-        '''
-        Summary: promotes piece to a King
-
-        Args:
-            location (tuple): coordinates of piece to promote
-        '''
-        row,col = location
-        self.BOARD[row][col] *= 2
+        self.color *= -1
 
     def gameOver(self, winner):
         '''
@@ -232,6 +248,7 @@ class Checkers():
         Args:
             winner (boolean): true if this player won
         '''
+        self.printBoard(self.BOARD)
         print("GAME OVER")
         if winner:
             print("YOU WON")
@@ -266,38 +283,39 @@ class Checkers():
                     row += '   |'
             print(row)
             print('+---+---+---+---+---+---+---+---+')
-        print(str(self.color) + " Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter) )
-    
-
+        print("Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter) )
+        if self.color == -1:
+            print("\nRED's turn to move")
+        else:
+            print("\nBLACK's turn to move")
+        print("Use 'a' and 'd' to cycle, 'e' to select")
 
     def main(self):
-        self.printBoard(self.BOARD)
+        '''
+        Summary: play a game of checkers
+        '''
+        # print initial setup
+        # self.printBoard(self.BOARD)
+        # play game until someone loses all pieces
         while self.redCounter > 0 and self.blackCounter > 0:
+            # select piece to move
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
-            
-            hasJumped = 0
-            hasMoved = 0
-            
-            while True:
-                possibleMoves = self.canJump(pieceLocation)
-                if hasJumped == 0:
-                    if not possibleMoves:
-                        possibleMoves = self.findMoves(pieceLocation)
-                        hasMoved = 1
-                        hasJumped = 0
-                    else:
-                        hasJumped = 1
-                if possibleMoves == 0:
-                    break
+            # make move(s)
+            possibleJumps = self.findJumps(pieceLocation)
+            if possibleJumps:
+                while possibleJumps:
+                    moveLocation = self.selectLocation(possibleJumps)
+                    self.makeMove(pieceLocation, moveLocation)
+                    pieceLocation = moveLocation
+                    possibleJumps = self.findJumps(pieceLocation)
+            else:
+                possibleMoves = self.findMoves(pieceLocation)
                 moveLocation = self.selectLocation(possibleMoves)
                 self.makeMove(pieceLocation, moveLocation)
-                pieceLocation = moveLocation
-                if hasMoved:
-                    break
-
-            self.color *= -1
-            print("switch turns")
+            
+            # switch colors
+            self.endTurn()
             
         if self.color == 1 and self.blackCounter > 0:
             self.gameOver(True)
@@ -307,5 +325,14 @@ class Checkers():
             self.gameOver(False)
 
 if __name__ == '__main__':
+    '''
+    FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME:
+    python3 -m main
+    '''
+
+    # comment out import controller at the top of the file
+    import sys
+    sys.path.append('..')
+    import controller
     game = Checkers()
     game.main()
