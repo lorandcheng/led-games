@@ -49,6 +49,9 @@ def main():
         pass
     print("username verified")
     client.joinLobby(client.client, game)
+    opponent = client.chooseOpponent(client.players)
+    #print(f"ledGames/{opponent}/requests")
+    client.client.publish(f"ledGames/{opponent}/requests", f"{client.username}, 1")
     while True:
         pass
 

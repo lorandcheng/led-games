@@ -68,6 +68,7 @@ class mqttClient:
     def __init__(self):
         self.username = ""
         self.unverified = ""
+        self.players = []
         self.game = 0
         self.client = mqtt.Client()
         self.client.on_connect = self.onConnect
@@ -114,9 +115,8 @@ class mqttClient:
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
-        players = self.parseMessage(msg)
-        opponent = self.chooseOpponent(players)
-        client.publish(f"ledGames/{opponent}/requests", f"{self.username}, 1")
+        self.players = self.parseMessage(msg)
+        
 
     def joinLobby(self, client, game):
         client.subscribe("ledGames/lobby")
