@@ -92,8 +92,8 @@ def myCallback(client, userdata, msg):
 
 def joinLobby(client, game):
     client.subscribe("ledGames/lobby")
-    print("joined lobby" + username + game.name)
-    client.publish("ledGames/lobby/status", str((username, game)))
+    print("joined lobby", username, game.name)
+    client.publish("ledGames/lobby/status", f'{username}, {game.name}')
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))

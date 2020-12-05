@@ -46,7 +46,8 @@ def main():
     game = gameInit()
     inputName(client)
     joinLobby(client, game)
-
+    while True:
+        time.sleep(3)
 
 
 
