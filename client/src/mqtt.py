@@ -60,7 +60,9 @@ Each player listens on "ledGames/<ownUsername>/play" and sends on "ledGames/<opp
 import paho.mqtt.client as mqtt
 import time
 
-name = ""
+import controller
+
+username = ""
 
 def parseMessage(msg):
     message = str(msg.payload, "utf-8")
@@ -68,18 +70,18 @@ def parseMessage(msg):
     return parsedMessage
 
 def inputName(client):
-    global name
-    name = input("Enter your name: ")
-    client.publish("ledGames/users/status", f'{name}, 1')
+    global username
+    username = controller.getName()
+    client.publish("ledGames/users/status", f'{username}, 1')
 
 def verifyName(client, userdata, msg):
-    global name
-    eyeD, ack = parseMessage(msg)
-    if eyeD == name:
-        if ack == "1":
+    global username
+    name, code = parseMessage(msg)
+    if name == username:
+        if code == "1":
             client.unsubscribe("ledGames/users")
-            client.subscribe("ledGames/" + str(eyeD))
-            client.message_callback_add("ledGames/" + str(eyeD), myCallback)
+            client.subscribe("ledGames/" + str(username))
+            client.message_callback_add("ledGames/" + str(username), myCallback)
         else:
             print("Your username was invalid.")
             inputName(client)
