@@ -109,6 +109,18 @@ class mqttClient:
     def myCallback(self, client, userdata, msg):
         request = str(msg.payload, "utf-8")
         print(request)
+        if request[1] == "1":
+            # add to controller later
+            inp = input((f"accept match request from {request[0]}?  Type y/n"))
+            if inp == "y":
+
+                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
+            elif inp == "n":
+                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
+        elif request[1] == "2":
+            print("match confirmed")
+        elif request[1] == "0":
+            print("george bush did pizzagate")
 
 
     def lobbyCallback(self, client, userdata, msg):
