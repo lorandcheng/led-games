@@ -27,8 +27,8 @@ def verifyName(client, userdata, msg):
 
 def joinLobby(client, name, game):
     client.subscribe("ledGames/lobby")
-    game = chooseGame()
-    client.publish("ledGames/lobby/status", str((name, game)))
+    # game = chooseGame()
+    # client.publish("ledGames/lobby/status", str((name, game)))
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
@@ -54,6 +54,11 @@ def mqttInit():
     return client
 
 if __name__ == '__main__':
+<<<<<<< HEAD:src/mqtt.py
     print("success")
     mqttInit()
     
+=======
+    client =  mqttInit()
+    inputName(client)
+>>>>>>> 80abaf32e12447aec76915a730c82c6bdcd26cf3:client/src/mqtt.py
