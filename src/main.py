@@ -5,12 +5,12 @@ import os
 
 # Module imports
 from games import battleship, checkers
-from mqtt import mqttInit
+from mqtt import mqttInit, inputName, joinLobby
 import controller
 
 GAMES = [
-    ('Checkers', checkers.Checkers()), 
-    ('Battleship', battleship.Battleship())
+    checkers.Checkers(),
+    battleship.Battleship()
 ]
 
 def selectGame():
@@ -21,9 +21,9 @@ def selectGame():
         print('Choose a game:')
         for i in range(len(GAMES)):
             if i == index:
-                print('* ' + GAMES[i][0])
+                print('* ' + GAMES[i].name)
             else:
-                print('  ' + GAMES[i][0])
+                print('  ' + GAMES[i].name)
         inp = controller.getInput()
         try:
             index += inp
@@ -38,12 +38,14 @@ def selectGame():
 
 def gameInit():
     selection = selectGame()
-    game = GAMES[selection][1]
-    game.main()
+    game = GAMES[selection].name
+    return game
 
 def main():
-    mqttInit()
-    gameInit()
+    client = mqttInit()
+    game = gameInit()
+    name = inputName(client)
+    joinLobby(client, game)
 
 
 
