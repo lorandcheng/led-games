@@ -16,6 +16,11 @@ def getInput():
         else:
             raise ValueError('Invalid input')
 
+def getName():
+    name = input("Enter your name: ")
+    return name
+
+
 if __name__ == '__main__':
     while True:
         getInput()
