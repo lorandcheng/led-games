@@ -20,9 +20,14 @@ def verifyName(client, userdata, msg):
         if ack == "1":
             client.unsubscribe("ledGames/users")
             client.subscribe("ledGames/" + str(eyeD))
+            client.message_callback_add("ledGames/" + str(eyeD), myCallback)
         else:
             print("Your username was invalid.")
             inputName(client)
+
+def myCallback(client, userdata, msg):
+    print(str(msg.payload, "utf-8"))
+
 
 def joinLobby(client, name, game):
     client.subscribe("ledGames/lobby")
@@ -34,14 +39,14 @@ def onConnect(client, userdata, flags, rc):
     client.subscribe("ledGames/users")
     client.message_callback_add("ledGames/users", verifyName)
 
-
-
 def onMessage(client, userdata, msg):
     print("onMessage")
     #print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
-def onDisconnect(client):
-    pass
+def onDisconnect(client, useradata, rc):
+    print("disconnecting")
+    client.publish("ledGames/users/status", f'lorand, 0')
+    print("published")
 
 def mqttInit():   
     client = mqtt.Client()
@@ -51,10 +56,15 @@ def mqttInit():
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
     inputName(client)
+    time.sleep(3)
+    client.disconnect()
+    client.loop_stop()
+    time.sleep(3)
     return client
     
 
 if __name__ == '__main__':
     client =  mqttInit()
-    while True:
-        pass
+
+        
+
