@@ -12,12 +12,14 @@ def userStatus(client, userdata, msg):
     '''
     msg: (name, action) name = username, action = 1(add)/0(remove)
     '''
+    print("triggered")
     name, action = parseMessage(msg)
     if action:
         if name in USERS:
-            client.publish("ledGames/users", str((name, 0)))
+            print("denied")
+            client.publish("ledGames/users", f'{name}, 0')
         else:
-            client.publish("ledGames/users", str((name, 1)))
+            client.publish("ledGames/users", f'{name}, 1')
             USERS.append(name)
             print("user added: " + name)
     else:
@@ -45,6 +47,8 @@ def mqttInit():
     client.on_message = onMessage
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
+    while True:
+        pass
 
 
 if __name__ == '__main__':
