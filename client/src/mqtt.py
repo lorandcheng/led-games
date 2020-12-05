@@ -11,12 +11,11 @@ def parseMessage(msg):
 def inputName(client):
     global name
     name = input("Enter your name: ")
-    client.publish("ledGames/users/status", name)
+    client.publish("ledGames/users/status", f'{name}, 1')
 
 def verifyName(client, userdata, msg):
     global name
     eyeD, ack = parseMessage(msg)
-
     if eyeD == name:
         if ack == "1":
             client.unsubscribe("ledGames/users")
@@ -51,8 +50,11 @@ def mqttInit():
     client.on_disconnect = onDisconnect
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
+    inputName(client)
     return client
+    
 
 if __name__ == '__main__':
     client =  mqttInit()
-    inputName(client)
+    while True:
+        pass
