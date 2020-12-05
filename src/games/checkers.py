@@ -13,11 +13,13 @@ class Checkers():
         Summary: Initializes attributes
 
         Attributes:
+            self.name: the name of the game
             self.BOARD: the gameboard
             self.color: the color of this player
             self.redCounter: score of red player
             self.blackCounter: score of black player
         '''
+        self.name = 'Checkers'
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
