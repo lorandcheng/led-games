@@ -38,14 +38,15 @@ def selectGame():
 
 def gameInit():
     selection = selectGame()
-    game = GAMES[selection].name
+    game = GAMES[selection]
     return game
 
 def main():
     client = mqttInit()
     game = gameInit()
-    name = inputName(client)
+    inputName(client)
     joinLobby(client, game)
+
 
 
 
