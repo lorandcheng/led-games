@@ -5,7 +5,7 @@ import os
 
 # Module imports
 from games import battleship, checkers
-from mqtt import mqttInit, inputName, joinLobby
+from mqttClient import mqttClient
 import controller
 
 GAMES = [
@@ -38,16 +38,19 @@ def selectGame():
 
 def gameInit():
     selection = selectGame()
-    game = GAMES[selection].name
+    game = GAMES[selection]
     return game
 
 def main():
-    client = mqttInit()
+    client = mqttClient()
     game = gameInit()
-    name = inputName(client)
-    joinLobby(client, game)
-
-
+    client.inputName(client.client)
+    while client.username == "":
+        pass
+    print("username verified")
+    client.joinLobby(client.client, game)
+    while True:
+        pass
 
 if __name__ == '__main__':
     main()
