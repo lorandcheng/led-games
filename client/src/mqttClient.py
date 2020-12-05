@@ -99,7 +99,7 @@ class mqttClient:
             if code == "1":
                 client.unsubscribe("ledGames/users")
                 self.username = self.unverified
-                client.subscribe(f"ledGames/{self.username}/#")
+                client.subscribe(f"ledGames/{self.username}/requests")
                 client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
             else:
                 print("Your username was invalid.")
@@ -116,7 +116,7 @@ class mqttClient:
         """
         players = self.parseMessage(msg)
         opponent = self.chooseOpponent(players)
-        client.publish(f"ledGames/{opponent}/request", f"{self.username}, 1")
+        client.publish(f"ledGames/{opponent}/requests", f"{self.username}, 1")
 
     def joinLobby(self, client, game):
         client.subscribe("ledGames/lobby")
