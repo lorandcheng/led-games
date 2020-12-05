@@ -32,6 +32,12 @@ def userStatus(client, userdata, msg):
         except:
             pass
 
+def lobby(client, userdata, msg):
+    print("entered lobby")
+    entry = parseMessage(msg)
+    LOBBY.append(entry)
+    print(LOBBY)
+    client.publish("ledGames/lobby", str(LOBBY))
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
@@ -39,6 +45,7 @@ def onConnect(client, userdata, flags, rc):
     client.subscribe("ledGames/lobby/status")
 
     client.message_callback_add("ledGames/users/status", userStatus)
+    client.message_callback_add("ledGames/lobby/status", lobby)
     
 
 def onMessage(client, userdata, msg):
