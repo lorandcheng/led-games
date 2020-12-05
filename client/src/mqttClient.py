@@ -98,22 +98,25 @@ class mqttClient:
         if name == self.unverified:
             if code == "1":
                 client.unsubscribe("ledGames/users")
-                client.subscribe("ledGames/" + str(self.unverified))
-                client.message_callback_add("ledGames/" + str(self.unverified), self.myCallback)
                 self.username = self.unverified
+                client.subscribe(f"ledGames/{self.username}/#")
+                client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
             else:
                 print("Your username was invalid.")
                 self.inputName(client)
 
     def myCallback(self, client, userdata, msg):
-        print(str(msg.payload, "utf-8"))
+        request = str(msg.payload, "utf-8")
+        print(request)
+
 
     def lobbyCallback(self, client, userdata, msg):
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
         players = self.parseMessage(msg)
-        self.chooseOpponent(players)
+        opponent = self.chooseOpponent(players)
+        client.publish(f"ledGames/{opponent}/request", f"{self.username}, 1")
 
     def joinLobby(self, client, game):
         client.subscribe("ledGames/lobby")
@@ -126,7 +129,8 @@ class mqttClient:
         available = []
         for player in players:
             if player[1] == self.game.name:
-                available.append(player[0])
+                if not player[0] == self.username:
+                    available.append(player[0])
         index = 0
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
