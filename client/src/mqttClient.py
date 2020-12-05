@@ -76,6 +76,7 @@ class mqttClient:
         self.client.on_disconnect = self.onDisconnect
         self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
         self.client.loop_start()
+        self.requestFlag = 0
 
 
     def parseMessage(self, msg):
@@ -107,19 +108,21 @@ class mqttClient:
                 self.inputName(client)
 
     def myCallback(self, client, userdata, msg):
-        request = str(msg.payload, "utf-8")
-        print(request)
-        if request[1] == "1":
+        self.requestFlag = 1
+        request = self.parseMessage(msg)
+        print(request[1])
+        print(type(request[1]))
+        if str(request[1]) == "1":
             # add to controller later
-            inp = input((f"accept match request from {request[0]}?  Type y/n"))
+            inp = input(f"accept match request from {request[0]}?  Type y/n")
             if inp == "y":
 
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
             elif inp == "n":
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
-        elif request[1] == "2":
+        elif str(request[1]) == "2":
             print("match confirmed")
-        elif request[1] == "0":
+        elif str(request[1]) == "0":
             print("george bush did pizzagate")
 
 
@@ -144,6 +147,7 @@ class mqttClient:
                 if not player[0] == self.username:
                     available.append(player[0])
         index = 0
+
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
             print("Use 'a' and 'd' to cycle, 'e' to select")
