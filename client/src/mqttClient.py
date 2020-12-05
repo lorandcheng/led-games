@@ -61,6 +61,7 @@ Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames
 import paho.mqtt.client as mqtt
 import time
 import os
+from pynput import keyboard
 
 import controller
 
@@ -76,8 +77,24 @@ class mqttClient:
         self.client.on_disconnect = self.onDisconnect
         self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
         self.client.loop_start()
-        self.requestFlag = 0
+        self.key = keyboard.Listener(on_press = self.onPress)
+        self.key.start()
+        self.index = 0
+        self.selected = 0
+        self.requested = 0
 
+    def onPress(self, key):
+        try: 
+            k = key.char # single-char keys
+        except: 
+            k = key.name # other keys
+    
+        if k == "a":
+            self.index -=1
+        elif k == "d":
+            self.index +=1
+        elif k == "e":
+            self.selected = 1
 
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
@@ -108,7 +125,7 @@ class mqttClient:
                 self.inputName(client)
 
     def myCallback(self, client, userdata, msg):
-        self.requestFlag = 1
+        self.requested = 1
         request = self.parseMessage(msg)
         print(request[1])
         print(type(request[1]))
@@ -116,14 +133,20 @@ class mqttClient:
             # add to controller later
             inp = input(f"accept match request from {request[0]}?  Type y/n")
             if inp == "y":
-
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
             elif inp == "n":
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
+                self.requested = 0
+                self.chooseOpponent(self.players)
+
         elif str(request[1]) == "2":
             print("match confirmed")
         elif str(request[1]) == "0":
+            self.requested = 0
             print("george bush did pizzagate")
+            self.chooseOpponent(self.players)
+
+
 
 
     def lobbyCallback(self, client, userdata, msg):
@@ -141,32 +164,34 @@ class mqttClient:
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}')
 
     def chooseOpponent(self, players):
+        self.index = 0
         available = []
         for player in players:
             if player[1] == self.game.name:
                 if not player[0] == self.username:
                     available.append(player[0])
-        index = 0
 
         while True:
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print("Use 'a' and 'd' to cycle, 'e' to select")
-            print('Choose an opponent:')
-            for i in range(len(available)):
-                if i == index:
-                    print('* ' + available[i])
-                else:
-                    print('  ' + available[i])
-            inp = controller.getInput()
-            try:
-                index += inp
-            except TypeError:
+            if self.requested == 1:
                 break
-            if index > len(available)-1:
-                index = 0
-            elif index < 0:
-                index = len(available)-1
-        return available[index]
+            else:
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print("Use 'a' and 'd' to cycle, 'e' to select")
+                print('Choose an opponent:')
+                for i in range(len(available)):
+                    if i == self.index:
+                        print('* ' + available[i])
+                    else:
+                        print('  ' + available[i])
+                
+                if self.index > len(available)-1:
+                    self.index = 0
+                elif self.index < 0:
+                    self.index = len(available)-1
+                if self.selected == 1:
+                    self.selected = 0
+                    break
+        return available[self.index]
 
 
     def onConnect(self, client, userdata, flags, rc):
