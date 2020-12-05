@@ -43,7 +43,8 @@ def gameInit():
 
 def main():
     mqttInit()
-    gameInit()
+    # gameInit()
+    
 
 
 
