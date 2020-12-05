@@ -14,7 +14,7 @@ def userStatus(client, userdata, msg):
     '''
     print("triggered")
     name, action = parseMessage(msg)
-    if action:
+    if int(action):
         if name in USERS:
             print("denied")
             client.publish("ledGames/users", f'{name}, 0')
@@ -22,10 +22,13 @@ def userStatus(client, userdata, msg):
             client.publish("ledGames/users", f'{name}, 1')
             USERS.append(name)
             print("user added: " + name)
+            print(USERS)
     else:
         try:
+            print("some bitch disconnected")
             USERS.remove(name)
             print("user removed: " + name)
+            print(USERS)
         except:
             pass
 
