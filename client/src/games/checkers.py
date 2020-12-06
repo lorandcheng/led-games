@@ -41,8 +41,7 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = 1
-        # self.color = random.choice([-1, 1])
+        self.color = 0
         self.redCounter = 12
         self.blackCounter = 12
 

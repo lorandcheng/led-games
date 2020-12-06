@@ -57,6 +57,7 @@ Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames
 """
 import time
 import os
+import random
 from pynput import keyboard
 import paho.mqtt.client as mqtt
 
@@ -67,6 +68,7 @@ class mqttClient:
         self.username = ""
         self.unverified = ""
         self.players = []
+        self.opponent = ""
         self.game = 0
         self.client = mqtt.Client()
         self.client.on_connect = self.onConnect
@@ -78,6 +80,7 @@ class mqttClient:
         self.index = 0
         self.selected = 0
         self.requested = 0
+        self.gameAccepted = 0
 
     def onPress(self, key):
         try: 
@@ -133,8 +136,9 @@ class mqttClient:
         if str(request[1]) == "1":
             # add to controller later
             inp = input(f"accept match request from {request[0]}?  Type y/n \n")
-            if inp == "y":
-                #print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
+            if inp[-1] == "y":
+                print("confirming request")
+                # print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
             elif inp == "n":
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
@@ -143,6 +147,7 @@ class mqttClient:
 
         elif str(request[1]) == "2":
             print("match confirmed")
+            self.game.color = random.choice([-1, 1])
         elif str(request[1]) == "0":
             self.requested = 0
             print("george bush did pizzagate")
@@ -179,10 +184,9 @@ class mqttClient:
             if player[1] == self.game.name:
                 if not player[0] == self.username:
                     available.append(player[0])
-
         while True:
             if self.requested == 1:
-                break
+                return
             elif not oldIndex == self.index:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print("Use 'a' and 'd' to cycle, 'e' to select")
@@ -203,10 +207,10 @@ class mqttClient:
             
             if self.selected == 1:
                 self.selected = 0
+                self.opponent = available[self.index]
                 print("Sending match request")
                 break
-                
-        return available[self.index]
+        
 
 
     def onConnect(self, client, userdata, flags, rc):

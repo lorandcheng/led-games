@@ -51,9 +51,9 @@ def main():
     client.joinLobby(client.client, game)
     while client.players == []:
         pass
-    opponent = client.chooseOpponent()
+    client.chooseOpponent()
     #print(f"ledGames/{opponent}/requests")
-    client.client.publish(f"ledGames/{opponent}/requests", f"{client.username}, 1")
+    client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
     while True:
         pass
 
