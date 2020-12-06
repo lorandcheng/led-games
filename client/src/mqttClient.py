@@ -97,6 +97,8 @@ class mqttClient:
         elif k == "e":
             print("e")
             self.selected = 1
+        #elif k == "r":
+            #self.chooseOpponent()
 
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
@@ -130,25 +132,24 @@ class mqttClient:
     def myCallback(self, client, userdata, msg):
         self.requested = 1
         request = self.parseMessage(msg)
-        print(request[1])
-        print(type(request[1]))
+
         if str(request[1]) == "1":
             # add to controller later
             inp = input(f"accept match request from {request[0]}?  Type y/n \n")
             if inp == "y":
-                print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
+                #print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
             elif inp == "n":
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
                 self.requested = 0
-                self.chooseOpponent(self.players)
+                self.chooseOpponent()
 
         elif str(request[1]) == "2":
             print("match confirmed")
         elif str(request[1]) == "0":
             self.requested = 0
             print("george bush did pizzagate")
-            self.chooseOpponent(self.players)
+            self.chooseOpponent()
 
 
 
@@ -157,7 +158,9 @@ class mqttClient:
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
+        #print("lobby updated \n")
         self.players = self.parseMessage(msg)
+        #self.chooseOpponent()
         
 
     def joinLobby(self, client, game):
@@ -167,12 +170,15 @@ class mqttClient:
         print("joined lobby", self.username, game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}')
 
-    def chooseOpponent(self, players):
-        self.key.start()
+    def chooseOpponent(self):
+        try:
+            self.key.start()
+        except:
+            pass
         self.index = 0
         oldIndex = 0
         available = []
-        for player in players:
+        for player in self.players:
             if player[1] == self.game.name:
                 if not player[0] == self.username:
                     available.append(player[0])
