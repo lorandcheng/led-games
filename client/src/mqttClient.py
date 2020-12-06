@@ -54,14 +54,11 @@ Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames
 
 ...
 
-
 """
-
-
-import paho.mqtt.client as mqtt
 import time
 import os
 from pynput import keyboard
+import paho.mqtt.client as mqtt
 
 import controller
 
