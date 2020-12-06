@@ -95,6 +95,7 @@ class mqttClient:
             self.index +=1
             print("d")
         elif k == "e":
+            print("e")
             self.selected = 1
 
     def parseMessage(self, msg):
@@ -133,8 +134,9 @@ class mqttClient:
         print(type(request[1]))
         if str(request[1]) == "1":
             # add to controller later
-            inp = input(f"accept match request from {request[0]}?  Type y/n")
+            inp = input(f"accept match request from {request[0]}?  Type y/n \n")
             if inp == "y":
+                print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
             elif inp == "n":
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
@@ -194,11 +196,13 @@ class mqttClient:
                         print('* ' + available[i])
                     else:
                         print('  ' + available[i])
-                
-                if self.selected == 1:
-                    self.selected = 0
-                    break
                 oldIndex = self.index
+            
+            if self.selected == 1:
+                self.selected = 0
+                print("Sending match request")
+                break
+                
         return available[self.index]
 
 
