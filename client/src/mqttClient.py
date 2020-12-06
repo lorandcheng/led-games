@@ -130,6 +130,9 @@ class mqttClient:
                 self.inputName(client)
         
 
+    def playCallback(self, client, userdata, msg):
+        print("you recieved a turn")
+
     def myCallback(self, client, userdata, msg):
         self.requested = 1
         request = self.parseMessage(msg)
@@ -142,6 +145,8 @@ class mqttClient:
                 print("confirming request")
                 # print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
+                client.subscribe(f"ledGames/{self.username}/play")
+                client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
             elif inp[-1] == "n":
                 print("rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
