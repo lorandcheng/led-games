@@ -2,9 +2,11 @@
 import copy
 import os
 import random 
+import sys
 # Third party imports
 
 # Other file imports
+#sys.path.append("~\led-games\client\src\controller.py")
 import controller
 
 class Checkers():
@@ -41,10 +43,10 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = 0
+        self.color = 1
         self.redCounter = 12
         self.blackCounter = 12
-        self.busy = 0
+        self.busy = 1
         self.done = 0
 
     def isOnBoard(self, row, col):
@@ -177,6 +179,7 @@ class Checkers():
         tempBoard = copy.deepcopy(self.BOARD)
         inp = ""
         index = 0
+        #print(locations)
         row, col = locations[index]
 
         # print first view
@@ -242,9 +245,9 @@ class Checkers():
         '''
         Summary: actions at the end of the turn
         '''
+        print("ending turn")
         self.busy = 0
-        while not self.busy:
-            pass
+
 
     def gameOver(self, winner):
         '''
@@ -302,7 +305,7 @@ class Checkers():
         # print initial setup
         # self.printBoard(self.BOARD)
         # play game until someone loses all pieces
-        while self.redCounter > 0 and self.blackCounter > 0:
+        while self.redCounter > 0 and self.blackCounter > 0 and self.busy == 1:
             # select piece to move
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
@@ -321,14 +324,16 @@ class Checkers():
             
             # switch colors
             self.endTurn()
+
+            # switch back to your turn
             
-        if self.color == 1 and self.blackCounter > 0:
-            self.gameOver(True)
-        elif self.color == -1 and self.redCounter > 0:
-            self.gameOver(True)
-        else:
-            self.gameOver(False)
-        self.done = 1
+        # if self.color == 1 and self.blackCounter > 0:
+        #     self.gameOver(True)
+        # elif self.color == -1 and self.redCounter > 0:
+        #     self.gameOver(True)
+        # else:
+        #     self.gameOver(False)
+        # self.done = 1
 
 if __name__ == '__main__':
     '''
