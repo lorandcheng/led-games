@@ -10,6 +10,7 @@ MQTT SERVER STEPS
     - TODO remove users who leave
 3. Listen for incoming lobby connections on "ledGames/lobby/status"
     - when a new user joins the lobby, send out an updated lobby list
+    - TODO remove users from lobby
 
 """
 
@@ -24,9 +25,11 @@ def parseMessage(msg):
     return parsedMessage
 
 def users(client, userdata, msg):
-    '''
-    msg: (name, action) name = username, action = 1(add)/0(remove)
-    '''
+    """
+    msg: (name, action)
+        name: username
+        action: 1(add), 0(remove)
+    """
     name, action = parseMessage(msg)
     if int(action):
         if name in USERS:
