@@ -78,7 +78,6 @@ class mqttClient:
         self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
         self.client.loop_start()
         self.key = keyboard.Listener(on_press = self.onPress)
-        self.key.start()
         self.index = 0
         self.selected = 0
         self.requested = 0
@@ -91,8 +90,10 @@ class mqttClient:
     
         if k == "a":
             self.index -=1
+            print("a")
         elif k == "d":
             self.index +=1
+            print("d")
         elif k == "e":
             self.selected = 1
 
@@ -123,6 +124,7 @@ class mqttClient:
             else:
                 print("Your username was invalid.")
                 self.inputName(client)
+        
 
     def myCallback(self, client, userdata, msg):
         self.requested = 1
@@ -164,7 +166,9 @@ class mqttClient:
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}')
 
     def chooseOpponent(self, players):
+        self.key.start()
         self.index = 0
+        oldIndex = 0
         available = []
         for player in players:
             if player[1] == self.game.name:
@@ -174,23 +178,27 @@ class mqttClient:
         while True:
             if self.requested == 1:
                 break
-            else:
+            elif not oldIndex == self.index:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print("Use 'a' and 'd' to cycle, 'e' to select")
                 print('Choose an opponent:')
+
+                
+                if self.index > len(available)-1:
+                    self.index = 0
+                elif self.index < 0:
+                    self.index = len(available)-1
+
                 for i in range(len(available)):
                     if i == self.index:
                         print('* ' + available[i])
                     else:
                         print('  ' + available[i])
                 
-                if self.index > len(available)-1:
-                    self.index = 0
-                elif self.index < 0:
-                    self.index = len(available)-1
                 if self.selected == 1:
                     self.selected = 0
                     break
+                oldIndex = self.index
         return available[self.index]
 
 
