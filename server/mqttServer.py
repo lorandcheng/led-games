@@ -51,7 +51,7 @@ def users(client, userdata, msg):
 def lobby(client, userdata, msg):
     user = parseMessage(msg)
     print(user, "entered lobby")
-    LOBBY.append(user))
+    LOBBY.append(user)
     print(LOBBY)
     client.publish("ledGames/lobby", str(LOBBY))
 
