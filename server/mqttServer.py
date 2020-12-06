@@ -1,3 +1,18 @@
+"""
+MQTT SERVER STEPS
+=================
+1. Start server:
+    - SUB "ledGames/users/status"
+    - SUB "ledGames/lobby/status"
+2. Listen for incoming user connections on "ledGames/users/status"
+    - when a new user connects, add them to USERS list
+    - reject already used usernames
+    - TODO remove users who leave
+3. Listen for incoming lobby connections on "ledGames/lobby/status"
+    - when a new user joins the lobby, send out an updated lobby list
+
+"""
+
 import paho.mqtt.client as mqtt
 
 USERS = []
@@ -8,11 +23,10 @@ def parseMessage(msg):
     parsedMessage = tuple(map(str, message.split(", ")))
     return parsedMessage
 
-def userStatus(client, userdata, msg):
+def users(client, userdata, msg):
     '''
     msg: (name, action) name = username, action = 1(add)/0(remove)
     '''
-    print("triggered")
     name, action = parseMessage(msg)
     if int(action):
         if name in USERS:
@@ -25,7 +39,6 @@ def userStatus(client, userdata, msg):
             print(USERS)
     else:
         try:
-            print("some bitch disconnected")
             USERS.remove(name)
             print("user removed: " + name)
             print(USERS)
@@ -33,9 +46,9 @@ def userStatus(client, userdata, msg):
             pass
 
 def lobby(client, userdata, msg):
-    print("entered lobby")
-    entry = parseMessage(msg)
-    LOBBY.append(entry)
+    user = parseMessage(msg)
+    print(user, "entered lobby")
+    LOBBY.append(user))
     print(LOBBY)
     client.publish("ledGames/lobby", str(LOBBY))
 
@@ -44,7 +57,7 @@ def onConnect(client, userdata, flags, rc):
     client.subscribe("ledGames/users/status")
     client.subscribe("ledGames/lobby/status")
 
-    client.message_callback_add("ledGames/users/status", userStatus)
+    client.message_callback_add("ledGames/users/status", users)
     client.message_callback_add("ledGames/lobby/status", lobby)
     
 
