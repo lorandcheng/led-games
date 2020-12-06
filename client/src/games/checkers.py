@@ -44,6 +44,8 @@ class Checkers():
         self.color = 0
         self.redCounter = 12
         self.blackCounter = 12
+        self.busy = 0
+        self.done = 0
 
     def isOnBoard(self, row, col):
         if not(0 <= row <= 7):
@@ -240,7 +242,9 @@ class Checkers():
         '''
         Summary: actions at the end of the turn
         '''
-        self.color *= -1
+        self.busy = 0
+        while not self.busy:
+            pass
 
     def gameOver(self, winner):
         '''
@@ -324,6 +328,7 @@ class Checkers():
             self.gameOver(True)
         else:
             self.gameOver(False)
+        self.done = 1
 
 if __name__ == '__main__':
     '''

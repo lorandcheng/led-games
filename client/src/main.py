@@ -54,6 +54,12 @@ def main():
     client.chooseOpponent()
     #print(f"ledGames/{opponent}/requests")
     client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
+    while not client.start:
+        pass
+    while not game.done:
+        game.busy = 1
+        game.main()
+        client.client.publish(f"ledGames/{client.opponent}/play", game.BOARD)
     while True:
         pass
 

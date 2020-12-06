@@ -81,6 +81,7 @@ class mqttClient:
         self.selected = 0
         self.requested = 0
         self.gameAccepted = 0
+        self.start = 0
 
     def onPress(self, key):
         try: 
@@ -135,19 +136,21 @@ class mqttClient:
 
         if str(request[1]) == "1":
             # add to controller later
+            self.key.stop()
             inp = input(f"accept match request from {request[0]}?  Type y/n \n")
             if inp[-1] == "y":
                 print("confirming request")
                 # print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
-            elif inp == "n":
+            elif inp[-1] == "n":
+                print("rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
                 self.requested = 0
                 self.chooseOpponent()
 
         elif str(request[1]) == "2":
             print("match confirmed")
-            self.game.color = random.choice([-1, 1])
+            self.start = 1
         elif str(request[1]) == "0":
             self.requested = 0
             print("george bush did pizzagate")
