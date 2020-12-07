@@ -152,7 +152,7 @@ class mqttClient:
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
                 self.start = 1
                 self.initiator = 0
-                self.opponent = request[0]
+                self.opponent = str(request[0])
             elif inp[-1] == "n":
                 print("rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
@@ -163,6 +163,8 @@ class mqttClient:
             print("match confirmed")
             self.start = 1
             self.initiator = 1
+            client.subscribe(f"ledGames/{self.username}/play")
+            client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
         elif str(request[1]) == "0":
             self.requested = 0
             print("george bush did pizzagate")

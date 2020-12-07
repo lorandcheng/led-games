@@ -79,6 +79,7 @@ def main():
         
         game.main()
         print("sending your turn")
+        print(client.opponent)
         client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
     
     while True:
