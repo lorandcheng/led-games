@@ -327,6 +327,8 @@ class Checkers():
 
             # switch back to your turn
             
+        # Fix this: determine who won the game and set self.done = 1 when games is voer
+
         # if self.color == 1 and self.blackCounter > 0:
         #     self.gameOver(True)
         # elif self.color == -1 and self.redCounter > 0:
@@ -334,6 +336,8 @@ class Checkers():
         # else:
         #     self.gameOver(False)
         # self.done = 1
+
+
 
 if __name__ == '__main__':
     '''
