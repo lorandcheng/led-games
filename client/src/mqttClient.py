@@ -82,6 +82,7 @@ class mqttClient:
         self.requested = 0
         self.gameAccepted = 0
         self.start = 0
+        self.boardStr = ""
 
     def onPress(self, key):
         try: 
@@ -132,6 +133,7 @@ class mqttClient:
 
     def playCallback(self, client, userdata, msg):
         print("you recieved a turn")
+        self.boardStr = str(msg.payload, "utf-8")
 
     def myCallback(self, client, userdata, msg):
         self.requested = 1

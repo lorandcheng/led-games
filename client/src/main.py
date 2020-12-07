@@ -62,7 +62,12 @@ def main():
         print("sending your turn")
         client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
         while game.busy == 0:
-            pass
+            if client.boardStr:
+                game.busy = 1
+                game.BOARD = game.beginTurn(client.boardStr)
+            else:
+                pass
+        
     
     while True:
         pass

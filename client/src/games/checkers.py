@@ -247,7 +247,13 @@ class Checkers():
         '''
         print("ending turn")
         self.busy = 0
-
+    
+    def beginTurn(self, data)
+        '''
+        Processes string game board into array format
+        '''
+        print("converting game board")
+        
 
     def gameOver(self, winner):
         '''
