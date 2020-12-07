@@ -263,6 +263,7 @@ class Checkers():
             for i in range(8):
                 self.BOARD[j][i] = int(vals[i])
             j+=1
+        print(self.BOARD)
 
     def gameOver(self, winner):
         '''

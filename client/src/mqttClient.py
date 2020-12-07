@@ -152,6 +152,7 @@ class mqttClient:
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
                 self.start = 1
                 self.initiator = 0
+                self.opponent = request[0]
             elif inp[-1] == "n":
                 print("rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")

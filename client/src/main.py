@@ -77,9 +77,9 @@ def main():
             else:
                 pass
         
-        # game.main()
-        # print("sending your turn")
-        # client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
+        game.main()
+        print("sending your turn")
+        client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
     
     while True:
         pass
