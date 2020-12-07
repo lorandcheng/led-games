@@ -59,11 +59,13 @@ def main():
     while not game.done:
         if client.initiator == 1:
             game.busy = 1
+            game.color = 1
             game.main()
             print("sending your turn")
             client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
             # print(str(game.busy))
             client.initiator = 0
+           
 
         while game.busy == 0:
             if len(client.boardStr) > 0:

@@ -43,7 +43,7 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = 1
+        self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
         self.busy = 0
@@ -253,8 +253,16 @@ class Checkers():
         Processes string game board into array format
         '''
         print("converting game board")
-        print(data)
+        message = data[2:len(data)-2]
 
+        rows = message.split("], [")
+        j = 0
+        for element in rows:
+            vals = element.split(", ")
+            
+            for i in range(8):
+                self.BOARD[j][i] = int(vals[i])
+            j+=1
 
     def gameOver(self, winner):
         '''
