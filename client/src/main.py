@@ -57,9 +57,13 @@ def main():
     while not client.start:
         pass
     while not game.done:
-        game.busy = 1
+
         game.main()
-        client.client.publish(f"ledGames/{client.opponent}/play", game.BOARD)
+        print("sending your turn")
+        client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
+        while game.busy == 0:
+            pass
+    
     while True:
         pass
 
