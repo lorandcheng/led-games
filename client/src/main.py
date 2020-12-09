@@ -14,32 +14,32 @@ GAMES = [
 ]
 
 def selectGame():
-    index = 0
+    listener = controller.Listener(len(GAMES))
+    oldIndex = listener.index
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print('Choose a game:')
+    for i in range(len(GAMES)):
+        if i == listener.index:
+            print('* ' + GAMES[i].name)
+        else:
+            print('  ' + GAMES[i].name)
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print("Use 'a' and 'd' to cycle, 'e' to select")
-        print('Choose a game:')
-        for i in range(len(GAMES)):
-            if i == index:
-                print('* ' + GAMES[i].name)
-            else:
-                print('  ' + GAMES[i].name)
-        inp = controller.getInput()
-        try:
-            index += inp
-        except TypeError:
+        if oldIndex != listener.index:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print('Choose a game:')
+            for i in range(len(GAMES)):
+                if i == listener.index:
+                    print('* ' + GAMES[i].name)
+                else:
+                    print('  ' + GAMES[i].name)
+            oldIndex = listener.index
+            print(listener.selected)
+        if listener.selected:
             break
-        if index > len(GAMES)-1:
-            index = 0
-        elif index < 0:
-            index = len(GAMES)-1
-    return index
+    return GAMES[listener.index]
         
-
-def gameInit():
-    selection = selectGame()
-    game = GAMES[selection]
-    return game
+def gameInit(): 
+    return selectGame()
 
 def main():
     client = mqttClient()
