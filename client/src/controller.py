@@ -43,31 +43,40 @@ class Listener:
         self.len = length
 
     def onPress(self, key):
-        try:
-            k = key.char # single-char keys
-        except: 
-            k = key.name # other keys
-    
-        if k == "up" or k == "left":
-            self.index -= 1
-        elif k == "down" or k == "right":
-            self.index += 1
-        elif k == "enter":
-            self.selected = 1
-            return
+        if not self.selected:
+            try:
+                k = key.char # single-char keys
+            except: 
+                k = key.name # other keys
         
-        if self.index > self.len-1:
-            self.index = 0
-        elif self.index < 0:
-            self.index = self.len-1
-
-        # print(self.index)
+            if k == "up" or k == "left":
+                self.index -= 1
+            elif k == "down" or k == "right":
+                self.index += 1
+            elif k == "enter":
+                self.selected = 1
+                return
+            
+            if self.index > self.len-1:
+                self.index = 0
+            elif self.index < 0:
+                self.index = self.len-1
 
     def onRelease(self, key):
         pass
 
 if __name__ == '__main__':
+    """
+    DEMO CODE
+    """
     listener = Listener(10)
     print("Starting keyboard listener")
+    oldIndex = listener.index
     while True:
-        pass
+        if oldIndex != listener.index:
+            print("\nUpdating menu")
+            print("Index value:", listener.index)
+            oldIndex = listener.index
+        if listener.selected:
+            break
+    print("A selection has been made at index", listener.index)
