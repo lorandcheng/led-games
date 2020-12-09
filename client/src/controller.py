@@ -26,6 +26,12 @@ def getName():
 
 from pynput import keyboard
 class Listener:
+    """
+    Class usage:
+    This class is for menu selection requiring user input. A listener object is initialized with a parameter of the menu length.
+    The calling code should wait in a while loop and break when Listener.selected == 1
+    In the while loop, the menu display should be updated according to the selected index Listener.index
+    """
     def __init__(self, length):
         self.key = keyboard.Listener(
             on_press = self.onPress,
