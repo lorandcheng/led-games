@@ -34,6 +34,16 @@ class Checkers():
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
         # self.BOARD = [
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0, -1,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  1,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        # ]
+        # self.BOARD = [
         #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0,  1,  0, -1,  0, -1,  0], 
         #     [ 0, -1,  0, -1,  0,  0,  0, -1], 
@@ -314,6 +324,16 @@ class Checkers():
             print("\nBLACK's turn to move")
         print("Use 'a' and 'd' to cycle, 'e' to select")
 
+    def countPieces(self):
+        self.redCounter = 0
+        self.blackCounter = 0
+        for r in range(8):
+            for c in range(8):
+                if self.BOARD[r][c] == 1:
+                    self.blackCounter += 1
+                elif self.BOARD[r][c] == -1:
+                    self.redCounter += 1
+
     def main(self):
         '''
         Summary: play a game of checkers
@@ -321,6 +341,7 @@ class Checkers():
         # print initial setup
         # self.printBoard(self.BOARD)
         # play game until someone loses all pieces
+        self.countPieces()
         while self.redCounter > 0 and self.blackCounter > 0 and self.busy == 1:
             # select piece to move
             pieces = self.findPieces()

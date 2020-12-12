@@ -98,8 +98,12 @@ def main():
             client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
         
         # ending sequence
+        time.sleep(1)
         print("Your game with " + client.opponent + "has ended.")
         firstGame = 0
+        client.opponent = ""
+        client.start = 0
+        client.players = []
         inp = input("Would you like to play again? y/n")
         if inp == 'y':
             print("returning to lobby")
