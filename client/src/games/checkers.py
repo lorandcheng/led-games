@@ -47,7 +47,7 @@ class Checkers():
         self.redCounter = 12
         self.blackCounter = 12
         self.busy = 0
-        self.done = 0
+        self.done = 0 # TODO: this could also double as a result of the game, 1 = win, -1 = loss
 
     def isOnBoard(self, row, col):
         if not(0 <= row <= 7):
@@ -341,17 +341,14 @@ class Checkers():
             # switch colors
             self.endTurn()
 
-            # switch back to your turn
-            
-        # Fix this: determine who won the game and set self.done = 1 when games is voer
-
-        # if self.color == 1 and self.blackCounter > 0:
-        #     self.gameOver(True)
-        # elif self.color == -1 and self.redCounter > 0:
-        #     self.gameOver(True)
-        # else:
-        #     self.gameOver(False)
-        # self.done = 1
+        # only runs if all of one color of pieces has been removed
+        if self.color == 1 and self.blackCounter > 0:
+            self.gameOver(True)
+        elif self.color == -1 and self.redCounter > 0:
+            self.gameOver(True)
+        else:
+            self.gameOver(False)
+        self.done = 1
 
 
 
