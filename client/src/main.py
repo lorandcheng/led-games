@@ -108,6 +108,7 @@ def main():
         if inp == 'y':
             print("returning to lobby")
         elif inp == 'n':
+            client.client.publish("ledGames/users/status", f'{client.username}, 0')
             break
         else:
             print("please type y or n")

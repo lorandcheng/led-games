@@ -40,7 +40,8 @@ def users(client, userdata, msg):
             USERS.append(name)
             print("user added: " + name)
             print(USERS)
-    else:
+    elif int(action)==0:
+        print("removing")
         try:
             USERS.remove(name)
             print("user removed: " + name)
