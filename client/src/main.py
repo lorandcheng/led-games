@@ -57,12 +57,30 @@ def main():
     while not client.start:
         pass
     while not game.done:
+        if client.initiator == 1:
+            game.busy = 1
+            game.color = 1
+            game.main()
+            print("sending your turn")
+            client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
+            # print(str(game.busy))
+            client.initiator = 0
+           
 
+        while game.busy == 0:
+            if len(client.boardStr) > 0:
+                game.busy = 1
+
+                print(client.boardStr)
+                game.beginTurn(client.boardStr)
+                client.boardStr = ""
+            else:
+                pass
+        
         game.main()
         print("sending your turn")
+        print(client.opponent)
         client.client.publish(f"ledGames/{client.opponent}/play", f"{game.BOARD}")
-        while game.busy == 0:
-            pass
     
     while True:
         pass

@@ -43,10 +43,10 @@ class Checkers():
         #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
-        self.color = 1
+        self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
-        self.busy = 1
+        self.busy = 0
         self.done = 0
 
     def isOnBoard(self, row, col):
@@ -247,7 +247,23 @@ class Checkers():
         '''
         print("ending turn")
         self.busy = 0
+    
+    def beginTurn(self, data):
+        '''
+        Processes string game board into array format
+        '''
+        print("converting game board")
+        message = data[2:len(data)-2]
 
+        rows = message.split("], [")
+        j = 0
+        for element in rows:
+            vals = element.split(", ")
+            
+            for i in range(8):
+                self.BOARD[j][i] = int(vals[i])
+            j+=1
+        print(self.BOARD)
 
     def gameOver(self, winner):
         '''
