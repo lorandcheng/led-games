@@ -6,10 +6,10 @@ import sys
 # Third party imports
 
 # Other file imports
-#sys.path.append("~\led-games\client\src\controller.py")
+sys.path.append('..')
 import controller
 
-class Checkers():
+class Checkers:
     def __init__(self):
         '''
         Summary: Initializes attributes
@@ -166,7 +166,7 @@ class Checkers():
 
     def selectLocation(self, locations):
         '''
-        Summary: prompts user to cycle through given locations and select one. 'a' and 'd' to cycle through, 'e' to select
+        Summary: prompts user to cycle through given locations and select one. Arrow keys to cycle through, enter to select
 
         Args:
             locations (list of tuples): list of locations to cycle through  
@@ -175,12 +175,11 @@ class Checkers():
             (row, col) (tuple): coordinates of selected location  
         '''
 
-        # copy board for display, initialize variables
+        # copy board for display, initialize listener
         tempBoard = copy.deepcopy(self.BOARD)
-        inp = ""
-        index = 0
-        #print(locations)
-        row, col = locations[index]
+        listener = controller.Listener(len(locations))
+        oldIndex = listener.index
+        row, col = locations[oldIndex]
 
         # print first view
         for r,c in locations:
@@ -190,21 +189,16 @@ class Checkers():
 
         # allow user to loop through inputs and select location
         while True:
-            inp = controller.getInput()
-            try:
-                index += inp
-            except TypeError:
+            if oldIndex != listener.index:
+                # refresh view
+                row, col = locations[listener.index]
+                for r,c in locations:
+                    tempBoard[r][c] = "*"
+                tempBoard[row][col] = "X"
+                self.printBoard(tempBoard)
+                oldIndex = listener.index
+            if listener.selected:
                 break
-            if index > len(locations)-1:
-                index = 0
-            elif index < 0:
-                index = len(locations)-1
-            row, col = locations[index]
-            # refresh view
-            for r,c in locations:
-                tempBoard[r][c] = "*"
-            tempBoard[row][col] = "X"
-            self.printBoard(tempBoard)
 
         # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
@@ -360,10 +354,7 @@ if __name__ == '__main__':
     FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME:
     python3 -m main
     '''
-
-    # comment out import controller at the top of the file
-    import sys
-    sys.path.append('..')
-    import controller
     game = Checkers()
+    game.busy = 1
     game.main()
+    print("done all")
