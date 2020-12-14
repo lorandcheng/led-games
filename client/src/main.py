@@ -50,7 +50,7 @@ def main():
         #setup MQTT and Game
         if firstGame:
             client = mqttClient()
-        game = gameInit()
+        game = selectGame()
 
         #username setup
         if firstGame:
@@ -58,13 +58,16 @@ def main():
             while client.username == "":
                 pass
             print("username verified")
-
+        time.sleep(2)
         #enter match-making lobby
         client.joinLobby(client.client, game)
         while client.players == []:
             pass
         #choose opponent from lobby, then wait for acceptance of request
-        client.chooseOpponent()
+        opponents = client.findOpponents(client.players)
+        opponent = client.chooseOpponent(opponents)
+        print("SELECTED OPPONENT", opponent)
+        time.sleep(5)
         client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
         while not client.start:
             pass

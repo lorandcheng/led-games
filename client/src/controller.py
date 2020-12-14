@@ -85,6 +85,7 @@ class Reader(Listener):
         oldIndex = self.index
         while True:
             if oldIndex != self.index:
+                self.output.clear()
                 self.output.show(self.str+self.chars[self.index])
                 oldIndex = self.index
             if self.selected:

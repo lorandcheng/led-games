@@ -2,18 +2,18 @@
 MQTT CLIENT STEPS
 =================
 
-SETUP self.username
+SETUP username
 --------------
 1. SUB "ledGames/users"
-2. Generate a self.username
-3. Check self.username against existing self.usernames by PUB "ledGames/user/status" 
+2. Generate a username
+3. Check username against existing usernames by PUB "ledGames/user/status" 
     message = (name, code)
-    name: generated self.username
-    code: 1 to add, 0 to remove self.username
+    name: generated username
+    code: 1 to add, 0 to remove username
 4. Listen for a response on "ledGames/users"
     response = (name, code)
-    name: self.username that the response is for
-    code: 1 for sucess, 0 for failure (self.username taken or other failure)
+    name: username that the response is for
+    code: 1 for sucess, 0 for failure (username taken or other failure)
 
 JOIN LOBBY AND SELECT OPPONENT
 ------------------------------
@@ -26,11 +26,11 @@ JOIN LOBBY AND SELECT OPPONENT
     - identify players of the same game
 8. Send the opponent a game request with PUB "ledGames/<opponent>/request"
     message = (name, request)
-    name: self.username
+    name: username
     request: 1 to request or confirm, 0 to deny
 9. Listen for a response on "ledGames/<self.username>/request"
     response = (opponent, request)
-    opponent: opponent's self.username
+    opponent: opponent's username
     request: 1 to request or confirm, 0 to deny
 10. If the request was denied, repeat from step 7, otherwise leave lobby with PUB "ledGames/lobby/status"
     message = (name, game)
@@ -39,7 +39,7 @@ JOIN LOBBY AND SELECT OPPONENT
 
 PLAY GAME
 ---------
-Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames/<opponentsself.username>/play"
+Each player listens on "ledGames/<self.username>/play" and sends on "ledGames/<opponent.username>/play"
 
 11. The player who initiated the connnection picks a random color, then sends the color assignments across
     message = [(name, color),(name, color)]
@@ -62,6 +62,7 @@ from pynput import keyboard
 import paho.mqtt.client as mqtt
 
 import controller
+import output
 
 class mqttClient:
     def __init__(self):
@@ -84,6 +85,7 @@ class mqttClient:
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
+        self.output = output.terminalDisplay()
         
     def onPress(self, key):
         try: 
@@ -116,7 +118,8 @@ class mqttClient:
         return parsedMessage
 
     def inputName(self, client):
-        self.unverified = controller.getName()
+        reader = controller.Reader()
+        self.unverified = reader.readStr()
         client.publish("ledGames/users/status", f'{self.unverified}, 1')
 
     def verifyName(self, client, userdata, msg):
@@ -158,7 +161,7 @@ class mqttClient:
                 print("rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
                 self.requested = 0
-                self.chooseOpponent()
+                # self.chooseOpponent()
 
         elif str(request[1]) == "2":
             print("match confirmed")
@@ -170,7 +173,7 @@ class mqttClient:
         elif str(request[1]) == "0":
             self.requested = 0
             print("george bush did pizzagate")
-            self.chooseOpponent()
+            # self.chooseOpponent()
 
 
 
@@ -191,44 +194,79 @@ class mqttClient:
         print("joined lobby", self.username, game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
-    def chooseOpponent(self):
-        try:
-            self.key.start()
-        except:
-            pass
-        self.index = 0
-        oldIndex = 0
-        available = []
-        for player in self.players:
+    def chooseOpponent(self, players):
+        # initialize listener
+        listener = controller.Listener(len(players))
+        # define printing function
+        def printPlayers(self):
+            self.output.clear()
+            for i in range(len(players)):
+                if i == listener.index:
+                    self.output.show('* ' + players[i])
+                else:
+                    self.output.show('  ' + players[i])
+        
+        printPlayers(self)
+        oldIndex = listener.index
+        while True:
+            if oldIndex != listener.index:
+                printPlayers(self)
+                oldIndex = listener.index
+            if listener.selected:
+                self.opponent = players[listener.index]
+                self.output.show(f"Selected opponent {self.opponent}")
+                return self.opponent
+            if self.requested:
+                return 0
+
+    def findOpponents(self, players):
+        opponents = []
+        for player in players:
             if player[1] == self.game.name:
                 if not player[0] == self.username:
-                    available.append(player[0])
-        while True:
-            if self.requested == 1:
-                return
-            elif not oldIndex == self.index:
-                os.system('cls' if os.name == 'nt' else 'clear')
-                print("Use 'a' and 'd' to cycle, 'e' to select")
-                print('Choose an opponent:')
+                    opponents.append(player[0])
+        return opponents
+
+
+
+
+        # try:
+        #     self.key.start()
+        # except:
+        #     pass
+        # self.index = 0
+        # oldIndex = 0
+        # available = []
+        # for player in self.players:
+        #     if player[1] == self.game.name:
+        #         if not player[0] == self.username:
+        #             available.append(player[0])
+        # while True:
+        #     if self.requested == 1:
+        #         return
+        #     elif not oldIndex == self.index:
+        #         os.system('cls' if os.name == 'nt' else 'clear')
+        #         print("Use 'a' and 'd' to cycle, 'e' to select")
+        #         print('Choose an opponent:')
 
                 
-                if self.index > len(available)-1:
-                    self.index = 0
-                elif self.index < 0:
-                    self.index = len(available)-1
+        #         if self.index > len(available)-1:
+        #             self.index = 0
+        #         elif self.index < 0:
+        #             self.index = len(available)-1
 
-                for i in range(len(available)):
-                    if i == self.index:
-                        print('* ' + available[i])
-                    else:
-                        print('  ' + available[i])
-                oldIndex = self.index
+        #         for i in range(len(available)):
+        #             if i == self.index:
+        #                 print('* ' + available[i])
+        #             else:
+        #                 print('  ' + available[i])
+        #         oldIndex = self.index
             
-            if self.selected == 1:
-                self.selected = 0
-                self.opponent = available[self.index]
-                print("Sending match request")
-                break
+        #     if self.selected == 1:
+        #         self.selected = 0
+        #         self.opponent = available[self.index]
+        #         print("Sending match request")
+        #         break
         
 
 
