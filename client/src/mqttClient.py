@@ -67,7 +67,7 @@ import output
 class mqttClient:
     def __init__(self):
         self.username = ""
-        self.unverified = ""
+        self.verified = False
         self.players = []
         self.opponent = ""
         self.game = 0
@@ -119,15 +119,15 @@ class mqttClient:
 
     def inputName(self, client):
         reader = controller.Reader()
-        self.unverified = reader.readStr()
-        client.publish("ledGames/users/status", f'{self.unverified}, 1')
+        self.username = reader.readStr()
+        client.publish("ledGames/users/status", f'{self.username}, 1')
 
     def verifyName(self, client, userdata, msg):
         name, code = self.parseMessage(msg)
-        if name == self.unverified:
+        if name == self.username:
             if code == "1":
                 client.unsubscribe("ledGames/users")
-                self.username = self.unverified
+                self.verified = True
                 client.subscribe(f"ledGames/{self.username}/requests")
                 client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
             else:
@@ -182,9 +182,7 @@ class mqttClient:
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
-        #print("lobby updated \n")
         self.players = self.parseMessage(msg)
-        #self.chooseOpponent()
         
 
     def joinLobby(self, client, game):

@@ -52,7 +52,7 @@ def main():
     OUTPUT.show("Enter your username")
     time.sleep(2)
     client.inputName(client.client)
-    while client.username == "":
+    while not client.verified:
         pass
     OUTPUT.show("Username verified")
     time.sleep(1)
