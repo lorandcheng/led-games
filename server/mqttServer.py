@@ -54,6 +54,7 @@ def users(client, userdata, msg):
 
 def lobby(client, userdata, msg):
 
+    print(str(msg.payload, 'utf-8'))
     name, game, action = parseMessage(msg)
     a = int(action)
     if a == 1:

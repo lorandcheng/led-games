@@ -187,7 +187,7 @@ class mqttClient:
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.game = game
         print("joined lobby", self.username, game.name)
-        client.publish("ledGames/lobby/status", f'{self.username}, {game.name}')
+        client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def chooseOpponent(self):
         try:
