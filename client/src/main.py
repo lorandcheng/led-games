@@ -61,18 +61,19 @@ def main():
         game = selectGame()
         #enter match-making lobby
         client.joinLobby(client.client, game)
-        while client.players == []:
+        while client.lobby == []:
             pass
         #choose opponent from lobby, then wait for acceptance of request
-        opponents = client.findOpponents(client.players)
+        opponents = client.findOpponents(client.lobby)
         opponent = client.selectOpponent(opponents)
-        OUTPUT.show(f"SELECTED OPPONENT {opponent}")
-        OUTPUT.show("Sending match request...")
-        time.sleep(2)
-        client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
+        if opponent != 0:
+            OUTPUT.show(f"SELECTED OPPONENT {opponent}")
+            OUTPUT.show("Sending match request...")
+            time.sleep(2)
+            client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
         while not client.start:
             pass
-        
+
         #loop responsible for gameplay
         while not game.done:
             #sequence for very first turn of game, only runs once

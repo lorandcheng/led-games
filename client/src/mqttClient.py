@@ -68,7 +68,7 @@ class mqttClient:
     def __init__(self):
         self.username = ""
         self.verified = False
-        self.players = []
+        self.lobby = []
         self.opponent = ""
         self.game = 0
         self.client = mqtt.Client()
@@ -152,9 +152,6 @@ class mqttClient:
             print("george bush did pizzagate")
             # self.chooseOpponent()
 
-
-
-
     def lobbyCallback(self, client, userdata, msg):
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
@@ -166,7 +163,7 @@ class mqttClient:
         client.subscribe("ledGames/lobby")
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.game = game
-        print("joined lobby", self.username, game.name)
+        print(self.username, "joined the lobby to play", game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def selectOpponent(self, players):
