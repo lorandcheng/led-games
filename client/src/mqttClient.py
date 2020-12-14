@@ -97,7 +97,7 @@ class mqttClient:
         return parsedMessage
 
     def inputName(self, client):
-        reader = controller.Reader()
+        reader = controller.Reader("Enter a username:")
         self.username = reader.readStr()
         client.publish("ledGames/users/status", f'{self.username}, 1')
 

@@ -9,8 +9,6 @@ from mqttClient import mqttClient
 import controller
 import output
 
-firstGame = 1 #flag that makes reentering lobby easier
-
 OUTPUT = output.terminalDisplay()
 
 GAMES = [
@@ -19,38 +17,17 @@ GAMES = [
 ]
 
 def selectGame():
-    listener = controller.Listener(len(GAMES))
-    oldIndex = listener.index
-    OUTPUT.clear()
-    OUTPUT.show('Choose a game:')
-    for i in range(len(GAMES)):
-        if i == listener.index:
-            OUTPUT.show('* ' + GAMES[i].name)
-        else:
-            OUTPUT.show('  ' + GAMES[i].name)
-    while True:
-        if oldIndex != listener.index:
-            OUTPUT.clear()
-            OUTPUT.show('Choose a game:')
-            for i in range(len(GAMES)):
-                if i == listener.index:
-                    OUTPUT.show('* ' + GAMES[i].name)
-                else:
-                    OUTPUT.show('  ' + GAMES[i].name)
-            oldIndex = listener.index
-            OUTPUT.show(listener.selected)
-        if listener.selected:
-            break
-    return GAMES[listener.index]
+    prompt = "Choose a game:"
+    options = [game.name for game in GAMES]
+    menu = controller.Menu(prompt, options, indexing=True)
+    index, name = menu.select()
+    return GAMES[index]
         
 def gameInit(): 
     return selectGame()
 
 def main():
     client = mqttClient()
-    OUTPUT.clear()
-    OUTPUT.show("Enter your username")
-    time.sleep(2)
     client.inputName(client.client)
     while not client.verified:
         pass
@@ -59,6 +36,7 @@ def main():
 
     while True:
         game = selectGame()
+        time.sleep(3)
         #enter match-making lobby
         client.joinLobby(client.client, game)
         while client.lobby == []:
@@ -108,7 +86,6 @@ def main():
         # ending sequence
         time.sleep(1)
         print("Your game with " + client.opponent + "has ended.")
-        firstGame = 0
         client.opponent = ""
         client.start = 0
         client.players = []

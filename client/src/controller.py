@@ -43,7 +43,8 @@ import string
 import time
 from output import terminalDisplay
 class Reader(Listener):
-    def __init__(self):
+    def __init__(self, prompt):
+        self.prompt = prompt
         self.str = ""
         self.chars = [" ", "_"]
         self.chars += list(string.ascii_lowercase+string.digits)
@@ -55,26 +56,28 @@ class Reader(Listener):
     
     def readStr(self):
         self.output.clear()
+        self.output.show(self.prompt)
         self.output.show(self.chars[self.index])
         oldIndex = self.index
         while True:
             if oldIndex != self.index:
                 self.output.clear()
+                self.output.show(self.prompt)
                 self.output.show(self.str+self.chars[self.index])
                 oldIndex = self.index
             if self.selected:
                 if self.chars[self.index] == " ":
-                    break
+                    return self.str
                 self.str += self.chars[self.index]
                 self.index = 0
                 self.selected = 0
-        return self.str
 
 class Menu(Listener):
-    def __init__(self, prompt, options):
+    def __init__(self, prompt, options, indexing=False):
         self.output = terminalDisplay()
         self.prompt = prompt
         self.options = options
+        self.indexing = indexing
         super().__init__(len(options))
 
     def _printOptions(self):
@@ -94,11 +97,10 @@ class Menu(Listener):
                 self._printOptions()
                 oldIndex = self.index
             if self.selected:
-                return self.options[self.index]
-
-
-
-
+                if self.indexing:
+                    return (self.index, self.options[self.index])
+                else:
+                    return self.options[self.index]
 
 
 if __name__ == '__main__':
@@ -120,7 +122,8 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    # reader = Reader()
+    # prompt = "Enter a name"
+    # reader = Reader(prompt)
     # print("Starting reader")
     # reader.readStr()
     # print("You entered:", reader.getStr())
@@ -130,6 +133,6 @@ if __name__ == '__main__':
     """
     prompt = "Choose an option"
     options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
-    menu = Menu(prompt, options)
-    selection = menu.select()
-    print("You chose:", selection)
+    menu = Menu(prompt, options, indexing=True)
+    index, selection = menu.select()
+    print("You chose:", selection, "at index", index)
