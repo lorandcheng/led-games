@@ -65,7 +65,7 @@ def main():
             pass
         #choose opponent from lobby, then wait for acceptance of request
         opponents = client.findOpponents(client.players)
-        opponent = client.chooseOpponent(opponents)
+        opponent = client.selectOpponent(opponents)
         print("SELECTED OPPONENT", opponent)
         time.sleep(5)
         client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")

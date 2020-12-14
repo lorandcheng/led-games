@@ -194,7 +194,7 @@ class mqttClient:
         print("joined lobby", self.username, game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
-    def chooseOpponent(self, players):
+    def selectOpponent(self, players):
         # initialize listener
         listener = controller.Listener(len(players))
         # define printing function
@@ -214,7 +214,6 @@ class mqttClient:
                 oldIndex = listener.index
             if listener.selected:
                 self.opponent = players[listener.index]
-                self.output.show(f"Selected opponent {self.opponent}")
                 return self.opponent
             if self.requested:
                 return 0
