@@ -102,7 +102,7 @@ class Reader(Listener):
 
 if __name__ == '__main__':
     """
-    DEMO CODE LISTENER
+    DEMO LISTENER CODE
     """
     # listener = Listener(10)
     # print("Starting keyboard listener")
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # print("A selection has been made at index", listener.index)
 
     """
-    DEMO CODE READER
+    DEMO READER CODE
     """
     reader = Reader()
     print("Starting reader")
