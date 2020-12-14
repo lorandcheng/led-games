@@ -84,7 +84,7 @@ class mqttClient:
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
-
+        
     def onPress(self, key):
         try: 
             k = key.char # single-char keys
@@ -134,7 +134,7 @@ class mqttClient:
 
     def playCallback(self, client, userdata, msg):
         print("you recieved a turn")
-        self.boardStr = str(msg.payload, "utf-8")
+        self.boardStr = str(msg.payload, 'utf-8')
 
     def myCallback(self, client, userdata, msg):
         self.requested = 1
@@ -150,6 +150,7 @@ class mqttClient:
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
                 client.subscribe(f"ledGames/{self.username}/play")
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
+                client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
                 self.start = 1
                 self.initiator = 0
                 self.opponent = str(request[0])
@@ -161,6 +162,7 @@ class mqttClient:
 
         elif str(request[1]) == "2":
             print("match confirmed")
+            client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
             self.start = 1
             self.initiator = 1
             client.subscribe(f"ledGames/{self.username}/play")
@@ -187,7 +189,7 @@ class mqttClient:
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.game = game
         print("joined lobby", self.username, game.name)
-        client.publish("ledGames/lobby/status", f'{self.username}, {game.name}')
+        client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def chooseOpponent(self):
         try:
