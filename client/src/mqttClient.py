@@ -110,12 +110,12 @@ class mqttClient:
                 client.subscribe(f"ledGames/{self.username}/requests")
                 client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
             else:
-                print("Your username was invalid.")
+                self.output.show("Your username was invalid.")
                 self.inputName(client)
         
 
     def playCallback(self, client, userdata, msg):
-        print("you recieved a turn")
+        self.output.show("You recieved a turn")
         self.boardStr = str(msg.payload, 'utf-8')
 
     def myCallback(self, client, userdata, msg):
@@ -125,8 +125,7 @@ class mqttClient:
         if str(request[1]) == "1":
             inp = input(f"accept match request from {request[0]}?  Type y/n \n")
             if inp[-1] == "y":
-                print("confirming request")
-                # print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
+                self.output.show("Confirming request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
                 client.subscribe(f"ledGames/{self.username}/play")
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
@@ -135,13 +134,13 @@ class mqttClient:
                 self.initiator = 0
                 self.opponent = str(request[0])
             elif inp[-1] == "n":
-                print("rejecting request")
+                self.output.show("Rejecting request")
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
                 self.requested = 0
                 # self.chooseOpponent()
 
         elif str(request[1]) == "2":
-            print("match confirmed")
+            self.output.show("Match confirmed")
             client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
             self.start = 1
             self.initiator = 1
@@ -149,7 +148,7 @@ class mqttClient:
             client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
         elif str(request[1]) == "0":
             self.requested = 0
-            print("george bush did pizzagate")
+            self.output.show("Match denied")
             # self.chooseOpponent()
 
     def lobbyCallback(self, client, userdata, msg):
@@ -162,7 +161,7 @@ class mqttClient:
         client.subscribe("ledGames/lobby")
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.game = game
-        print(self.username, "joined the lobby to play", game.name)
+        self.output.show(self.username + " joined the lobby to play " + game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def selectOpponent(self, players):
@@ -207,7 +206,6 @@ class mqttClient:
 
     def onMessage(self, client, userdata, msg):
         print("onMessage")
-        #print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
     def onDisconnect(self, client, useradata, rc):
         print("disconnecting")
