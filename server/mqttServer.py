@@ -53,11 +53,18 @@ def users(client, userdata, msg):
             pass
 
 def lobby(client, userdata, msg):
-    user = parseMessage(msg)
-    print(user, "entered lobby")
-    LOBBY.append(user)
-    print(LOBBY)
-    client.publish("ledGames/lobby", str(LOBBY))
+
+    name, game, action = parseMessage(msg)
+    a = int(action)
+    if a == 1:
+        print(name, "entered lobby")
+        LOBBY.append((name, game))
+        print(LOBBY)
+        client.publish("ledGames/lobby", str(LOBBY))
+    elif a == 0:
+        for entry in LOBBY:
+            if entry[0] == name:
+                LOBBY.remove(entry)
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
