@@ -7,8 +7,11 @@ import os
 from games import battleship, checkers
 from mqttClient import mqttClient
 import controller
+import output
 
 firstGame = 1 #flag that makes reentering lobby easier
+
+OUTPUT = output.terminalDisplay()
 
 GAMES = [
     checkers.Checkers(),
@@ -18,24 +21,24 @@ GAMES = [
 def selectGame():
     listener = controller.Listener(len(GAMES))
     oldIndex = listener.index
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print('Choose a game:')
+    OUTPUT.clear()
+    OUTPUT.show('Choose a game:')
     for i in range(len(GAMES)):
         if i == listener.index:
-            print('* ' + GAMES[i].name)
+            OUTPUT.show('* ' + GAMES[i].name)
         else:
-            print('  ' + GAMES[i].name)
+            OUTPUT.show('  ' + GAMES[i].name)
     while True:
         if oldIndex != listener.index:
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print('Choose a game:')
+            OUTPUT.clear()
+            OUTPUT.show('Choose a game:')
             for i in range(len(GAMES)):
                 if i == listener.index:
-                    print('* ' + GAMES[i].name)
+                    OUTPUT.show('* ' + GAMES[i].name)
                 else:
-                    print('  ' + GAMES[i].name)
+                    OUTPUT.show('  ' + GAMES[i].name)
             oldIndex = listener.index
-            print(listener.selected)
+            OUTPUT.show(listener.selected)
         if listener.selected:
             break
     return GAMES[listener.index]
@@ -44,21 +47,18 @@ def gameInit():
     return selectGame()
 
 def main():
+    client = mqttClient()
+    OUTPUT.clear()
+    OUTPUT.show("Enter your username")
+    time.sleep(2)
+    client.inputName(client.client)
+    while client.username == "":
+        pass
+    OUTPUT.show("Username verified")
+    time.sleep(1)
+
     while True:
-        global firstGame
-
-        #setup MQTT and Game
-        if firstGame:
-            client = mqttClient()
         game = selectGame()
-
-        #username setup
-        if firstGame:
-            client.inputName(client.client)
-            while client.username == "":
-                pass
-            print("username verified")
-        time.sleep(2)
         #enter match-making lobby
         client.joinLobby(client.client, game)
         while client.players == []:
