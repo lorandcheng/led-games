@@ -150,6 +150,7 @@ class mqttClient:
                 client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
                 client.subscribe(f"ledGames/{self.username}/play")
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
+                client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
                 self.start = 1
                 self.initiator = 0
                 self.opponent = str(request[0])
@@ -161,6 +162,7 @@ class mqttClient:
 
         elif str(request[1]) == "2":
             print("match confirmed")
+            client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
             self.start = 1
             self.initiator = 1
             client.subscribe(f"ledGames/{self.username}/play")
