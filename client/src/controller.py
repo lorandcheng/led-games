@@ -65,18 +65,61 @@ class Listener:
     def onRelease(self, key):
         pass
 
+import string
+import time
+from output import terminalDisplay
+class Reader(Listener):
+    def __init__(self):
+        self.str = ""
+        self.chars = [" ", "_"]
+        self.chars += list(string.ascii_lowercase+string.digits)
+        self.output = terminalDisplay()
+        super().__init__(len(self.chars))
+    
+    def getStr(self):
+        return self.str
+    
+    def readStr(self):
+        self.output.clear()
+        self.output.show(self.chars[self.index])
+        oldIndex = self.index
+        while True:
+            if oldIndex != self.index:
+                self.output.show(self.str+self.chars[self.index])
+                oldIndex = self.index
+            if self.selected:
+                if self.chars[self.index] == " ":
+                    break
+                self.str += self.chars[self.index]
+                self.index = 0
+                self.selected = 0
+        return self.str
+
+
+
+
+
+
 if __name__ == '__main__':
     """
-    DEMO CODE
+    DEMO CODE LISTENER
     """
-    listener = Listener(10)
-    print("Starting keyboard listener")
-    oldIndex = listener.index
-    while True:
-        if oldIndex != listener.index:
-            print("\nUpdating menu")
-            print("Index value:", listener.index)
-            oldIndex = listener.index
-        if listener.selected:
-            break
-    print("A selection has been made at index", listener.index)
+    # listener = Listener(10)
+    # print("Starting keyboard listener")
+    # oldIndex = listener.index
+    # while True:
+    #     if oldIndex != listener.index:
+    #         print("\nUpdating menu")
+    #         print("Index value:", listener.index)
+    #         oldIndex = listener.index
+    #     if listener.selected:
+    #         break
+    # print("A selection has been made at index", listener.index)
+
+    """
+    DEMO CODE READER
+    """
+    reader = Reader()
+    print("Starting reader")
+    reader.readStr()
+    print("You entered:", reader.getStr())
