@@ -77,33 +77,12 @@ class mqttClient:
         self.client.on_disconnect = self.onDisconnect
         self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
         self.client.loop_start()
-        self.key = keyboard.Listener(on_press = self.onPress)
-        self.index = 0
-        self.selected = 0
         self.requested = 0
         self.gameAccepted = 0
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
         self.output = output.terminalDisplay()
-        
-    def onPress(self, key):
-        try: 
-            k = key.char # single-char keys
-        except: 
-            k = key.name # other keys
-    
-        if k == "a":
-            self.index -=1
-            print("a")
-        elif k == "d":
-            self.index +=1
-            print("d")
-        elif k == "e":
-            print("e")
-            self.selected = 1
-        #elif k == "r":
-            #self.chooseOpponent()
 
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
@@ -144,8 +123,6 @@ class mqttClient:
         request = self.parseMessage(msg)
 
         if str(request[1]) == "1":
-            # add to controller later
-            self.key.stop()
             inp = input(f"accept match request from {request[0]}?  Type y/n \n")
             if inp[-1] == "y":
                 print("confirming request")
@@ -223,49 +200,6 @@ class mqttClient:
                 if not player[0] == self.username:
                     opponents.append(player[0])
         return opponents
-
-
-
-
-        # try:
-        #     self.key.start()
-        # except:
-        #     pass
-        # self.index = 0
-        # oldIndex = 0
-        # available = []
-        # for player in self.players:
-        #     if player[1] == self.game.name:
-        #         if not player[0] == self.username:
-        #             available.append(player[0])
-        # while True:
-        #     if self.requested == 1:
-        #         return
-        #     elif not oldIndex == self.index:
-        #         os.system('cls' if os.name == 'nt' else 'clear')
-        #         print("Use 'a' and 'd' to cycle, 'e' to select")
-        #         print('Choose an opponent:')
-
-                
-        #         if self.index > len(available)-1:
-        #             self.index = 0
-        #         elif self.index < 0:
-        #             self.index = len(available)-1
-
-        #         for i in range(len(available)):
-        #             if i == self.index:
-        #                 print('* ' + available[i])
-        #             else:
-        #                 print('  ' + available[i])
-        #         oldIndex = self.index
-            
-        #     if self.selected == 1:
-        #         self.selected = 0
-        #         self.opponent = available[self.index]
-        #         print("Sending match request")
-        #         break
-        
-
 
     def onConnect(self, client, userdata, flags, rc):
         print("Connection returned " + str(rc))

@@ -66,12 +66,13 @@ def main():
         #choose opponent from lobby, then wait for acceptance of request
         opponents = client.findOpponents(client.players)
         opponent = client.selectOpponent(opponents)
-        print("SELECTED OPPONENT", opponent)
-        time.sleep(5)
+        OUTPUT.show(f"SELECTED OPPONENT {opponent}")
+        OUTPUT.show("Sending match request...")
+        time.sleep(2)
         client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
         while not client.start:
             pass
-
+        
         #loop responsible for gameplay
         while not game.done:
             #sequence for very first turn of game, only runs once

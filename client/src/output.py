@@ -10,4 +10,8 @@ class terminalDisplay:
     def show(self, info):
         print(info)
 
+class ledDisplay:
+    def __init__(self):
+        pass
+
     
