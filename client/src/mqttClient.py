@@ -156,9 +156,8 @@ class mqttClient:
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
-        self.players = self.parseMessage(msg)
+        self.lobby = self.parseMessage(msg)
         
-
     def joinLobby(self, client, game):
         client.subscribe("ledGames/lobby")
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
@@ -167,6 +166,9 @@ class mqttClient:
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def selectOpponent(self, players):
+        """
+        exception case: if there are no players to choose from?
+        """
         # initialize listener
         listener = controller.Listener(len(players))
         # define printing function

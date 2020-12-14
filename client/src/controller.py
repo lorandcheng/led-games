@@ -70,6 +70,32 @@ class Reader(Listener):
                 self.selected = 0
         return self.str
 
+class Menu(Listener):
+    def __init__(self, prompt, options):
+        self.output = terminalDisplay()
+        self.prompt = prompt
+        self.options = options
+        super().__init__(len(options))
+
+    def _printOptions(self):
+        self.output.clear()
+        self.output.show(self.prompt)
+        for i in range(len(self.options)):
+            if i == self.index:
+                self.output.show('* ' + self.options[i])
+            else:
+                self.output.show('  ' + self.options[i])
+
+    def select(self):
+        self._printOptions()
+        oldIndex = self.index
+        while True:
+            if oldIndex != self.index:
+                self._printOptions()
+                oldIndex = self.index
+            if self.selected:
+                return self.options[self.index]
+
 
 
 
@@ -94,7 +120,16 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    reader = Reader()
-    print("Starting reader")
-    reader.readStr()
-    print("You entered:", reader.getStr())
+    # reader = Reader()
+    # print("Starting reader")
+    # reader.readStr()
+    # print("You entered:", reader.getStr())
+
+    """
+    DEMO MENU CODE
+    """
+    prompt = "Choose an option"
+    options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
+    menu = Menu(prompt, options)
+    selection = menu.select()
+    print("You chose:", selection)

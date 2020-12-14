@@ -64,6 +64,7 @@ def main():
         while client.lobby == []:
             pass
         #choose opponent from lobby, then wait for acceptance of request
+        print("selecting opponent")
         opponents = client.findOpponents(client.lobby)
         opponent = client.selectOpponent(opponents)
         if opponent != 0:
@@ -71,6 +72,8 @@ def main():
             OUTPUT.show("Sending match request...")
             time.sleep(2)
             client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
+        else:
+            pass
         while not client.start:
             pass
 
