@@ -120,36 +120,44 @@ class mqttClient:
 
     def myCallback(self, client, userdata, msg):
         self.requested = 1
-        request = self.parseMessage(msg)
+        user, code = self.parseMessage(msg)
 
-        if str(request[1]) == "1":
-            inp = input(f"accept match request from {request[0]}?  Type y/n \n")
-            if inp[-1] == "y":
+        if code == "0":
+            self.requested = 0
+            self.opponent = ""
+            self.output.show("Match denied")
+            opponents = self.findOpponents(self.lobby)
+            self.selectOpponent(opponents)
+
+        elif code == "1":
+            prompt = f"Accept match request from {user}?"
+            options = ["y", "n"]
+            menu = controller.Menu(prompt, options)
+            selection = menu.select()
+            if selection == "y":
                 self.output.show("Confirming request")
-                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
+                client.publish(f"ledGames/{user}/requests", f"{self.username}, 2")
                 client.subscribe(f"ledGames/{self.username}/play")
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
                 client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
                 self.start = 1
                 self.initiator = 0
-                self.opponent = str(request[0])
-            elif inp[-1] == "n":
+                self.opponent = user
+            else:
                 self.output.show("Rejecting request")
-                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
+                client.publish(f"ledGames/{user}/requests", f"{self.username}, 0")
                 self.requested = 0
                 # self.chooseOpponent()
 
-        elif str(request[1]) == "2":
+        elif code == "2":
             self.output.show("Match confirmed")
             client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
             self.start = 1
             self.initiator = 1
             client.subscribe(f"ledGames/{self.username}/play")
             client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
-        elif str(request[1]) == "0":
-            self.requested = 0
-            self.output.show("Match denied")
-            # self.chooseOpponent()
+
+        
 
     def lobbyCallback(self, client, userdata, msg):
         """

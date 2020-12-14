@@ -20,7 +20,7 @@ def selectGame():
     prompt = "Choose a game:"
     options = [game.name for game in GAMES]
     menu = controller.Menu(prompt, options, indexing=True)
-    index, name = menu.select()
+    index,_ = menu.select()
     return GAMES[index]
         
 def gameInit(): 
@@ -36,13 +36,11 @@ def main():
 
     while True:
         game = selectGame()
-        time.sleep(3)
         #enter match-making lobby
         client.joinLobby(client.client, game)
         while client.lobby == []:
             pass
         #choose opponent from lobby, then wait for acceptance of request
-        print("selecting opponent")
         opponents = client.findOpponents(client.lobby)
         opponent = client.selectOpponent(opponents)
         if opponent != 0:
