@@ -30,8 +30,11 @@ def users(client, userdata, msg):
         name: username
         action: 1(add), 0(remove)
     """
+    print('1')
     name, action = parseMessage(msg)
-    if int(action):
+    a = int(action)
+    print(a)
+    if a:
         if name in USERS:
             print("denied")
             client.publish("ledGames/users", f'{name}, 0')
@@ -40,7 +43,8 @@ def users(client, userdata, msg):
             USERS.append(name)
             print("user added: " + name)
             print(USERS)
-    else:
+    elif a==0:
+        print("removing")
         try:
             USERS.remove(name)
             print("user removed: " + name)
@@ -49,11 +53,21 @@ def users(client, userdata, msg):
             pass
 
 def lobby(client, userdata, msg):
-    user = parseMessage(msg)
-    print(user, "entered lobby")
-    LOBBY.append(user)
-    print(LOBBY)
-    client.publish("ledGames/lobby", str(LOBBY))
+
+    print(str(msg.payload, 'utf-8'))
+    name, game, action = parseMessage(msg)
+    a = int(action)
+    if a == 1:
+        print(name, "entered lobby")
+        LOBBY.append((name, game))
+        print(LOBBY)
+        client.publish("ledGames/lobby", str(LOBBY))
+    elif a == 0:
+        for entry in LOBBY:
+            if entry[0] == name:
+                print("removing from lobby")
+                print(entry)
+                LOBBY.remove(entry)
 
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
