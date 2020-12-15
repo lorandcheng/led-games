@@ -89,7 +89,7 @@ def main():
         print("Your game with " + client.opponent + "has ended.")
         client.opponent = ""
         client.start = 0
-        client.players = []
+        client.lobby = []
         prompt = "Would you like to play again? y/n"
         options = ["y", "n"]
         menu = inputs.Menu(prompt, options)
