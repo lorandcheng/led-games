@@ -151,8 +151,10 @@ class mqttClient:
             else:
                 self.output.show("Rejecting request")
                 client.publish(f"ledGames/{user}/requests", f"{self.username}, 0")
+                self.opponent = ""
+                opponents = self.findOpponents(self.lobby)
+                self.selectOpponent(opponents)
             self.requested = 0
-                # self.chooseOpponent()
 
         elif code == "2":
             self.output.show("Match confirmed")
@@ -178,9 +180,7 @@ class mqttClient:
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
     def selectOpponent(self, players):
-        """
-        exception case: if there are no players to choose from?
-        """
+
         if len(players) == 0:
             self.output.show("Waiting for opponents")
             while len(self.lobby) == 1:
