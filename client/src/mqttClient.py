@@ -172,6 +172,11 @@ class mqttClient:
         """
         exception case: if there are no players to choose from?
         """
+        if len(players) == 0:
+            self.output.show("Waiting for opponents")
+            while len(self.lobby) == 1:
+                pass
+            self.selectOpponent(self.findOpponents(self.lobby))
         # initialize listener
         listener = controller.Listener(len(players))
         # define printing function

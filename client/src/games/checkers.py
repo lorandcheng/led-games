@@ -11,7 +11,7 @@ import controller
 
 class Checkers:
     def __init__(self):
-        '''
+        """
         Summary: Initializes attributes
 
         Attributes:
@@ -20,7 +20,7 @@ class Checkers:
             self.color: the color of this player
             self.redCounter: score of red player
             self.blackCounter: score of black player
-        '''
+        """
         self.name = 'Checkers'
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
@@ -33,16 +33,16 @@ class Checkers:
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
-        self.BOARD = [
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0, -1,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  1,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        ]
+        # self.BOARD = [
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0, -1,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  1,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        # ]
         # self.BOARD = [
         #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0,  1,  0, -1,  0, -1,  0], 
@@ -67,12 +67,12 @@ class Checkers:
         return True
 
     def findPieces(self):
-        '''
+        """
         Summary: finds all available pieces to move
 
         Return: 
             locations (list of tuples): coordinates of available pieces
-        '''
+        """
         val = self.color
         locs = []
         for r in range(8):
@@ -92,7 +92,7 @@ class Checkers:
         return locs
 
     def findMoves(self, location):
-        '''
+        """
         Summary: finds all possible moves 1 square away (non-jumping) for a given piece
 
         Args:
@@ -101,7 +101,7 @@ class Checkers:
         Returns:
             locs (list of tuples): if there are any moves available, returns coordinates of possible moves
             0: returns zero if there are no possible moves
-        '''
+        """
 
         row, col = location
         locs = []
@@ -130,7 +130,7 @@ class Checkers:
         return 0 if len(locs) == 0 else locs
 
     def findJumps(self, location):
-        '''
+        """
         Summary: checks to see if there are any jump moves for a given piece
 
         Args:
@@ -139,7 +139,7 @@ class Checkers:
         Returns:
             locs (list of tuples): if there are any jump moves available, returns coordinates of possible moves
             0: returns zero if there are no possible moves
-        '''
+        """
 
         row, col = location
         locs= []
@@ -175,7 +175,7 @@ class Checkers:
         return 0 if len(locs) == 0 else locs
 
     def selectLocation(self, locations):
-        '''
+        """
         Summary: prompts user to cycle through given locations and select one. Arrow keys to cycle through, enter to select
 
         Args:
@@ -183,7 +183,7 @@ class Checkers:
 
         Return: 
             (row, col) (tuple): coordinates of selected location  
-        '''
+        """
 
         # copy board for display, initialize listener
         tempBoard = copy.deepcopy(self.BOARD)
@@ -218,13 +218,13 @@ class Checkers:
         return (row, col)
 
     def makeMove(self, location, final):
-        '''
+        """
         Summary: makes a single move or hop, updates board and counters
 
         Args:
             location (tuple): initial location
             final (tuple): final location
-        '''
+        """
         rowI, colI = location # initial row, col
         rowF, colF = final # final row, col
         piece = self.BOARD[rowI][colI]
@@ -246,16 +246,16 @@ class Checkers:
 
             
     def endTurn(self):
-        '''
+        """
         Summary: actions at the end of the turn
-        '''
+        """
         print("ending turn")
         self.busy = 0
     
     def beginTurn(self, data):
-        '''
+        """
         Processes string game board into array format
-        '''
+        """
         print("converting game board")
         message = data[2:len(data)-2]
 
@@ -270,12 +270,12 @@ class Checkers:
         print(self.BOARD)
 
     def gameOver(self, winner):
-        '''
+        """
         Summary: actions at the end of the game
 
         Args:
             winner (boolean): true if this player won
-        '''
+        """
         self.printBoard(self.BOARD)
         print("GAME OVER")
         if winner:
@@ -284,12 +284,12 @@ class Checkers:
             print("YOU LOST")
 
     def printBoard(self, board):
-        '''
+        """
         Summary: prints the given board
 
         Args:
             board (2D list): the board stored in a 2D array
-        '''
+        """
         os.system('cls' if os.name == 'nt' else 'clear')
         print('\n+---+---+---+---+---+---+---+---+')
         for r in range(8):
@@ -329,9 +329,9 @@ class Checkers:
                     self.redCounter += 1
 
     def main(self):
-        '''
+        """
         Summary: play a game of checkers
-        '''
+        """
         # print initial setup
         # self.printBoard(self.BOARD)
         # play game until someone loses all pieces
@@ -368,10 +368,10 @@ class Checkers:
 
 
 if __name__ == '__main__':
-    '''
+    """
     FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME:
     python3 -m main
-    '''
+    """
     game = Checkers()
     game.busy = 1
     game.main()
