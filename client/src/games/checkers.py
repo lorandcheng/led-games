@@ -8,7 +8,7 @@ import sys
 # Other file imports
 sys.path.append('..')
 import controller
-
+import output
 class Checkers:
     def __init__(self):
         """
@@ -22,6 +22,7 @@ class Checkers:
             self.blackCounter: score of black player
         """
         self.name = 'Checkers'
+        self.output = output.terminalDisplay()
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
@@ -249,14 +250,14 @@ class Checkers:
         """
         Summary: actions at the end of the turn
         """
-        print("ending turn")
+        self.output.show("ending turn")
         self.busy = 0
     
     def beginTurn(self, data):
         """
         Processes string game board into array format
         """
-        print("converting game board")
+        self.output.show("converting game board")
         message = data[2:len(data)-2]
 
         rows = message.split("], [")
@@ -267,7 +268,7 @@ class Checkers:
             for i in range(8):
                 self.BOARD[j][i] = int(vals[i])
             j+=1
-        print(self.BOARD)
+        self.output.show(self.BOARD)
 
     def gameOver(self, winner):
         """
@@ -277,11 +278,11 @@ class Checkers:
             winner (boolean): true if this player won
         """
         self.printBoard(self.BOARD)
-        print("GAME OVER")
+        self.output.show("GAME OVER")
         if winner:
-            print("YOU WON")
+            self.output.show("YOU WON")
         else:
-            print("YOU LOST")
+            self.output.show("YOU LOST")
 
     def printBoard(self, board):
         """
@@ -290,8 +291,9 @@ class Checkers:
         Args:
             board (2D list): the board stored in a 2D array
         """
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print('\n+---+---+---+---+---+---+---+---+')
+        self.output.clear()
+        output = "\n"
+        output += "+---+---+---+---+---+---+---+---+\n"
         for r in range(8):
             row = '|'
             for c in range(8):
@@ -309,14 +311,10 @@ class Checkers:
                     row += ' X |'
                 else:
                     row += '   |'
-            print(row)
-            print('+---+---+---+---+---+---+---+---+')
-        print("Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter) )
-        if self.color == -1:
-            print("\nRED's turn to move")
-        else:
-            print("\nBLACK's turn to move")
-        print("Use 'a' and 'd' to cycle, 'e' to select")
+            output += f"{row}\n+---+---+---+---+---+---+---+---+\n"
+        scores = "Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter)
+        output += scores
+        self.output.show(output)
 
     def countPieces(self):
         self.redCounter = 0
