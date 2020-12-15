@@ -7,8 +7,8 @@ import sys
 
 # Other file imports
 sys.path.append('..')
-import controller
-import output
+import inputs
+import outputs
 class Checkers:
     def __init__(self):
         """
@@ -22,7 +22,7 @@ class Checkers:
             self.blackCounter: score of black player
         """
         self.name = 'Checkers'
-        self.output = output.terminalDisplay()
+        self.output = outputs.terminalDisplay()
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         self.BOARD = [
             [ 0, -1,  0, -1,  0, -1,  0, -1], 
@@ -188,7 +188,7 @@ class Checkers:
 
         # copy board for display, initialize listener
         tempBoard = copy.deepcopy(self.BOARD)
-        listener = controller.Listener(len(locations))
+        listener = inputs.Listener(len(locations))
         oldIndex = listener.index
         row, col = locations[oldIndex]
 
@@ -353,15 +353,16 @@ class Checkers:
             
             # switch colors
             self.endTurn()
-
-        # only runs if all of one color of pieces has been removed
-        if self.color == 1 and self.blackCounter > 0:
-            self.gameOver(True)
-        elif self.color == -1 and self.redCounter > 0:
-            self.gameOver(True)
-        else:
-            self.gameOver(False)
-        self.done = 1
+        
+        if self.blackCounter ==0 or self.redCounter == 0:
+            # only runs if all of one color of pieces has been removed
+            if self.color == 1 and self.blackCounter > 0:
+                self.gameOver(True)
+            elif self.color == -1 and self.redCounter > 0:
+                self.gameOver(True)
+            else:
+                self.gameOver(False)
+            self.done = 1
 
 
 

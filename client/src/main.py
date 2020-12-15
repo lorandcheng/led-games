@@ -6,10 +6,10 @@ import os
 # Module imports
 from games import battleship, checkers
 from mqttClient import mqttClient
-import controller
-import output
+import inputs
+import outputs
 
-OUTPUT = output.terminalDisplay()
+OUTPUT = outputs.terminalDisplay()
 
 GAMES = [
     checkers.Checkers(),
@@ -19,7 +19,7 @@ GAMES = [
 def selectGame():
     prompt = "Choose a game:"
     options = [game.name for game in GAMES]
-    menu = controller.Menu(prompt, options, indexing=True)
+    menu = inputs.Menu(prompt, options, indexing=True)
     index,_ = menu.select()
     return GAMES[index]
         

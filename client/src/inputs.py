@@ -41,7 +41,7 @@ class Listener:
 
 import string
 import time
-from output import terminalDisplay
+from outputs import terminalDisplay
 class Reader(Listener):
     def __init__(self, prompt):
         self.prompt = prompt

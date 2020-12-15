@@ -57,8 +57,8 @@ Each player listens on "ledGames/<self.username>/play" and sends on "ledGames/<o
 """
 import paho.mqtt.client as mqtt
 
-import controller
-import output
+import inputs
+import outputs
 
 class mqttClient:
     def __init__(self):
@@ -78,7 +78,7 @@ class mqttClient:
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
-        self.output = output.terminalDisplay()
+        self.output = outputs.terminalDisplay()
 
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
@@ -93,7 +93,7 @@ class mqttClient:
         return parsedMessage
 
     def inputName(self, client):
-        reader = controller.Reader("Enter a username:")
+        reader = inputs.Reader("Enter a username:")
         self.username = reader.readStr()
         client.publish("ledGames/users/status", f'{self.username}, 1')
 
@@ -128,7 +128,7 @@ class mqttClient:
         elif code == "1":
             prompt = f"Accept match request from {user}?"
             options = ["y", "n"]
-            menu = controller.Menu(prompt, options)
+            menu = inputs.Menu(prompt, options)
             selection = menu.select()
             if selection == "y":
                 self.output.show("Confirming request")
@@ -178,7 +178,7 @@ class mqttClient:
                 pass
             self.selectOpponent(self.findOpponents(self.lobby))
         # initialize listener
-        listener = controller.Listener(len(players))
+        listener = inputs.Listener(len(players))
         # define printing function
         def printPlayers(self):
             self.output.clear()
