@@ -80,6 +80,15 @@ class mqttClient:
         self.initiator = -1
         self.output = outputs.terminalDisplay()
 
+    def reset(self):
+        self.opponent = ""
+        self.game = 0
+        self.requested = 0
+        self.gameAccepted = 0
+        self.start = 0
+        self.boardStr = ""
+        self.initiator = -1
+
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
         parsedMessage = []
@@ -142,7 +151,7 @@ class mqttClient:
             else:
                 self.output.show("Rejecting request")
                 client.publish(f"ledGames/{user}/requests", f"{self.username}, 0")
-                self.requested = 0
+            self.requested = 0
                 # self.chooseOpponent()
 
         elif code == "2":

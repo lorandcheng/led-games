@@ -35,7 +35,9 @@ def main():
     time.sleep(1)
 
     while True:
+        client.reset()
         game = selectGame()
+        game.__init__()
         #enter match-making lobby
         client.joinLobby(client.client, game)
         while client.lobby == []:
@@ -66,9 +68,10 @@ def main():
             
             #where a player waits to recieve a turn from the opponent
             while game.busy == 0:
+                print("entered while loop")
                 if len(client.boardStr) > 0:
+                    print("received board")
                     game.busy = 1
-
                     print(client.boardStr)
                     game.beginTurn(client.boardStr) #update the game board
                     client.boardStr = ""
