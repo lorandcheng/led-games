@@ -87,19 +87,18 @@ def main():
         client.opponent = ""
         client.start = 0
         client.players = []
-        inp = input("Would you like to play again? y/n")
-        if inp == 'y':
+        prompt = "Would you like to play again? y/n"
+        options = ["y", "n"]
+        menu = inputs.Menu(prompt, options)
+        selection = menu.select()
+        del menu
+        if selection == 'y':
             print("returning to lobby")
-        elif inp == 'n':
-            print(inp)
+        else:
             info = client.client.publish("ledGames/users/status", f'{client.username}, 0')
             info.wait_for_publish()
             #time.sleep(2)
             break
-        else:
-            print("please type y or n")
-            inp = input("Would you like to play again? y/n")
-            continue
 
     return
 
