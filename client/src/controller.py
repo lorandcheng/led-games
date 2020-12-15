@@ -102,7 +102,6 @@ class Menu(Listener):
                 else:
                     return self.options[self.index]
 
-
 if __name__ == '__main__':
     """
     DEMO LISTENER CODE
@@ -136,3 +135,4 @@ if __name__ == '__main__':
     menu = Menu(prompt, options, indexing=True)
     index, selection = menu.select()
     print("You chose:", selection, "at index", index)
+    del menu
