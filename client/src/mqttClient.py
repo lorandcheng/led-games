@@ -61,8 +61,8 @@ import inputs
 import outputs
 
 class mqttClient:
-    def __init__(self):
-        self.username = ""
+    def __init__(self, username):
+        self.username = username
         self.verified = False
         self.lobby = []
         self.opponent = ""

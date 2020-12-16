@@ -28,18 +28,11 @@ def selectGame(games):
 def gameInit(): 
     return selectGame(GAMES)
 
-def userInit():
-    generator = UsernameGenerator(OUTPUT)
-    return generator.getUsername()
-
 def main():
-    USERNAME = userInit()
-    client = mqttClient()
-    client.inputName(client.client)
-    while not client.verified:
-        pass
-    OUTPUT.show("Username verified")
-    time.sleep(1)
+    generator = UsernameGenerator(OUTPUT)
+    USERNAME = generator.getUsername()
+    
+    client = mqttClient(USERNAME)
 
     while True:
         client.reset()
