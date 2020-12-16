@@ -41,14 +41,14 @@ class Listener:
 
 import string
 import time
-from outputs import terminalDisplay
+from outputs import TerminalDisplay
 class Reader(Listener):
-    def __init__(self, prompt):
+    def __init__(self, output, prompt=""):
         self.prompt = prompt
         self.str = ""
         self.chars = [" ", "_"]
         self.chars += list(string.ascii_lowercase+string.digits)
-        self.output = terminalDisplay()
+        self.output = output
         super().__init__(len(self.chars))
     
     def getStr(self):
@@ -73,8 +73,8 @@ class Reader(Listener):
                 self.selected = 0
 
 class Menu(Listener):
-    def __init__(self, prompt, options, indexing=False):
-        self.output = terminalDisplay()
+    def __init__(self, prompt, options, output, indexing=False):
+        self.output = output
         self.prompt = prompt
         self.options = options
         self.indexing = indexing
@@ -103,6 +103,9 @@ class Menu(Listener):
                     return self.options[self.index]
 
 if __name__ == '__main__':
+    from outputs import TerminalDisplay
+
+    OUTPUT = TerminalDisplay()
     """
     DEMO LISTENER CODE
     """
@@ -121,18 +124,18 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    # prompt = "Enter a name"
-    # reader = Reader(prompt)
-    # print("Starting reader")
-    # reader.readStr()
-    # print("You entered:", reader.getStr())
+    prompt = "Enter a name"
+    reader = Reader(prompt, OUTPUT)
+    print("Starting reader")
+    reader.readStr()
+    print("You entered:", reader.getStr())
 
     """
     DEMO MENU CODE
     """
-    prompt = "Choose an option"
-    options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
-    menu = Menu(prompt, options, indexing=True)
-    index, selection = menu.select()
-    print("You chose:", selection, "at index", index)
-    del menu
+    # prompt = "Choose an option"
+    # options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
+    # menu = Menu(prompt, options, OUTPUT, indexing=True)
+    # index, selection = menu.select()
+    # print("You chose:", selection, "at index", index)
+    # del menu

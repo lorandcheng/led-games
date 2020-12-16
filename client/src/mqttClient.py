@@ -78,7 +78,7 @@ class mqttClient:
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
-        self.output = outputs.terminalDisplay()
+        self.output = outputs.TerminalDisplay()
 
     def reset(self):
         self.opponent = ""
@@ -102,7 +102,7 @@ class mqttClient:
         return parsedMessage
 
     def inputName(self, client):
-        reader = inputs.Reader("Enter a username:")
+        reader = inputs.Reader(self.output, "Enter a username:")
         self.username = reader.readStr()
         client.publish("ledGames/users/status", f'{self.username}, 1')
 
@@ -137,7 +137,7 @@ class mqttClient:
         elif code == "1":
             prompt = f"Accept match request from {user}?"
             options = ["y", "n"]
-            menu = inputs.Menu(prompt, options)
+            menu = inputs.Menu(prompt, options, self.output)
             selection = menu.select()
             if selection == "y":
                 self.output.show("Confirming request")
@@ -183,7 +183,7 @@ class mqttClient:
 
         if len(players) == 0:
             self.output.show("Waiting for opponents")
-            while len(self.lobby) == 1:
+            while len(self.findOpponents(self.lobby)) == 0:
                 pass
             self.selectOpponent(self.findOpponents(self.lobby))
         # initialize listener

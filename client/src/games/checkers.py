@@ -22,7 +22,7 @@ class Checkers:
             self.blackCounter: score of black player
         """
         self.name = 'Checkers'
-        self.output = outputs.terminalDisplay()
+        self.output = outputs.TerminalDisplay()
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
         # self.BOARD = [
         #     [ 0, -1,  0, -1,  0, -1,  0, -1], 

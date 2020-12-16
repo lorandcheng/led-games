@@ -1,32 +1,39 @@
 # Standard library imports
 import time
-import os
 # Third party imports
 
 # Module imports
 from games import battleship, checkers
 from mqttClient import mqttClient
+from mqtt import UsernameGenerator
 import inputs
 import outputs
 
-OUTPUT = outputs.terminalDisplay()
+OUTPUT = outputs.TerminalDisplay()
 
 GAMES = [
     checkers.Checkers(),
     battleship.Battleship()
 ]
 
-def selectGame():
+USERNAME = ""
+
+def selectGame(games):
     prompt = "Choose a game:"
-    options = [game.name for game in GAMES]
-    menu = inputs.Menu(prompt, options, indexing=True)
+    options = [game.name for game in games]
+    menu = inputs.Menu(prompt, options, OUTPUT, indexing=True)
     index,_ = menu.select()
-    return GAMES[index]
+    return games[index]
         
 def gameInit(): 
-    return selectGame()
+    return selectGame(GAMES)
+
+def userInit():
+    generator = UsernameGenerator(OUTPUT)
+    return generator.getUsername()
 
 def main():
+    USERNAME = userInit()
     client = mqttClient()
     client.inputName(client.client)
     while not client.verified:
@@ -36,7 +43,7 @@ def main():
 
     while True:
         client.reset()
-        game = selectGame()
+        game = selectGame(GAMES)
         game.__init__()
         #enter match-making lobby
         client.joinLobby(client.client, game)
@@ -96,7 +103,7 @@ def main():
         client.lobby = []
         prompt = "Would you like to play again? y/n"
         options = ["y", "n"]
-        menu = inputs.Menu(prompt, options)
+        menu = inputs.Menu(prompt, options, OUTPUT)
         selection = menu.select()
         del menu
         if selection == 'y':
@@ -106,8 +113,6 @@ def main():
             info.wait_for_publish()
             #time.sleep(2)
             break
-
-    return
 
 if __name__ == '__main__':
     main()

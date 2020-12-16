@@ -1,6 +1,6 @@
 import os
 
-class terminalDisplay:
+class TerminalDisplay:
     def __init__(self):
         pass
 
@@ -10,7 +10,7 @@ class terminalDisplay:
     def show(self, info):
         print(info)
 
-class ledDisplay:
+class LedDisplay:
     def __init__(self):
         pass
 
