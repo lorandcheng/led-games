@@ -105,15 +105,19 @@ class Lobby(mqttClient):
             if self.selected == 0:
                 menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
                 selection = menu.select()
-
+                print("selection:", selection)
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1")
                     self.selected = self.requester
+                    print("accepting opponent")
+                    time.sleep(2)
                     break
                     
                 # if the request is denied, send deny message and return to choosing an opponent
                 else:
+                    print("denying opponent", self.requester)
+                    time.sleep(2)
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, -1")
                     self.requester = ""
 
