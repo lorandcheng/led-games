@@ -95,6 +95,7 @@ class Menu(Listener):
                 self.output.show('  ' + self.options[i])
 
     def select(self):
+        self.exit = False
         self._printOptions()
         oldIndex = self.index
         while True:
@@ -111,6 +112,9 @@ class Menu(Listener):
                         return self.options[self.index]
                 except:
                     self.output.show("List was updated since your selection")
+
+    def exitMenu(self):
+        self.exit = True
 
 if __name__ == '__main__':
     from outputs import TerminalDisplay

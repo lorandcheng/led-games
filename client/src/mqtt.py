@@ -41,10 +41,10 @@ class UsernameGenerator(mqttMessenger):
             reader = Reader(self.output, prompt)
             # get username input
             self.username = reader.readStr()
-            self.verified = 0
             # send username to be verified
             self.client.publish("ledGames/users/status", f'{self.username}, 1')
             # wait for a response
+            self.verified = 0
             while self.verified == 0:
                 pass
                 # usernameCallback will either set self.verified to 1 or -1
@@ -70,36 +70,96 @@ class Lobby(mqttMessenger):
         self.output = output
         self.username = username
         self.game = game
-        self.opponent = ""
-        self.choseOpponent = 0 # -1 rejected, 0 waiting, 1 confirmed/accepted
-        self.waiting = False
+        self.selected = "" # name of user that I selected
+        self.requester = "" # name of user that sent me a request
+        self.opponentResponse = 0 # -1 rejected, 0 waiting, 1 accepted
+        
 
         self.client.subscribe("ledGames/lobby")
         self.client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.client.subscribe(f"ledGames/{self.username}/requests")
         self.client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
 
-        prompt = "Choose an opponent:"
-        self.menu = Menu(self.output, prompt)
+        self.menu = Menu(self.output, "Choose an opponent:")
 
         
     def lobby(self):
-        self.client.publish("ledGames/lobby", f"{self.username}, {self.game}, 1")
+        # join lobby
+        self.client.publish("ledGames/lobby/status", f"{self.username}, {self.game}, 1")
+
+        # wait until lobby is received and other players are present
         while self.menu.options == []:
             pass
-        while self.choseOpponent == 0:
-            self.selectOpponent()
-            self.client.publish(f"ledGames/{self.opponent}/requests", f"{self.username}, 1")
-            self.waiting = True
-            while self.waiting:
-                pass
+
+        # choose an opponent
+        while True:
+            self.selected = ""
+            self.selected = self.menu.select()
+
+            # if menu was exited because an opponent sent me a request, process the request
+            if self.selected == 0:
+                menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
+                selection = menu.select()
+
+                # if the request is accepted, send accept message and finalize opponent
+                if selection == "y":
+                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1")
+                    self.selected = self.requester
+                    break
+                    
+                # if the request is denied, send deny message and return to choosing an opponent
+                else:
+                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, -1")
+                    self.requester = ""
+
+            # otherwise, send a request to the selected opponent
+            else:
+                self.client.publish(f"ledGames/{self.selected}/requests", f"{self.username}, 0") 
+                self.opponentResponse = 0
+
+                # wait for response
+                while self.opponentResponse == 0:
+                    pass
+
+                # if opponent accepted, finalize
+                if self.opponentResponse == 1:
+                    break
+
+                # if opponent rejected, return to choosing an opponent
+                else:
+                    pass
+        
+        # leave lobby
+        self.client.publish(f"ledGames/lobby/status", f"{self.username}, , 0")
+
+        return self.selected
+
+
+
 
     def myCallback(self, client, useradata, msg):
-        pass
-            
+
+        opponent, code = parseMessage(msg)
+        code = int(code)
+
+        if code == 0:
+            # exit selection menu if opponent sent me a request
+            self.requester = opponent
+            self.menu.exitMenu()
+        else:
+            # -1 if opponent rejected, 1 if opponent confirmed my request
+            self.opponentResponse = code 
+        
+
     
         
     def lobbyCallback(self, client, userdata, msg):
+        """
+        Topic: "ledGames/lobby"
+
+        Summary: updates the list of potential opponents whenever a new user joins the lobby
+        """
+
         players = parseMessage(msg)
         opponents = []
         for player in players:
@@ -107,9 +167,7 @@ class Lobby(mqttMessenger):
                 if not player[0] == self.username:
                     opponents.append(player[0])
         self.menu.updateOptions(opponents)
-
-    def selectOpponent(self):
-        self.opponent = self.menu.select()
+        
 
 
 class Game(mqttMessenger):
