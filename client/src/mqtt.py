@@ -3,7 +3,7 @@ import time
 import paho.mqtt.client as mqtt
 
 from outputs import TerminalDisplay
-from parser import parseMessage
+from parsersM import parseMessage
 from inputs import Reader, Menu
 
 class mqttClient:
