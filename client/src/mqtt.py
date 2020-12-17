@@ -64,6 +64,66 @@ class UsernameGenerator(mqttMessenger):
             else:
                 self.verified = -1
 
+class Lobby(mqttMessenger):
+    def __init__(self, username, game, output):
+        super().__init__()
+        self.output = output
+        self.username = username
+        self.game = game
+        self.opponent = ""
+        self.choseOpponent = 0 # -1 rejected, 0 waiting, 1 confirmed/accepted
+        self.waiting = False
+
+        self.client.subscribe("ledGames/lobby")
+        self.client.message_callback_add("ledGames/lobby", self.lobbyCallback)
+        self.client.subscribe(f"ledGames/{self.username}/requests")
+        self.client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
+
+        prompt = "Choose an opponent:"
+        options = []
+        self.menu = Menu(prompt, options, self.output)
+
+        
+    def lobby(self):
+        self.client.publish("ledGames/lobby", f"{self.username}, {self.game}, 1")
+        while lobbyList = []:
+            pass
+        while self.choseOpponent = 0:
+            self.selectOpponent()
+            self.client.publish(f"ledGames/{self.opponent}/requests", f"{self.username}, 1"
+            self.waiting = True
+            while self.waiting:
+                pass
+
+    def myCallback(self, client, useradata, msg):
+        
+            
+    
+        
+    def lobbyCallback(self, client, userdata, msg):
+        players = parseMessage(msg)
+        opponents = []
+        for player in players:
+            if player[1] == self.game:
+                if not player[0] == self.username:
+                    opponents.append(player[0])
+        self.menu.updateOptions(opponents)
+
+    def selectOpponent(self):
+        self.opponent = self.menu.select()
+
+
+class Game(mqttMessenger):
+    def __init__(self, game, username, opponent):
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     """
     DEMO USERNAME_GENERATOR CODE

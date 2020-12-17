@@ -78,7 +78,12 @@ class Menu(Listener):
         self.prompt = prompt
         self.options = options
         self.indexing = indexing
+        self.exit = False
         super().__init__(len(options))
+
+    def updateOptions(self, newOptions):
+        self.options = newOptions
+        self.length = len(newOptions)
 
     def _printOptions(self):
         self.output.clear()
@@ -93,6 +98,8 @@ class Menu(Listener):
         self._printOptions()
         oldIndex = self.index
         while True:
+            if self.exit:
+                return 0
             if oldIndex != self.index:
                 self._printOptions()
                 oldIndex = self.index
@@ -133,9 +140,9 @@ if __name__ == '__main__':
     """
     DEMO MENU CODE
     """
-    # prompt = "Choose an option"
-    # options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
-    # menu = Menu(prompt, options, OUTPUT, indexing=True)
-    # index, selection = menu.select()
-    # print("You chose:", selection, "at index", index)
-    # del menu
+    prompt = "Choose an option"
+    options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
+    menu = Menu(prompt, options, OUTPUT, indexing=True)
+    index, selection = menu.select()
+    print("You chose:", selection, "at index", index)
+    del menu
