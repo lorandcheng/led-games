@@ -17,7 +17,7 @@ class Listener:
         self.len = length
 
     def onPress(self, key):
-        if not self.selected:
+        if not self.selected and self.len != 0:
             try:
                 k = key.char # single-char keys
             except: 
@@ -104,10 +104,13 @@ class Menu(Listener):
                 self._printOptions()
                 oldIndex = self.index
             if self.selected:
-                if self.indexing:
-                    return (self.index, self.options[self.index])
-                else:
-                    return self.options[self.index]
+                try:
+                    if self.indexing:
+                        return (self.index, self.options[self.index])
+                    else:
+                        return self.options[self.index]
+                except:
+                    self.output.show("List was updated since your selection")
 
 if __name__ == '__main__':
     from outputs import TerminalDisplay
@@ -131,11 +134,11 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    prompt = "Enter a name"
-    reader = Reader(prompt, OUTPUT)
-    print("Starting reader")
-    reader.readStr()
-    print("You entered:", reader.getStr())
+    # prompt = "Enter a name"
+    # reader = Reader(prompt, OUTPUT)
+    # print("Starting reader")
+    # reader.readStr()
+    # print("You entered:", reader.getStr())
 
     """
     DEMO MENU CODE
