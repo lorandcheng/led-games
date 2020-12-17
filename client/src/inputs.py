@@ -1,4 +1,10 @@
+import string
+import time
+
 from pynput import keyboard
+
+from outputs import TerminalDisplay
+
 class Listener:
     """
     Class usage:
@@ -38,10 +44,6 @@ class Listener:
 
     def onRelease(self, key):
         pass
-
-import string
-import time
-from outputs import TerminalDisplay
 class Reader(Listener):
     def __init__(self, output, prompt=""):
         self.prompt = prompt
@@ -71,6 +73,9 @@ class Reader(Listener):
                 self.str += self.chars[self.index]
                 self.index = 0
                 self.selected = 0
+    
+    def __del__(self):
+        self.key.stop()
 
 class Menu(Listener):
     def __init__(self, output, prompt="", options=[], indexing=False):
@@ -83,7 +88,7 @@ class Menu(Listener):
 
     def updateOptions(self, newOptions):
         self.options = newOptions
-        self.length = len(newOptions)
+        self.len = len(newOptions)
 
     def _printOptions(self):
         self.output.clear()
@@ -115,6 +120,9 @@ class Menu(Listener):
 
     def exitMenu(self):
         self.exit = True
+
+    def __del__(self):
+        self.key.stop()
 
 if __name__ == '__main__':
     from outputs import TerminalDisplay

@@ -52,7 +52,8 @@ class UsernameGenerator(mqttClient):
                 # if self.verified == -1, the outer while loop repeats
             if self.verified == -1:
                 self.output.show("Username taken")
-                time.sleep(1)
+                time.sleep(2)
+
         return self.username
 
     def usernameCallback(self, client, userdata, msg):
@@ -63,6 +64,9 @@ class UsernameGenerator(mqttClient):
                 self.verified = 1
             else:
                 self.verified = -1
+
+    def __del__(self):
+        self.client.disconnect()
 
 class Lobby(mqttClient):
     def __init__(self, username, game, output):
@@ -95,7 +99,8 @@ class Lobby(mqttClient):
         while True:
             self.selected = ""
             self.selected = self.menu.select()
-
+            print("selected:", self.selected)
+            time.sleep(2)
             # if menu was exited because an opponent sent me a request, process the request
             if self.selected == 0:
                 menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
@@ -166,7 +171,8 @@ class Lobby(mqttClient):
                     opponents.append(player[0])
         self.menu.updateOptions(opponents)
         
-
+    def __del__(self):
+        self.client.disconnect()
 
 class Game(mqttClient):
     def __init__(self, game, username, opponent):
@@ -180,19 +186,23 @@ class Game(mqttClient):
 
 
 if __name__ == "__main__":
+    OUTPUT = TerminalDisplay()
+
     """
     DEMO USERNAME_GENERATOR CODE
     """
-    OUTPUT = TerminalDisplay()
     usernameGenerator = UsernameGenerator(OUTPUT)
-    username = usernameGenerator.getUsername()
-    print(f"You chose the username: {username}")
-    time.sleep(3)
+    USERNAME = usernameGenerator.getUsername()
+    print(f"You chose the username: {USERNAME}")
+    time.sleep(2)
 
     """
-    DEMO LOBBY CODE
+    DEMO LOBBY CODE (do not comment out previous demo code)
     """
-    
+    GAME = "Checkers"
+    lobby = Lobby(USERNAME, GAME, OUTPUT)
+    lobby.lobby()
+
 
     """
     DEMO GAME CODE
