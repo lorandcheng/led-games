@@ -6,7 +6,7 @@ from outputs import TerminalDisplay
 from parser import parseMessage
 from inputs import Reader, Menu
 
-class mqttMessenger:
+class mqttClient:
     def __init__(self):
         self.client = mqtt.Client()
         self.client.on_connect = self.onConnect
@@ -24,7 +24,7 @@ class mqttMessenger:
     def onDisconnect(self, client, useradata, rc):
         print("disconnecting")
 
-class UsernameGenerator(mqttMessenger):
+class UsernameGenerator(mqttClient):
     def __init__(self, Output):
         super().__init__()
         self.output = Output
@@ -64,7 +64,7 @@ class UsernameGenerator(mqttMessenger):
             else:
                 self.verified = -1
 
-class Lobby(mqttMessenger):
+class Lobby(mqttClient):
     def __init__(self, username, game, output):
         super().__init__()
         self.output = output
@@ -73,7 +73,6 @@ class Lobby(mqttMessenger):
         self.selected = "" # name of user that I selected
         self.requester = "" # name of user that sent me a request
         self.opponentResponse = 0 # -1 rejected, 0 waiting, 1 accepted
-        
 
         self.client.subscribe("ledGames/lobby")
         self.client.message_callback_add("ledGames/lobby", self.lobbyCallback)
@@ -81,6 +80,7 @@ class Lobby(mqttMessenger):
         self.client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
 
         self.menu = Menu(self.output, "Choose an opponent:")
+
 
         
     def lobby(self):
@@ -136,7 +136,6 @@ class Lobby(mqttMessenger):
 
 
 
-
     def myCallback(self, client, useradata, msg):
 
         opponent, code = parseMessage(msg)
@@ -151,8 +150,7 @@ class Lobby(mqttMessenger):
             self.opponentResponse = code 
         
 
-    
-        
+
     def lobbyCallback(self, client, userdata, msg):
         """
         Topic: "ledGames/lobby"
@@ -170,7 +168,7 @@ class Lobby(mqttMessenger):
         
 
 
-class Game(mqttMessenger):
+class Game(mqttClient):
     def __init__(self, game, username, opponent):
         pass
 
@@ -190,3 +188,12 @@ if __name__ == "__main__":
     username = usernameGenerator.getUsername()
     print(f"You chose the username: {username}")
     time.sleep(3)
+
+    """
+    DEMO LOBBY CODE
+    """
+    
+
+    """
+    DEMO GAME CODE
+    """
