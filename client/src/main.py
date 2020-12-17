@@ -21,7 +21,7 @@ USERNAME = ""
 def selectGame(games):
     prompt = "Choose a game:"
     options = [game.name for game in games]
-    menu = inputs.Menu(prompt, options, OUTPUT, indexing=True)
+    menu = inputs.Menu(OUTPUT, prompt, options, indexing=True)
     index,_ = menu.select()
     return games[index]
         
@@ -96,7 +96,7 @@ def main():
         client.lobby = []
         prompt = "Would you like to play again? y/n"
         options = ["y", "n"]
-        menu = inputs.Menu(prompt, options, OUTPUT)
+        menu = inputs.Menu(OUTPUT, prompt, options)
         selection = menu.select()
         del menu
         if selection == 'y':

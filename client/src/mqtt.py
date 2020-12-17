@@ -80,8 +80,7 @@ class Lobby(mqttMessenger):
         self.client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
 
         prompt = "Choose an opponent:"
-        options = []
-        self.menu = Menu(prompt, options, self.output)
+        self.menu = Menu(self.output, prompt)
 
         
     def lobby(self):

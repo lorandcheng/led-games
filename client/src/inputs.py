@@ -73,7 +73,7 @@ class Reader(Listener):
                 self.selected = 0
 
 class Menu(Listener):
-    def __init__(self, prompt, options, output, indexing=False):
+    def __init__(self, output, prompt="", options=[], indexing=False):
         self.output = output
         self.prompt = prompt
         self.options = options
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     """
     prompt = "Choose an option"
     options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
-    menu = Menu(prompt, options, OUTPUT, indexing=True)
+    menu = Menu(OUTPUT, prompt, options, indexing=True)
     index, selection = menu.select()
     print("You chose:", selection, "at index", index)
     del menu

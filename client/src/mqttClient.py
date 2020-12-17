@@ -137,7 +137,7 @@ class mqttClient:
         elif code == "1":
             prompt = f"Accept match request from {user}?"
             options = ["y", "n"]
-            menu = inputs.Menu(prompt, options, self.output)
+            menu = inputs.Menu(self.output, prompt, options)
             selection = menu.select()
             if selection == "y":
                 self.output.show("Confirming request")
