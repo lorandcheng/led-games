@@ -100,6 +100,7 @@ class Menu(Listener):
                 self.output.show('  ' + self.options[i])
 
     def select(self):
+        self.selected = 0
         self.exit = False
         self._printOptions()
         oldIndex = self.index

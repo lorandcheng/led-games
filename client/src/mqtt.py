@@ -99,8 +99,8 @@ class Lobby(mqttClient):
         while True:
             self.selected = ""
             self.selected = self.menu.select()
-            print("selected:", self.selected)
-            time.sleep(2)
+            #print("selected:", self.selected)
+            #time.sleep(2)
             # if menu was exited because an opponent sent me a request, process the request
             if self.selected == 0:
                 menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
@@ -121,11 +121,12 @@ class Lobby(mqttClient):
             else:
                 self.client.publish(f"ledGames/{self.selected}/requests", f"{self.username}, 0") 
                 self.opponentResponse = 0
-
+                print('waiting for response')
                 # wait for response
                 while self.opponentResponse == 0:
                     pass
-
+                print('got response')
+                time.sleep(3)
                 # if opponent accepted, finalize
                 if self.opponentResponse == 1:
                     break
@@ -145,14 +146,15 @@ class Lobby(mqttClient):
 
         opponent, code = parseMessage(msg)
         code = int(code)
-
+        print('callback')
         if code == 0:
             # exit selection menu if opponent sent me a request
             self.requester = opponent
             self.menu.exitMenu()
         else:
             # -1 if opponent rejected, 1 if opponent confirmed my request
-            self.opponentResponse = code 
+            self.opponentResponse = code
+            print("recieved respones "+str(code)) 
         
 
 
@@ -201,7 +203,8 @@ if __name__ == "__main__":
     """
     GAME = "Checkers"
     lobby = Lobby(USERNAME, GAME, OUTPUT)
-    lobby.lobby()
+    opponent = lobby.lobby()
+    print(opponent)
 
 
     """
