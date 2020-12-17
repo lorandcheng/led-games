@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 
 from outputs import TerminalDisplay
 from parser import parseMessage
-from inputs import Reader
+from inputs import Reader, Menu
 
 class mqttMessenger:
     def __init__(self):
@@ -86,17 +86,17 @@ class Lobby(mqttMessenger):
         
     def lobby(self):
         self.client.publish("ledGames/lobby", f"{self.username}, {self.game}, 1")
-        while lobbyList = []:
+        while self.menu.options == []:
             pass
-        while self.choseOpponent = 0:
+        while self.choseOpponent == 0:
             self.selectOpponent()
-            self.client.publish(f"ledGames/{self.opponent}/requests", f"{self.username}, 1"
+            self.client.publish(f"ledGames/{self.opponent}/requests", f"{self.username}, 1")
             self.waiting = True
             while self.waiting:
                 pass
 
     def myCallback(self, client, useradata, msg):
-        
+        pass
             
     
         
@@ -115,7 +115,7 @@ class Lobby(mqttMessenger):
 
 class Game(mqttMessenger):
     def __init__(self, game, username, opponent):
-
+        pass
 
 
 
