@@ -2,9 +2,17 @@ import time
 
 import paho.mqtt.client as mqtt
 
+from inputs import Reader, Menu
+from games import battleship, checkers
 from outputs import TerminalDisplay
 from parsersM import parseMessage
-from inputs import Reader, Menu
+
+def selectGame(games):
+    prompt = "Choose a game:"
+    options = [game.name for game in games]
+    menu = Menu(OUTPUT, prompt, options, indexing=True)
+    index,_ = menu.select()
+    return games[index]
 
 class mqttClient:
     def __init__(self):
@@ -25,9 +33,9 @@ class mqttClient:
         print("disconnecting")
 
 class UsernameGenerator(mqttClient):
-    def __init__(self, Output):
+    def __init__(self, output):
         super().__init__()
-        self.output = Output
+        self.output = output
         self.username = ""
         self.verified = 0 # -1 rejected, 0 unverified, 1 verified
         self.client.subscribe("ledGames/users")
@@ -179,22 +187,50 @@ class Lobby(mqttClient):
         self.client.disconnect()
 
 class Game(mqttClient):
-    def __init__(self, game, username, opponent):
+    def __init__(self, game, username, opponent, output):
+        self.game = game
+        self.username = username
+        self.opponent = opponent
+        self.output = output
+
+        self.client.subscribe(f"ledGames/{self.username}/play")
+        self.client.message_callback_add(f"ledGames/{self.username}/play", self.receiveTurn)
+
+    def play(self):
+        """
+        Summary: main gameplay
+        """
         pass
 
+    def sendTurn(self, data):
+        """
+        Summary: sends game data to opponent after each turn
+        """
+        pass
 
-
-
+    def receiveTurn(self, client, userdata, msg):
+        """
+        Summary: callback to receive game data from opponent
+        """
+        pass
 
 
 
 
 if __name__ == "__main__":
     OUTPUT = TerminalDisplay()
+    GAMES = [
+        checkers.Checkers(),
+        battleship.Battleship()
+    ]
+    USERNAME = ""
+
+    game = selectGame(GAMES)
 
     """
     DEMO USERNAME_GENERATOR CODE
     """
+
     usernameGenerator = UsernameGenerator(OUTPUT)
     USERNAME = usernameGenerator.getUsername()
     print(f"You chose the username: {USERNAME}")
@@ -203,11 +239,15 @@ if __name__ == "__main__":
     """
     DEMO LOBBY CODE (do not comment out previous demo code)
     """
-    GAME = "Checkers"
-    lobby = Lobby(USERNAME, GAME, OUTPUT)
-    lobby.lobby()
 
+    lobby = Lobby(USERNAME, game.name, OUTPUT)
+    opponent = lobby.lobby()
+    print(f"You started a match with {opponent}")
+    time.sleep(2)
 
     """
-    DEMO GAME CODE
+    DEMO GAME CODE (do not comment out previous demo code)
     """
+
+    gameplay = Game(game, USERNAME, opponent, OUTPUT)
+    gameplay.play()
