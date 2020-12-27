@@ -2,10 +2,11 @@ import time
 
 import paho.mqtt.client as mqtt
 
-from inputs import Reader, Menu
 from games import battleship, checkers
+from inputs import Menu, Reader
 from outputs import TerminalDisplay
 from parsersM import parseMessage
+
 
 def selectGame(games):
     prompt = "Choose a game:"

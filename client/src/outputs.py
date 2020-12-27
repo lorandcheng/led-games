@@ -28,7 +28,7 @@ class LedDisplay:
         options.parallel = 1
         options.gpio_slowdown = 5
         options.hardware_mapping = 'adafruit-hat' 
-        
+
         # Configuration for the matrix
         options = RGBMatrixOptions()
         options.rows = 32
@@ -45,3 +45,8 @@ class LedDisplay:
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/7x13.bdf")
     
+    def clear(self):
+        self.matrix.Clear()
+
+    def show(self, info):
+        pass
