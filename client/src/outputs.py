@@ -1,12 +1,12 @@
 import os
 import sys
 
-# Add paths to matrix python modules
-sys.path.append('rpi-rgb-led-matrix/bindings/python/rgbmatrix')
-sys.path.append('rpi-rgb-led-matrix/bindings/python/samples')
+# # Add paths to matrix python modules
+# sys.path.append('rpi-rgb-led-matrix/bindings/python/rgbmatrix')
+# sys.path.append('rpi-rgb-led-matrix/bindings/python/samples')
 
-from samplebase import SampleBase
-from rgbmatrix import graphics, RGBMatrixOptions, RGBMatrix
+# from samplebase import SampleBase
+# from rgbmatrix import graphics, RGBMatrixOptions, RGBMatrix
 
 class TerminalDisplay:
     def __init__(self):
