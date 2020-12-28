@@ -212,20 +212,35 @@ class Game(mqttClient):
         """
         Summary: main gameplay
         """
-        
+        # play first turn if you start
+        if self.game.color:
+            data = self.game.playTurn()
+            self.sendTurn(data)
+
+        while not self.game.done:
+            # wait for opponent to play and receive game info (in callback)
+            while self.turn = False:
+                pass
+            
+            # play your turn
+            data = self.game.playTurn()
+            # send game info
+            self.sendTurn(data)
+            # loop again
 
 
     def sendTurn(self, data):
         """
         Summary: sends game data to opponent after each turn
         """
-        pass
+        self.client.publish(f"ledGames/{self.opponent}/play", data)
 
     def receiveTurn(self, client, userdata, msg):
         """
         Summary: callback to receive game data from opponent
         """
-        pass
+        self.game.parseData(msg)
+        self.turn = True
 
 
 
