@@ -110,13 +110,10 @@ class Lobby(mqttClient):
         while True:
             self.selected = ""
             self.selected = self.menu.select()
-            print("selected:", self.selected)
-            time.sleep(2)
             # if menu was exited because an opponent sent me a request, process the request
             if self.selected == 0:
                 menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
                 selection = menu.select()
-                print("selection:", selection)
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
                     # choose a random color and map to 1 and -1
@@ -202,7 +199,7 @@ class Game(mqttClient):
         self.game = game
         self.username = username
         self.opponent = opponent
-        self.game.color = color
+        self.game.color = int(color)
         self.output = output
         self.turn = False
 
