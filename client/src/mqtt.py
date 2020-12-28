@@ -1,3 +1,4 @@
+import atexit
 import random
 import time
 
@@ -252,9 +253,13 @@ class Game(mqttClient):
         self.turn = True
 
 
-
+def leave(username):
+    client = mqtt.Client()
+    client.publish("ledGames/users/status", f"{username}, 0")
 
 if __name__ == "__main__":
+    
+
     OUTPUT = TerminalDisplay()
     GAMES = [
         checkers.Checkers(),
@@ -273,19 +278,23 @@ if __name__ == "__main__":
     print(f"You chose the username: {USERNAME}")
     time.sleep(2)
 
-    """
-    DEMO LOBBY CODE (do not comment out previous demo code)
-    """
+    atexit.register(leave, USERNAME)
 
-    lobby = Lobby(USERNAME, game.name, OUTPUT)
-    opponent, color = lobby.lobby()
-    print(f"You started a match with {opponent}")
-    print(f"Your color is {color}")
-    time.sleep(2)
+    while True:
 
-    """
-    DEMO GAME CODE (do not comment out previous demo code)
-    """
+        """
+        DEMO LOBBY CODE (do not comment out previous demo code)
+        """
 
-    gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
-    gameplay.play()
+        lobby = Lobby(USERNAME, game.name, OUTPUT)
+        opponent, color = lobby.lobby()
+        print(f"You started a match with {opponent}")
+        print(f"Your color is {color}")
+        time.sleep(2)
+
+        """
+        DEMO GAME CODE (do not comment out previous demo code)
+        """
+
+        gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
+        gameplay.play()
