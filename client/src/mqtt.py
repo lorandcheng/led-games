@@ -213,7 +213,7 @@ class Game(mqttClient):
         """
 
         # play first turn if you start
-        if self.game.color:
+        if self.game.color == 1:
             data = self.game.playTurn()
             self.sendTurn(data)
 
