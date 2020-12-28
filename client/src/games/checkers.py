@@ -47,7 +47,6 @@ class Checkers:
         self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
-        self.busy = 0
         self.done = 0 # TODO: this could also double as a result of the game, 1 = win, -1 = loss
 
     def isOnBoard(self, row, col):
@@ -332,6 +331,7 @@ class Checkers:
 
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = 1
+            self.__init__()
         self.output.show("ending turn")
 
         return self.BOARD
