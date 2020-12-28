@@ -295,6 +295,14 @@ class Checkers:
                 elif self.BOARD[r][c] < 0:
                     self.redCounter += 1
 
+    def winner(self):
+        if self.color == 1 and self.blackCounter != 0:
+            return True
+        elif self.color == -1 and self.redCounter != 0:
+            return True
+        else:
+            return False
+
     def playTurn(self):
         """
         Summary: play a turn of checkers

@@ -231,6 +231,10 @@ class Game(mqttClient):
             self.sendTurn(data)
             self.turn = False
         print("game over")
+        if self.game.winner():
+            print("you won")
+        else:
+            print("you lost")
         time.sleep(3)
 
 
