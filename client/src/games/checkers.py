@@ -290,9 +290,9 @@ class Checkers:
         self.blackCounter = 0
         for r in range(8):
             for c in range(8):
-                if self.BOARD[r][c] == 1:
+                if self.BOARD[r][c] > 0:
                     self.blackCounter += 1
-                elif self.BOARD[r][c] == -1:
+                elif self.BOARD[r][c] < 0:
                     self.redCounter += 1
 
     def playTurn(self):

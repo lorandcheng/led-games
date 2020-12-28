@@ -216,6 +216,8 @@ class Game(mqttClient):
         if self.game.color == 1:
             data = self.game.playTurn()
             self.sendTurn(data)
+        else:
+            self.game.printBoard(self.game.BOARD)
 
         while not self.game.done:
             # wait for opponent to play and receive game info (in callback)
