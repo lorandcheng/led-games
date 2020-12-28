@@ -24,16 +24,16 @@ class Checkers:
         self.name = 'Checkers'
         self.output = outputs.TerminalDisplay()
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
-        self.BOARD = [
-            [ 0, -1,  0, -1,  0, -1,  0, -1], 
-            [-1,  0, -1,  0, -1,  0, -1,  0], 
-            [ 0, -1,  0, -1,  0, -1,  0, -1], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
-            [ 1,  0,  1,  0,  1,  0,  1,  0], 
-            [ 0,  1,  0,  1,  0,  1,  0,  1], 
-            [ 1,  0,  1,  0,  1,  0,  1,  0], 
-        ]
+        # self.BOARD = [
+        #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
+        #     [-1,  0, -1,  0, -1,  0, -1,  0], 
+        #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
+        #     [ 0,  1,  0,  1,  0,  1,  0,  1], 
+        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
+        # ]
         self.BOARD = [
             [-1,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
@@ -47,7 +47,8 @@ class Checkers:
         self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
-        self.done = 0 # TODO: this could also double as a result of the game, 1 = win, -1 = loss
+        self.countPieces()
+        self.done = 0
 
     def isOnBoard(self, row, col):
         if not(0 <= row <= 7):
