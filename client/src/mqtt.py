@@ -206,6 +206,7 @@ class Game(mqttClient):
         self.output = output
         self.turn = False
 
+        super().__init__()
         self.client.subscribe(f"ledGames/{self.username}/play")
         self.client.message_callback_add(f"ledGames/{self.username}/play", self.receiveTurn)
 
@@ -213,6 +214,7 @@ class Game(mqttClient):
         """
         Summary: main gameplay
         """
+
         # play first turn if you start
         if self.game.color:
             data = self.game.playTurn()
@@ -225,7 +227,7 @@ class Game(mqttClient):
 
             # play your turn
             data = self.game.playTurn()
-            
+
             # send game info
             self.sendTurn(data)
             self.turn = False
