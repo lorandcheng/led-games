@@ -234,7 +234,7 @@ class Game(mqttClient):
         """
         Summary: sends game data to opponent after each turn
         """
-        self.client.publish(f"ledGames/{self.opponent}/play", data)
+        self.client.publish(f"ledGames/{self.opponent}/play", str(data))
 
     def receiveTurn(self, client, userdata, msg):
         """
