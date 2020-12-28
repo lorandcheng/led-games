@@ -204,6 +204,7 @@ class Game(mqttClient):
         self.opponent = opponent
         self.game.color = color
         self.output = output
+        self.turn = False
 
         self.client.subscribe(f"ledGames/{self.username}/play")
         self.client.message_callback_add(f"ledGames/{self.username}/play", self.receiveTurn)
@@ -219,14 +220,15 @@ class Game(mqttClient):
 
         while not self.game.done:
             # wait for opponent to play and receive game info (in callback)
-            while self.turn = False:
+            while self.turn == False:
                 pass
-            
+
             # play your turn
             data = self.game.playTurn()
+            
             # send game info
             self.sendTurn(data)
-            # loop again
+            self.turn = False
 
 
     def sendTurn(self, data):

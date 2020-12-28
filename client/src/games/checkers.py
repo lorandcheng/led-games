@@ -324,6 +324,8 @@ class Checkers:
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = 1
 
+        return self.BOARD
+
 
 
 if __name__ == '__main__':
