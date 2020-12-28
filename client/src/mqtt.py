@@ -228,6 +228,8 @@ class Game(mqttClient):
             # send game info
             self.sendTurn(data)
             self.turn = False
+        print("game over")
+        time.sleep(3)
 
 
     def sendTurn(self, data):

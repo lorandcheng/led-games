@@ -34,16 +34,16 @@ class Checkers:
             [ 0,  1,  0,  1,  0,  1,  0,  1], 
             [ 1,  0,  1,  0,  1,  0,  1,  0], 
         ]
-        # self.BOARD = [
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0, -1,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  1,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        # ]
+        self.BOARD = [
+            [-1,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0, -1,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  1,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+        ]
         self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
@@ -303,26 +303,28 @@ class Checkers:
         # print initial setup
         self.printBoard(self.BOARD)
         
-        # select piece to move
-        pieces = self.findPieces()
-        pieceLocation = self.selectLocation(pieces)
-        # make move(s)
-        possibleJumps = self.findJumps(pieceLocation)
-        if possibleJumps:
-            while possibleJumps:
-                moveLocation = self.selectLocation(possibleJumps)
-                self.makeMove(pieceLocation, moveLocation)
-                pieceLocation = moveLocation
-                possibleJumps = self.findJumps(pieceLocation)
-        else:
-            possibleMoves = self.findMoves(pieceLocation)
-            moveLocation = self.selectLocation(possibleMoves)
-            self.makeMove(pieceLocation, moveLocation)
-
-        self.output.show("ending turn")
-        
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = 1
+        else:
+            # select piece to move
+            pieces = self.findPieces()
+            pieceLocation = self.selectLocation(pieces)
+            # make move(s)
+            possibleJumps = self.findJumps(pieceLocation)
+            if possibleJumps:
+                while possibleJumps:
+                    moveLocation = self.selectLocation(possibleJumps)
+                    self.makeMove(pieceLocation, moveLocation)
+                    pieceLocation = moveLocation
+                    possibleJumps = self.findJumps(pieceLocation)
+            else:
+                possibleMoves = self.findMoves(pieceLocation)
+                moveLocation = self.selectLocation(possibleMoves)
+                self.makeMove(pieceLocation, moveLocation)
+
+        if self.blackCounter == 0 or self.redCounter == 0:
+            self.done = 1
+        self.output.show("ending turn")
 
         return self.BOARD
 
