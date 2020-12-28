@@ -1,3 +1,4 @@
+import random
 import time
 
 import paho.mqtt.client as mqtt
@@ -86,6 +87,7 @@ class Lobby(mqttClient):
         self.selected = "" # name of user that I selected
         self.requester = "" # name of user that sent me a request
         self.opponentResponse = 0 # -1 rejected, 0 waiting, 1 accepted
+        self.color = 1
 
         self.client.subscribe("ledGames/lobby")
         self.client.message_callback_add("ledGames/lobby", self.lobbyCallback)
@@ -117,7 +119,12 @@ class Lobby(mqttClient):
                 print("selection:", selection)
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
-                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1")
+                    # choose a random color and map to 1 and -1
+                    self.color = random.randint(0,1)
+                    if self.color == 0:
+                        self.color = -1
+                    # send username, accepting code, and opponent's color
+                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1, {self.color*-1}")
                     self.selected = self.requester
                     print("accepting opponent")
                     time.sleep(2)
@@ -150,15 +157,18 @@ class Lobby(mqttClient):
         # leave lobby
         self.client.publish(f"ledGames/lobby/status", f"{self.username}, , 0")
 
-        return self.selected
+        return self.selected, self.color
 
 
 
     def myCallback(self, client, useradata, msg):
+        if len(parseMessage(msg)) == 3:
+            opponent, code, color = parseMessage(msg)
+            self.color = color
+        else:
+            opponent, code = parseMessage(msg)
 
-        opponent, code = parseMessage(msg)
         code = int(code)
-
         if code == 0:
             # exit selection menu if opponent sent me a request
             self.requester = opponent
@@ -188,10 +198,11 @@ class Lobby(mqttClient):
         self.client.disconnect()
 
 class Game(mqttClient):
-    def __init__(self, game, username, opponent, output):
+    def __init__(self, game, username, opponent, color, output):
         self.game = game
         self.username = username
         self.opponent = opponent
+        self.game.color = color
         self.output = output
 
         self.client.subscribe(f"ledGames/{self.username}/play")
@@ -201,7 +212,8 @@ class Game(mqttClient):
         """
         Summary: main gameplay
         """
-        pass
+        
+
 
     def sendTurn(self, data):
         """
@@ -242,13 +254,14 @@ if __name__ == "__main__":
     """
 
     lobby = Lobby(USERNAME, game.name, OUTPUT)
-    opponent = lobby.lobby()
+    opponent, color = lobby.lobby()
     print(f"You started a match with {opponent}")
+    print(f"Your color is {color}")
     time.sleep(2)
 
     """
     DEMO GAME CODE (do not comment out previous demo code)
     """
 
-    gameplay = Game(game, USERNAME, opponent, OUTPUT)
+    gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
     gameplay.play()
