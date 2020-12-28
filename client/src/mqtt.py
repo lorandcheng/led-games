@@ -254,8 +254,12 @@ class Game(mqttClient):
 
 
 def leave(username):
+    print("exiting program")
     client = mqtt.Client()
-    client.publish("ledGames/users/status", f"{username}, 0")
+    client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+    client.loop_start()
+    info = client.publish("ledGames/users/status", f"{username}, 0")
+    info.wait_for_publish()
 
 if __name__ == "__main__":
     
@@ -298,3 +302,10 @@ if __name__ == "__main__":
 
         gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
         gameplay.play()
+
+        menu = Menu(OUTPUT, f"Do you want to continue?", ["y", "n"])
+        selection = menu.select()
+
+        if selection == "n":
+            break
+
