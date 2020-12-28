@@ -242,7 +242,7 @@ class Checkers:
         """
         self.output.show("converting game board")
         message = str(data.payload, 'utf-8')
-        message = data[2:len(data)-2]
+        message = message[2:len(message)-2]
 
         rows = message.split("], [")
         j = 0
