@@ -1,7 +1,5 @@
 # Standard library imports
 import copy
-import os
-import random 
 import sys
 # Third party imports
 

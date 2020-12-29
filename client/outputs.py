@@ -1,5 +1,4 @@
 import os
-import sys
 
 # # Add paths to matrix python modules
 # sys.path.append('rpi-rgb-led-matrix/bindings/python/rgbmatrix')

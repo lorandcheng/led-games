@@ -6,7 +6,7 @@ import paho.mqtt.client as mqtt
 
 from games import battleship, checkers
 from inputs import Menu, Reader
-from outputs import TerminalDisplay
+from outputs import TerminalDisplay, LedDisplay
 from parsersM import parseMessage
 
 
