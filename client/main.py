@@ -14,8 +14,8 @@ OUTPUT = outputs.TerminalDisplay()
 firstGame = 1 #flag that makes reentering lobby easier
 
 GAMES = [
-    checkers.Checkers(),
-    battleship.Battleship()
+    checkers.Checkers(OUTPUT),
+    battleship.Battleship(OUTPUT)
 ]
 
 USERNAME = ""
