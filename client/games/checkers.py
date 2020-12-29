@@ -8,6 +8,9 @@ sys.path.append('..')
 import inputs
 
 class Checkers:
+    """
+    Summary: Checkers game module
+    """
     def __init__(self, output):
         """
         Summary: Initializes attributes

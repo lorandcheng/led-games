@@ -18,7 +18,10 @@ def selectGame(games):
     return games[index]
 
 class mqttClient:
-    def __init__(self):
+    """
+    Summary: Bare-bones mqtt client class
+    """
+    def __init__(self):   
         self.client = mqtt.Client()
         self.client.on_connect = self.onConnect
         self.client.on_message = self.onMessage
@@ -36,6 +39,9 @@ class mqttClient:
         print("disconnecting")
 
 class UsernameGenerator(mqttClient):
+    """
+    Summary: Prompts user to enter a username until it is approved by the server
+    """
     def __init__(self, output):
         super().__init__()
         self.output = output
@@ -80,6 +86,9 @@ class UsernameGenerator(mqttClient):
         self.client.disconnect()
 
 class Lobby(mqttClient):
+    """
+    Summary: Class to handle matchmaking and opponent selection
+    """
     def __init__(self, username, game, output):
         super().__init__()
         self.output = output
@@ -196,6 +205,9 @@ class Lobby(mqttClient):
         self.client.disconnect()
 
 class Game(mqttClient):
+    """
+    Summary: Class to handle game modules and gameplay
+    """
     def __init__(self, game, username, opponent, color, output):
         self.game = game
         self.username = username
