@@ -8,22 +8,23 @@ import sys
 # Other file imports
 sys.path.append('..')
 import inputs
-import outputs
 
 class Checkers:
-    def __init__(self):
+    def __init__(self, output):
         """
         Summary: Initializes attributes
 
         Attributes:
-            self.name: the name of the game
+            self.name: the name of the game  
+            self.output: output to write to  
             self.BOARD: the gameboard  
             self.color: the color of this player  
             self.redCounter: score of red player  
             self.blackCounter: score of black player  
+            self.done: whether the game is over
         """
         self.name = 'Checkers'
-        self.output = outputs.TerminalDisplay()
+        self.output = output
         
         # Gameboard codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
 

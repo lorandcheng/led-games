@@ -254,6 +254,9 @@ class Game(mqttClient):
 
 
 def leave(username):
+    """
+    Summary: cleanup function on program exit, removes username from server list
+    """
     print("exiting program")
     client = mqtt.Client()
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
@@ -266,8 +269,8 @@ if __name__ == "__main__":
 
     OUTPUT = TerminalDisplay()
     GAMES = [
-        checkers.Checkers(),
-        battleship.Battleship()
+        checkers.Checkers(OUTPUT),
+        battleship.Battleship(OUTPUT)
     ]
     USERNAME = ""
 

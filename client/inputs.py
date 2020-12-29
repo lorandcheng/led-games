@@ -44,6 +44,8 @@ class Listener:
 
     def onRelease(self, key):
         pass
+
+
 class Reader(Listener):
     def __init__(self, output, prompt=""):
         self.prompt = prompt
@@ -76,6 +78,7 @@ class Reader(Listener):
     
     def __del__(self):
         self.key.stop()
+
 
 class Menu(Listener):
     def __init__(self, output, prompt="", options=[], indexing=False):
