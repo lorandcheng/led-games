@@ -1,12 +1,15 @@
 # Standard library imports
 import time
-import os
 # Third party imports
 
 # Module imports
 from games import battleship, checkers
 from mqttClient import mqttClient
-import controller
+from mqtt import UsernameGenerator
+import inputs
+import outputs
+
+OUTPUT = outputs.TerminalDisplay()
 
 firstGame = 1 #flag that makes reentering lobby easier
 
@@ -15,57 +18,46 @@ GAMES = [
     battleship.Battleship()
 ]
 
-def selectGame():
-    index = 0
-    while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print("Use 'a' and 'd' to cycle, 'e' to select")
-        print('Choose a game:')
-        for i in range(len(GAMES)):
-            if i == index:
-                print('* ' + GAMES[i].name)
-            else:
-                print('  ' + GAMES[i].name)
-        inp = controller.getInput()
-        try:
-            index += inp
-        except TypeError:
-            break
-        if index > len(GAMES)-1:
-            index = 0
-        elif index < 0:
-            index = len(GAMES)-1
-    return index
-        
+USERNAME = ""
 
-def gameInit():
-    selection = selectGame()
-    game = GAMES[selection]
-    return game
+def selectGame(games):
+    prompt = "Choose a game:"
+    options = [game.name for game in games]
+    menu = inputs.Menu(OUTPUT, prompt, options, indexing=True)
+    index,_ = menu.select()
+    return games[index]
+        
+def gameInit(): 
+    return selectGame(GAMES)
 
 def main():
+    generator = UsernameGenerator(OUTPUT)
+    USERNAME = generator.getUsername()
+    
+    client = mqttClient(USERNAME)
+
     while True:
-        global firstGame
-
-        #setup MQTT and Game
-        if firstGame:
-            client = mqttClient()
-        game = gameInit()
-
-        #username setup
-        if firstGame:
-            client.inputName(client.client)
-            while client.username == "":
-                pass
-            print("username verified")
-
+        client.reset()
+        game = selectGame(GAMES)
+        game.__init__()
         #enter match-making lobby
         client.joinLobby(client.client, game)
-        while client.players == []:
+        while client.lobby == []:
             pass
         #choose opponent from lobby, then wait for acceptance of request
-        client.chooseOpponent()
+        opponent = 0
+        while not opponent:
+            opponents = client.findOpponents(client.lobby)
+            opponent = client.selectOpponent(opponents)
+            if opponent != 0:
+                break
+            else:
+                while client.requested:
+                    pass
+        OUTPUT.show(f"SELECTED OPPONENT {opponent}")
+        OUTPUT.show("Sending match request...")
         client.client.publish(f"ledGames/{client.opponent}/requests", f"{client.username}, 1")
+        
         while not client.start:
             pass
 
@@ -84,7 +76,6 @@ def main():
             while game.busy == 0:
                 if len(client.boardStr) > 0:
                     game.busy = 1
-
                     print(client.boardStr)
                     game.beginTurn(client.boardStr) #update the game board
                     client.boardStr = ""
@@ -100,25 +91,21 @@ def main():
         # ending sequence
         time.sleep(1)
         print("Your game with " + client.opponent + "has ended.")
-        firstGame = 0
         client.opponent = ""
         client.start = 0
-        client.players = []
-        inp = input("Would you like to play again? y/n")
-        if inp == 'y':
+        client.lobby = []
+        prompt = "Would you like to play again? y/n"
+        options = ["y", "n"]
+        menu = inputs.Menu(OUTPUT, prompt, options)
+        selection = menu.select()
+        del menu
+        if selection == 'y':
             print("returning to lobby")
-        elif inp == 'n':
-            print(inp)
+        else:
             info = client.client.publish("ledGames/users/status", f'{client.username}, 0')
             info.wait_for_publish()
             #time.sleep(2)
             break
-        else:
-            print("please type y or n")
-            inp = input("Would you like to play again? y/n")
-            continue
-
-    return
 
 if __name__ == '__main__':
     main()

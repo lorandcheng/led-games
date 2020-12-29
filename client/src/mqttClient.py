@@ -2,18 +2,18 @@
 MQTT CLIENT STEPS
 =================
 
-SETUP self.username
+SETUP username
 --------------
 1. SUB "ledGames/users"
-2. Generate a self.username
-3. Check self.username against existing self.usernames by PUB "ledGames/user/status" 
+2. Generate a username
+3. Check username against existing usernames by PUB "ledGames/user/status" 
     message = (name, code)
-    name: generated self.username
-    code: 1 to add, 0 to remove self.username
+    name: generated username
+    code: 1 to add, 0 to remove username
 4. Listen for a response on "ledGames/users"
     response = (name, code)
-    name: self.username that the response is for
-    code: 1 for sucess, 0 for failure (self.username taken or other failure)
+    name: username that the response is for
+    code: 1 for sucess, 0 for failure (username taken or other failure)
 
 JOIN LOBBY AND SELECT OPPONENT
 ------------------------------
@@ -26,11 +26,11 @@ JOIN LOBBY AND SELECT OPPONENT
     - identify players of the same game
 8. Send the opponent a game request with PUB "ledGames/<opponent>/request"
     message = (name, request)
-    name: self.username
+    name: username
     request: 1 to request or confirm, 0 to deny
 9. Listen for a response on "ledGames/<self.username>/request"
     response = (opponent, request)
-    opponent: opponent's self.username
+    opponent: opponent's username
     request: 1 to request or confirm, 0 to deny
 10. If the request was denied, repeat from step 7, otherwise leave lobby with PUB "ledGames/lobby/status"
     message = (name, game)
@@ -39,7 +39,7 @@ JOIN LOBBY AND SELECT OPPONENT
 
 PLAY GAME
 ---------
-Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames/<opponentsself.username>/play"
+Each player listens on "ledGames/<self.username>/play" and sends on "ledGames/<opponent.username>/play"
 
 11. The player who initiated the connnection picks a random color, then sends the color assignments across
     message = [(name, color),(name, color)]
@@ -55,19 +55,16 @@ Each player listens on "ledGames/<ownself.username>/play" and sends on "ledGames
 ...
 
 """
-import time
-import os
-import random
-from pynput import keyboard
 import paho.mqtt.client as mqtt
 
-import controller
+import inputs
+import outputs
 
 class mqttClient:
-    def __init__(self):
-        self.username = ""
-        self.unverified = ""
-        self.players = []
+    def __init__(self, username):
+        self.username = username
+        self.verified = False
+        self.lobby = []
         self.opponent = ""
         self.game = 0
         self.client = mqtt.Client()
@@ -76,32 +73,21 @@ class mqttClient:
         self.client.on_disconnect = self.onDisconnect
         self.client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
         self.client.loop_start()
-        self.key = keyboard.Listener(on_press = self.onPress)
-        self.index = 0
-        self.selected = 0
         self.requested = 0
         self.gameAccepted = 0
         self.start = 0
         self.boardStr = ""
         self.initiator = -1
-        
-    def onPress(self, key):
-        try: 
-            k = key.char # single-char keys
-        except: 
-            k = key.name # other keys
-    
-        if k == "a":
-            self.index -=1
-            print("a")
-        elif k == "d":
-            self.index +=1
-            print("d")
-        elif k == "e":
-            print("e")
-            self.selected = 1
-        #elif k == "r":
-            #self.chooseOpponent()
+        self.output = outputs.TerminalDisplay()
+
+    def reset(self):
+        self.opponent = ""
+        self.game = 0
+        self.requested = 0
+        self.gameAccepted = 0
+        self.start = 0
+        self.boardStr = ""
+        self.initiator = -1
 
     def parseMessage(self, msg):
         message = str(msg.payload, "utf-8")
@@ -116,121 +102,120 @@ class mqttClient:
         return parsedMessage
 
     def inputName(self, client):
-        self.unverified = controller.getName()
-        client.publish("ledGames/users/status", f'{self.unverified}, 1')
+        reader = inputs.Reader(self.output, "Enter a username:")
+        self.username = reader.readStr()
+        client.publish("ledGames/users/status", f'{self.username}, 1')
 
     def verifyName(self, client, userdata, msg):
         name, code = self.parseMessage(msg)
-        if name == self.unverified:
+        if name == self.username:
             if code == "1":
                 client.unsubscribe("ledGames/users")
-                self.username = self.unverified
+                self.verified = True
                 client.subscribe(f"ledGames/{self.username}/requests")
                 client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
             else:
-                print("Your username was invalid.")
+                self.output.show("Your username was invalid.")
                 self.inputName(client)
         
 
     def playCallback(self, client, userdata, msg):
-        print("you recieved a turn")
+        self.output.show("You recieved a turn")
         self.boardStr = str(msg.payload, 'utf-8')
 
     def myCallback(self, client, userdata, msg):
         self.requested = 1
-        request = self.parseMessage(msg)
+        user, code = self.parseMessage(msg)
 
-        if str(request[1]) == "1":
-            # add to controller later
-            self.key.stop()
-            inp = input(f"accept match request from {request[0]}?  Type y/n \n")
-            if inp[-1] == "y":
-                print("confirming request")
-                # print(f"ledGames/{request[0]}/requests" + f"{self.username}, 2")
-                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 2")
+        if code == "0":
+            self.requested = 0
+            self.opponent = ""
+            self.output.show("Match denied")
+            opponents = self.findOpponents(self.lobby)
+            self.selectOpponent(opponents)
+
+        elif code == "1":
+            prompt = f"Accept match request from {user}?"
+            options = ["y", "n"]
+            menu = inputs.Menu(self.output, prompt, options)
+            selection = menu.select()
+            if selection == "y":
+                self.output.show("Confirming request")
+                client.publish(f"ledGames/{user}/requests", f"{self.username}, 2")
                 client.subscribe(f"ledGames/{self.username}/play")
                 client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
                 client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
                 self.start = 1
                 self.initiator = 0
-                self.opponent = str(request[0])
-            elif inp[-1] == "n":
-                print("rejecting request")
-                client.publish(f"ledGames/{request[0]}/requests", f"{self.username}, 0")
-                self.requested = 0
-                self.chooseOpponent()
+                self.opponent = user
+            else:
+                self.output.show("Rejecting request")
+                client.publish(f"ledGames/{user}/requests", f"{self.username}, 0")
+                self.opponent = ""
+                opponents = self.findOpponents(self.lobby)
+                self.selectOpponent(opponents)
+            self.requested = 0
 
-        elif str(request[1]) == "2":
-            print("match confirmed")
+        elif code == "2":
+            self.output.show("Match confirmed")
             client.publish(f"ledGames/lobby/status", f'{self.username}, , 0')
             self.start = 1
             self.initiator = 1
             client.subscribe(f"ledGames/{self.username}/play")
             client.message_callback_add(f"ledGames/{self.username}/play", self.playCallback)
-        elif str(request[1]) == "0":
-            self.requested = 0
-            print("george bush did pizzagate")
-            self.chooseOpponent()
 
-
-
+        
 
     def lobbyCallback(self, client, userdata, msg):
         """
         Exception case: what if a new user joins while you are doing something like choosing an opponent, etc.
         """
-        #print("lobby updated \n")
-        self.players = self.parseMessage(msg)
-        #self.chooseOpponent()
+        self.lobby = self.parseMessage(msg)
         
-
     def joinLobby(self, client, game):
         client.subscribe("ledGames/lobby")
         client.message_callback_add("ledGames/lobby", self.lobbyCallback)
         self.game = game
-        print("joined lobby", self.username, game.name)
+        self.output.show(self.username + " joined the lobby to play " + game.name)
         client.publish("ledGames/lobby/status", f'{self.username}, {game.name}, 1')
 
-    def chooseOpponent(self):
-        try:
-            self.key.start()
-        except:
-            pass
-        self.index = 0
-        oldIndex = 0
-        available = []
-        for player in self.players:
+    def selectOpponent(self, players):
+
+        if len(players) == 0:
+            self.output.show("Waiting for opponents")
+            while len(self.findOpponents(self.lobby)) == 0:
+                pass
+            self.selectOpponent(self.findOpponents(self.lobby))
+        # initialize listener
+        listener = inputs.Listener(len(players))
+        # define printing function
+        def printPlayers(self):
+            self.output.clear()
+            for i in range(len(players)):
+                if i == listener.index:
+                    self.output.show('* ' + players[i])
+                else:
+                    self.output.show('  ' + players[i])
+        
+        printPlayers(self)
+        oldIndex = listener.index
+        while True:
+            if oldIndex != listener.index:
+                printPlayers(self)
+                oldIndex = listener.index
+            if listener.selected:
+                self.opponent = players[listener.index]
+                return self.opponent
+            if self.requested:
+                return 0
+
+    def findOpponents(self, players):
+        opponents = []
+        for player in players:
             if player[1] == self.game.name:
                 if not player[0] == self.username:
-                    available.append(player[0])
-        while True:
-            if self.requested == 1:
-                return
-            elif not oldIndex == self.index:
-                os.system('cls' if os.name == 'nt' else 'clear')
-                print("Use 'a' and 'd' to cycle, 'e' to select")
-                print('Choose an opponent:')
-
-                
-                if self.index > len(available)-1:
-                    self.index = 0
-                elif self.index < 0:
-                    self.index = len(available)-1
-
-                for i in range(len(available)):
-                    if i == self.index:
-                        print('* ' + available[i])
-                    else:
-                        print('  ' + available[i])
-                oldIndex = self.index
-            
-            if self.selected == 1:
-                self.selected = 0
-                self.opponent = available[self.index]
-                print("Sending match request")
-                break
-        
-
+                    opponents.append(player[0])
+        return opponents
 
     def onConnect(self, client, userdata, flags, rc):
         print("Connection returned " + str(rc))
@@ -239,7 +224,6 @@ class mqttClient:
 
     def onMessage(self, client, userdata, msg):
         print("onMessage")
-        #print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
     def onDisconnect(self, client, useradata, rc):
         print("disconnecting")
