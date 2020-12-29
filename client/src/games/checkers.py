@@ -9,6 +9,7 @@ import sys
 sys.path.append('..')
 import inputs
 import outputs
+
 class Checkers:
     def __init__(self):
         """
@@ -16,14 +17,16 @@ class Checkers:
 
         Attributes:
             self.name: the name of the game
-            self.BOARD: the gameboard
-            self.color: the color of this player
-            self.redCounter: score of red player
-            self.blackCounter: score of black player
+            self.BOARD: the gameboard  
+            self.color: the color of this player  
+            self.redCounter: score of red player  
+            self.blackCounter: score of black player  
         """
         self.name = 'Checkers'
         self.output = outputs.TerminalDisplay()
-        # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
+        
+        # Gameboard codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
+
         # self.BOARD = [
         #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
         #     [-1,  0, -1,  0, -1,  0, -1,  0], 
@@ -34,6 +37,9 @@ class Checkers:
         #     [ 0,  1,  0,  1,  0,  1,  0,  1], 
         #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
         # ]
+
+        # End of game test board
+
         self.BOARD = [
             [-1,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
@@ -44,18 +50,57 @@ class Checkers:
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
         ]
+
         self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
-        self.countPieces()
-        self.done = 0
+        self.updateScores()
+        self.done = False
+
+
+    def updateScores(self):
+        """
+        Summary: Updates scores based on pieces in self.BOARD
+        """
+        self.redCounter = 0
+        self.blackCounter = 0
+        for r in range(8):
+            for c in range(8):
+                if self.BOARD[r][c] > 0:
+                    self.blackCounter += 1
+                elif self.BOARD[r][c] < 0:
+                    self.redCounter += 1
+
+
+    def parseData(self, data):
+        """
+        Summary: Processes string game board into array format
+        """
+        message = str(data.payload, 'utf-8')
+        message = message[2:len(message)-2]
+
+        rows = message.split("], [")
+        j = 0
+        for element in rows:
+            vals = element.split(", ")
+            
+            for i in range(8):
+                self.BOARD[j][i] = int(vals[i])
+            j+=1
+
 
     def isOnBoard(self, row, col):
+        """
+        Summary: checks if a given coordinate is on the board
+        
+        Returns: True or False
+        """
         if not(0 <= row <= 7):
             return False
         if not(0 <= col <= 7):
             return False
         return True
+
 
     def findPieces(self):
         """
@@ -81,6 +126,7 @@ class Checkers:
                     if self.findMoves((r,c)):
                         locs.append((r,c))
         return locs
+
 
     def findMoves(self, location):
         """
@@ -119,6 +165,7 @@ class Checkers:
                 locs.append((row + r, col + c))
             
         return 0 if len(locs) == 0 else locs
+
 
     def findJumps(self, location):
         """
@@ -165,6 +212,7 @@ class Checkers:
 
         return 0 if len(locs) == 0 else locs
 
+
     def selectLocation(self, locations):
         """
         Summary: prompts user to cycle through given locations and select one. Arrow keys to cycle through, enter to select
@@ -208,6 +256,7 @@ class Checkers:
         # return selected coordinates
         return (row, col)
 
+
     def makeMove(self, location, final):
         """
         Summary: makes a single move or hop, updates board and counters
@@ -235,27 +284,11 @@ class Checkers:
         self.BOARD[final[0]][final[1]] = piece
         self.BOARD[location[0]][location[1]] = 0
         self.printBoard(self.BOARD)
-    
-    def parseData(self, data):
-        """
-        Processes string game board into array format
-        """
-        self.output.show("converting game board")
-        message = str(data.payload, 'utf-8')
-        message = message[2:len(message)-2]
 
-        rows = message.split("], [")
-        j = 0
-        for element in rows:
-            vals = element.split(", ")
-            
-            for i in range(8):
-                self.BOARD[j][i] = int(vals[i])
-            j+=1
 
     def printBoard(self, board):
         """
-        Summary: prints the given board
+        Summary: prints the given board to terminal
 
         Args:
             board (2D list): the board stored in a 2D array
@@ -285,34 +318,32 @@ class Checkers:
         output += scores
         self.output.show(output)
 
-    def countPieces(self):
-        self.redCounter = 0
-        self.blackCounter = 0
-        for r in range(8):
-            for c in range(8):
-                if self.BOARD[r][c] > 0:
-                    self.blackCounter += 1
-                elif self.BOARD[r][c] < 0:
-                    self.redCounter += 1
 
     def winner(self):
-        if self.color == 1 and self.blackCounter != 0:
+        """
+        Summary: returns true if you are the winner
+        """
+        if self.color == 1 and self.blackCounter != 0 and self.done:
             return True
-        elif self.color == -1 and self.redCounter != 0:
+        elif self.color == -1 and self.redCounter != 0 and self.done:
             return True
         else:
             return False
 
+
     def playTurn(self):
         """
-        Summary: play a turn of checkers
+        Summary: plays a turn of checkers
+
+        Return:
+            self.BOARD: updated board after turn
         """
-        self.countPieces()
+        self.updateScores()
         # print initial setup
         self.printBoard(self.BOARD)
         
         if self.blackCounter == 0 or self.redCounter == 0:
-            self.done = 1
+            self.done = True
         else:
             # select piece to move
             pieces = self.findPieces()
@@ -331,19 +362,7 @@ class Checkers:
                 self.makeMove(pieceLocation, moveLocation)
 
         if self.blackCounter == 0 or self.redCounter == 0:
-            self.done = 1
+            self.done = True
         self.output.show("ending turn")
 
         return self.BOARD
-
-
-
-if __name__ == '__main__':
-    """
-    FOR TESTING PURPOSES ONLY. USE main.py FOR ACTUAL RUNTIME:
-    python3 -m main
-    """
-    game = Checkers()
-    game.busy = 1
-    game.main()
-    print("done all")
