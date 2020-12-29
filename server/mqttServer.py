@@ -30,6 +30,7 @@ def users(client, userdata, msg):
         name: username
         action: 1(add), 0(remove)
     """
+    print('1')
     name, action = parseMessage(msg)
     a = int(action)
     if a:

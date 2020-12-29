@@ -11,6 +11,8 @@ import outputs
 
 OUTPUT = outputs.TerminalDisplay()
 
+firstGame = 1 #flag that makes reentering lobby easier
+
 GAMES = [
     checkers.Checkers(),
     battleship.Battleship()
@@ -72,9 +74,7 @@ def main():
             
             #where a player waits to recieve a turn from the opponent
             while game.busy == 0:
-                print("entered while loop")
                 if len(client.boardStr) > 0:
-                    print("received board")
                     game.busy = 1
                     print(client.boardStr)
                     game.beginTurn(client.boardStr) #update the game board
