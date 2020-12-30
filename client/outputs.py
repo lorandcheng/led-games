@@ -79,9 +79,9 @@ if __name__ == "__main__":
                 "black": (0, 0, 0),
                 "grey": (100, 100, 100),
                 "red": (255, 0, 0),
-                "orange": (255, 130, 0),
+                "orange": (255, 255, 0),
                 "blue": (0, 0, 255),
-                "purple": (130, 0, 255)
+                "purple": (255, 0, 255)
 
     }
 
@@ -96,24 +96,27 @@ if __name__ == "__main__":
 
     for r in range(8):
         for c in range(8):
-            pixels = [ 
-            (r*4+1, c*4+1), 
-            (r*4+1, c*4+2),
-            (r*4+2, c*4+1),
-            (r*4+2, c*4+2),
-            ]
+            if BOARD[r][c]:
+            
+                pixels = [ 
+                (r*4+1, c*4+1), 
+                (r*4+1, c*4+2),
+                (r*4+2, c*4+1),
+                (r*4+2, c*4+2),
+                ]
 
-            if BOARD[r][c] == 1:
-                color = colors["red"]
-            elif BOARD[r][c] == 2:
-                color = colors["orange"]
-            elif BOARD[r][c] == -1:
-                color = colors["blue"]
-            elif BOARD[r][c] == -2:
-                color = colors["purple"]
+                if BOARD[r][c] == 1:
+                    color = colors["red"]
+                elif BOARD[r][c] == 2:
+                    color = colors["orange"]
+                elif BOARD[r][c] == -1:
+                    color = colors["blue"]
+                elif BOARD[r][c] == -2:
+                    color = colors["purple"]
 
-            for row, column in pixels:
-                output[row][column] = color
+
+                for row, column in pixels:
+                    output[row][column] = color
 
 
 
