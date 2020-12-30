@@ -1,7 +1,7 @@
 import os
-from sys import platform
+import sys
 
-if platform == "linux" or platform == "linux2":
+if sys.platform == "linux" or sys.platform == "linux2":
     # Add paths to matrix python modules
     sys.path.append('rpi-rgb-led-matrix/bindings/python/rgbmatrix')
     sys.path.append('rpi-rgb-led-matrix/bindings/python/samples')
