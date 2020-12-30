@@ -66,7 +66,7 @@ if __name__ == "__main__":
     colors = {
                 "red": (255, 0, 0),
                 "black": (0, 0, 0),
-                "white": (255, 255, 255)
+                "white": (100, 100, 100)
             }
 
     output = []
@@ -74,7 +74,7 @@ if __name__ == "__main__":
         output.append([])
         for c in range(32):
             if ((r % 8 < 4) and (c % 8 < 4)) or ((r % 8 >= 4) and (c % 8 >= 4)):
-                output[r].append(colors['red'])
+                output[r].append(colors['black'])
             else:
                 output[r].append(colors['white'])
 
