@@ -1,10 +1,21 @@
+import atexit
+import random
 import time
 
 import paho.mqtt.client as mqtt
 
+from games import battleship, checkers
+from inputs import Menu, Reader
 from outputs import TerminalDisplay
 from parsersM import parseMessage
-from inputs import Reader, Menu
+
+
+def selectGame(games):
+    prompt = "Choose a game:"
+    options = [game.name for game in games]
+    menu = Menu(OUTPUT, prompt, options, indexing=True)
+    index,_ = menu.select()
+    return games[index]
 
 class mqttClient:
     def __init__(self):
@@ -25,9 +36,9 @@ class mqttClient:
         print("disconnecting")
 
 class UsernameGenerator(mqttClient):
-    def __init__(self, Output):
+    def __init__(self, output):
         super().__init__()
-        self.output = Output
+        self.output = output
         self.username = ""
         self.verified = 0 # -1 rejected, 0 unverified, 1 verified
         self.client.subscribe("ledGames/users")
@@ -77,6 +88,7 @@ class Lobby(mqttClient):
         self.selected = "" # name of user that I selected
         self.requester = "" # name of user that sent me a request
         self.opponentResponse = 0 # -1 rejected, 0 waiting, 1 accepted
+        self.color = 1
 
         self.client.subscribe("ledGames/lobby")
         self.client.message_callback_add("ledGames/lobby", self.lobbyCallback)
@@ -99,16 +111,18 @@ class Lobby(mqttClient):
         while True:
             self.selected = ""
             self.selected = self.menu.select()
-            #print("selected:", self.selected)
-            #time.sleep(2)
             # if menu was exited because an opponent sent me a request, process the request
             if self.selected == 0:
                 menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
                 selection = menu.select()
-                print("selection:", selection)
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
-                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1")
+                    # choose a random color and map to 1 and -1
+                    self.color = random.randint(0,1)
+                    if self.color == 0:
+                        self.color = -1
+                    # send username, accepting code, and opponent's color
+                    self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1, {self.color*-1}")
                     self.selected = self.requester
                     print("accepting opponent")
                     time.sleep(2)
@@ -142,15 +156,18 @@ class Lobby(mqttClient):
         # leave lobby
         self.client.publish(f"ledGames/lobby/status", f"{self.username}, , 0")
 
-        return self.selected
+        return self.selected, self.color
 
 
 
     def myCallback(self, client, useradata, msg):
+        if len(parseMessage(msg)) == 3:
+            opponent, code, color = parseMessage(msg)
+            self.color = color
+        else:
+            opponent, code = parseMessage(msg)
 
-        opponent, code = parseMessage(msg)
         code = int(code)
-        print('callback')
         if code == 0:
             # exit selection menu if opponent sent me a request
             self.requester = opponent
@@ -181,36 +198,116 @@ class Lobby(mqttClient):
         self.client.disconnect()
 
 class Game(mqttClient):
-    def __init__(self, game, username, opponent):
-        pass
+    def __init__(self, game, username, opponent, color, output):
+        self.game = game
+        self.username = username
+        self.opponent = opponent
+        self.game.color = int(color)
+        self.output = output
+        self.turn = False
+
+        super().__init__()
+        self.client.subscribe(f"ledGames/{self.username}/play")
+        self.client.message_callback_add(f"ledGames/{self.username}/play", self.receiveTurn)
+
+    def play(self):
+        """
+        Summary: main gameplay
+        """
+
+        # play first turn if you start
+        if self.game.color == 1:
+            data = self.game.playTurn()
+            self.sendTurn(data)
+        else:
+            self.game.printBoard(self.game.BOARD)
+
+        while not self.game.done:
+            # wait for opponent to play and receive game info (in callback)
+            while self.turn == False:
+                pass
+
+            # play your turn
+            data = self.game.playTurn()
+
+            # send game info
+            self.sendTurn(data)
+            self.turn = False
+        print("game over")
+        if self.game.winner():
+            print("you won")
+        else:
+            print("you lost")
+        time.sleep(3)
 
 
+    def sendTurn(self, data):
+        """
+        Summary: sends game data to opponent after each turn
+        """
+        self.client.publish(f"ledGames/{self.opponent}/play", str(data))
+
+    def receiveTurn(self, client, userdata, msg):
+        """
+        Summary: callback to receive game data from opponent
+        """
+        self.game.parseData(msg)
+        self.turn = True
 
 
-
-
-
+def leave(username):
+    print("exiting program")
+    client = mqtt.Client()
+    client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+    client.loop_start()
+    info = client.publish("ledGames/users/status", f"{username}, 0")
+    info.wait_for_publish()
 
 if __name__ == "__main__":
+    
+
     OUTPUT = TerminalDisplay()
+    GAMES = [
+        checkers.Checkers(),
+        battleship.Battleship()
+    ]
+    USERNAME = ""
+
+    game = selectGame(GAMES)
 
     """
     DEMO USERNAME_GENERATOR CODE
     """
+
     usernameGenerator = UsernameGenerator(OUTPUT)
     USERNAME = usernameGenerator.getUsername()
     print(f"You chose the username: {USERNAME}")
     time.sleep(2)
 
-    """
-    DEMO LOBBY CODE (do not comment out previous demo code)
-    """
-    GAME = "Checkers"
-    lobby = Lobby(USERNAME, GAME, OUTPUT)
-    opponent = lobby.lobby()
-    print(opponent)
+    atexit.register(leave, USERNAME)
 
+    while True:
 
-    """
-    DEMO GAME CODE
-    """
+        """
+        DEMO LOBBY CODE (do not comment out previous demo code)
+        """
+
+        lobby = Lobby(USERNAME, game.name, OUTPUT)
+        opponent, color = lobby.lobby()
+        print(f"You started a match with {opponent}")
+        print(f"Your color is {color}")
+        time.sleep(2)
+
+        """
+        DEMO GAME CODE (do not comment out previous demo code)
+        """
+
+        gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
+        gameplay.play()
+
+        menu = Menu(OUTPUT, f"Do you want to continue?", ["y", "n"])
+        selection = menu.select()
+
+        if selection == "n":
+            break
+

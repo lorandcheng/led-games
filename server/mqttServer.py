@@ -30,10 +30,8 @@ def users(client, userdata, msg):
         name: username
         action: 1(add), 0(remove)
     """
-    print('1')
     name, action = parseMessage(msg)
     a = int(action)
-    print(a)
     if a:
         if name in USERS:
             print("denied")
@@ -43,7 +41,7 @@ def users(client, userdata, msg):
             USERS.append(name)
             print("user added: " + name)
             print(USERS)
-    elif a==0:
+    elif a == 0:
         print("removing")
         try:
             USERS.remove(name)

@@ -24,18 +24,18 @@ class Checkers:
         self.name = 'Checkers'
         self.output = outputs.TerminalDisplay()
         # Codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king
-        # self.BOARD = [
-        #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
-        #     [-1,  0, -1,  0, -1,  0, -1,  0], 
-        #     [ 0, -1,  0, -1,  0, -1,  0, -1], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
-        #     [ 0,  1,  0,  1,  0,  1,  0,  1], 
-        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
-        # ]
         self.BOARD = [
+            [ 0, -1,  0, -1,  0, -1,  0, -1], 
+            [-1,  0, -1,  0, -1,  0, -1,  0], 
+            [ 0, -1,  0, -1,  0, -1,  0, -1], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 1,  0,  1,  0,  1,  0,  1,  0], 
+            [ 0,  1,  0,  1,  0,  1,  0,  1], 
+            [ 1,  0,  1,  0,  1,  0,  1,  0], 
+        ]
+        self.BOARD = [
+            [-1,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0, -1,  0,  0,  0,  0], 
@@ -44,16 +44,6 @@ class Checkers:
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  0,  0,  0,  0], 
         ]
-        # self.BOARD = [
-        #     [ 0,  0,  0, -1,  0, -1,  0, -1], 
-        #     [-1,  0,  1,  0, -1,  0, -1,  0], 
-        #     [ 0, -1,  0, -1,  0,  0,  0, -1], 
-        #     [ 0,  0, -1,  0, -1,  0,  0,  0], 
-        #     [ 0,  0,  0,  2,  0,  0,  0,  0], 
-        #     [ 1,  0, -1,  0, -1,  0,  1,  0], 
-        #     [ 0,  0,  0,  1,  0,  0,  0,  1], 
-        #     [ 1,  0,  1,  0,  1,  0,  1,  0], 
-        # ]
         self.color = -1
         self.redCounter = 12
         self.blackCounter = 12
@@ -244,21 +234,15 @@ class Checkers:
         # update board
         self.BOARD[final[0]][final[1]] = piece
         self.BOARD[location[0]][location[1]] = 0
-
-            
-    def endTurn(self):
-        """
-        Summary: actions at the end of the turn
-        """
-        self.output.show("ending turn")
-        self.busy = 0
+        self.printBoard(self.BOARD)
     
-    def beginTurn(self, data):
+    def parseData(self, data):
         """
         Processes string game board into array format
         """
         self.output.show("converting game board")
-        message = data[2:len(data)-2]
+        message = str(data.payload, 'utf-8')
+        message = message[2:len(message)-2]
 
         rows = message.split("], [")
         j = 0
@@ -268,21 +252,6 @@ class Checkers:
             for i in range(8):
                 self.BOARD[j][i] = int(vals[i])
             j+=1
-        self.output.show(self.BOARD)
-
-    def gameOver(self, winner):
-        """
-        Summary: actions at the end of the game
-
-        Args:
-            winner (boolean): true if this player won
-        """
-        self.printBoard(self.BOARD)
-        self.output.show("GAME OVER")
-        if winner:
-            self.output.show("YOU WON")
-        else:
-            self.output.show("YOU LOST")
 
     def printBoard(self, board):
         """
@@ -321,20 +290,30 @@ class Checkers:
         self.blackCounter = 0
         for r in range(8):
             for c in range(8):
-                if self.BOARD[r][c] == 1:
+                if self.BOARD[r][c] > 0:
                     self.blackCounter += 1
-                elif self.BOARD[r][c] == -1:
+                elif self.BOARD[r][c] < 0:
                     self.redCounter += 1
 
-    def main(self):
+    def winner(self):
+        if self.color == 1 and self.blackCounter != 0:
+            return True
+        elif self.color == -1 and self.redCounter != 0:
+            return True
+        else:
+            return False
+
+    def playTurn(self):
         """
-        Summary: play a game of checkers
+        Summary: play a turn of checkers
         """
-        # print initial setup
-        # self.printBoard(self.BOARD)
-        # play game until someone loses all pieces
         self.countPieces()
-        while self.redCounter > 0 and self.blackCounter > 0 and self.busy == 1:
+        # print initial setup
+        self.printBoard(self.BOARD)
+        
+        if self.blackCounter == 0 or self.redCounter == 0:
+            self.done = 1
+        else:
             # select piece to move
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
@@ -350,19 +329,12 @@ class Checkers:
                 possibleMoves = self.findMoves(pieceLocation)
                 moveLocation = self.selectLocation(possibleMoves)
                 self.makeMove(pieceLocation, moveLocation)
-            
-            # switch colors
-            self.endTurn()
-        
-        if self.blackCounter ==0 or self.redCounter == 0:
-            # only runs if all of one color of pieces has been removed
-            if self.color == 1 and self.blackCounter > 0:
-                self.gameOver(True)
-            elif self.color == -1 and self.redCounter > 0:
-                self.gameOver(True)
-            else:
-                self.gameOver(False)
+
+        if self.blackCounter == 0 or self.redCounter == 0:
             self.done = 1
+        self.output.show("ending turn")
+
+        return self.BOARD
 
 
 
