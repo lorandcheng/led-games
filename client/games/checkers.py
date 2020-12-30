@@ -356,31 +356,31 @@ class Checkers:
                             
                             for row, column in pixels:
                                 output[column][row] = colors["green"]
+                        
+                        pixels = [ 
+                        (r*4+1, c*4+1), 
+                        (r*4+1, c*4+2),
+                        (r*4+2, c*4+1),
+                        (r*4+2, c*4+2),
+                        ]
+
+                        diagonal = [
+                        (r*4+1, c*4+2),
+                        (r*4+2, c*4+1)
+                        ]
+
+                        if board[r][c] > 0:
+                            for row, column in pixels:
+                                output[column][row] = colors["red"]
+                            if board[r][c] == 2:
+                                for row, column in diagonal:
+                                    output[column][row] = colors["orange"]
                         else:
-                            pixels = [ 
-                            (r*4+1, c*4+1), 
-                            (r*4+1, c*4+2),
-                            (r*4+2, c*4+1),
-                            (r*4+2, c*4+2),
-                            ]
-
-                            diagonal = [
-                            (r*4+1, c*4+2),
-                            (r*4+2, c*4+1)
-                            ]
-
-                            if board[r][c] > 0:
-                                for row, column in pixels:
-                                    output[column][row] = colors["red"]
-                                if board[r][c] == 2:
-                                    for row, column in diagonal:
-                                        output[column][row] = colors["orange"]
-                            else:
-                                for row, column in pixels:
-                                    output[column][row] = colors["blue"]
-                                if board[r][c] == -2:
-                                    for row, column in diagonal:
-                                        output[column][row] = colors["purple"]
+                            for row, column in pixels:
+                                output[column][row] = colors["blue"]
+                            if board[r][c] == -2:
+                                for row, column in diagonal:
+                                    output[column][row] = colors["purple"]
 
         else:
             print("Unsupported output")
