@@ -76,7 +76,7 @@ if __name__ == "__main__":
             if ((r % 8 < 4) and (c % 8 < 4)) or ((r % 8 >= 4) and (c % 8 >= 4)):
                 output[r].append(colors['red'])
             else:
-                output[r].append(colors['black'])
+                output[r].append(colors['white'])
 
 
 
