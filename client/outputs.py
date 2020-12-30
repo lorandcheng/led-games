@@ -45,9 +45,15 @@ class LedDisplay:
         # Specifications for Font style of text
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/7x13.bdf")
+
+        self.canvas =  self.matrix.CreateFrameCanvas()
     
     def clear(self):
         self.matrix.Clear()
 
     def show(self, info):
-        pass
+        for r in range(self.matrix.height):
+            for c in range(self.matrix.width):
+                R, G, B = info[r][c]
+                self.canvas.setPixel(r, c, R, G, B)
+        self.canvas = self.matrix.SwapOnVSync

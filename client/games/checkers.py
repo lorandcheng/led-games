@@ -296,8 +296,7 @@ class Checkers:
             board (2D list): the board stored in a 2D array
         """
         self.output.clear()
-        output = ""
-        
+
         if type(self.output).__name__ == "TerminalDisplay":
             output = "\n"
             output += "+---+---+---+---+---+---+---+---+\n"
@@ -323,7 +322,20 @@ class Checkers:
             output += scores
 
         elif type(self.output).__name__ == "LedDisplay":
-            pass
+            colors = {
+                "red": (255, 0, 0),
+                "black": (0, 0, 0),
+                "white": (255, 255, 255)
+            }
+
+            output = []
+            for r in range(32):
+                output.append([])
+                for c in range(32):
+                    if r == 0 or r == 31 or c == 0 or c == 31:
+                        output[r].append(colors['red'])
+                    else:
+                        output[r].append(colors['black'])
 
         else:
             print("Unsupported output")
