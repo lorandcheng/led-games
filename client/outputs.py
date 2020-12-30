@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 if sys.platform == "linux" or sys.platform == "linux2":
     # Add paths to matrix python modules
@@ -77,3 +78,4 @@ if __name__ == "__main__":
 
     display = LedDisplay()
     display.show(output)
+    time.sleep(20)
