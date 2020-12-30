@@ -290,34 +290,45 @@ class Checkers:
 
     def printBoard(self, board):
         """
-        Summary: prints the given board to terminal
+        Summary: prints the given board
 
         Args:
             board (2D list): the board stored in a 2D array
         """
         self.output.clear()
-        output = "\n"
-        output += "+---+---+---+---+---+---+---+---+\n"
-        for r in range(8):
-            row = '|'
-            for c in range(8):
-                if board[r][c] == 2:
-                    row += ' B |'
-                elif board[r][c] == -2:
-                    row += ' R |'
-                elif board[r][c] == 1:
-                    row += ' b |'
-                elif board[r][c] == -1:
-                    row += ' r |'
-                elif board[r][c] == '*':
-                    row += ' * |'
-                elif board[r][c] == 'X':
-                    row += ' X |'
-                else:
-                    row += '   |'
-            output += f"{row}\n+---+---+---+---+---+---+---+---+\n"
-        scores = "Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter)
-        output += scores
+        output = ""
+        
+        if type(self.output).__name__ == "TerminalDisplay":
+            output = "\n"
+            output += "+---+---+---+---+---+---+---+---+\n"
+            for r in range(8):
+                row = '|'
+                for c in range(8):
+                    if board[r][c] == 2:
+                        row += ' B |'
+                    elif board[r][c] == -2:
+                        row += ' R |'
+                    elif board[r][c] == 1:
+                        row += ' b |'
+                    elif board[r][c] == -1:
+                        row += ' r |'
+                    elif board[r][c] == '*':
+                        row += ' * |'
+                    elif board[r][c] == 'X':
+                        row += ' X |'
+                    else:
+                        row += '   |'
+                output += f"{row}\n+---+---+---+---+---+---+---+---+\n"
+            scores = "Black: " + str(self.blackCounter) + " Red: " + str(self.redCounter)
+            output += scores
+
+        elif type(self.output).__name__ == "LedDisplay":
+            pass
+
+        else:
+            print("Unsupported output")
+            raise ValueError
+
         self.output.show(output)
 
 
