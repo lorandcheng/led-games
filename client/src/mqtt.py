@@ -273,8 +273,6 @@ if __name__ == "__main__":
     ]
     USERNAME = ""
 
-    game = selectGame(GAMES)
-
     """
     DEMO USERNAME_GENERATOR CODE
     """
@@ -287,7 +285,8 @@ if __name__ == "__main__":
     atexit.register(leave, USERNAME)
 
     while True:
-
+        game = selectGame(GAMES)
+        game.__init__()
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """
