@@ -105,20 +105,25 @@ if __name__ == "__main__":
                 (r*4+2, c*4+2),
                 ]
 
-                if BOARD[r][c] == 1:
-                    color = colors["red"]
-                elif BOARD[r][c] == 2:
-                    color = colors["orange"]
-                elif BOARD[r][c] == -1:
-                    color = colors["blue"]
-                elif BOARD[r][c] == -2:
-                    color = colors["purple"]
 
 
-                for row, column in pixels:
-                    output[row][column] = color
+                diagonal = [
+                (r*4+1, c*4+2),
+                (r*4+2, c*4+1)
+                ]
 
-
+                if BOARD[r][c] > 0:
+                    for row, column in pixels:
+                        output[column][row] = colors["red"]
+                    if BOARD[r][c] == 2:
+                        for row, column in diagonal:
+                            output[column][row] = colors["orange"]
+                else:
+                    for row, column in pixels:
+                        output[column][row] = colors["blue"]
+                    if BOARD[r][c] == -2:
+                        for row, column in diagonal:
+                            output[column][row] = colors["purple"]
 
     display = LedDisplay()
     display.show(output)
