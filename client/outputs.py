@@ -61,6 +61,8 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
+
+
     colors = {
                 "red": (255, 0, 0),
                 "black": (0, 0, 0),
@@ -71,10 +73,16 @@ if __name__ == "__main__":
     for r in range(32):
         output.append([])
         for c in range(32):
-            if r == 0 or r == 31 or c == 0 or c == 31:
+            if (r % 8 < 4) and (c % 8 < 4):
                 output[r].append(colors['red'])
             else:
                 output[r].append(colors['black'])
+
+
+
+
+
+
 
     display = LedDisplay()
     display.show(output)
