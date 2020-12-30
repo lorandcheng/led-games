@@ -57,3 +57,23 @@ class LedDisplay:
                 R, G, B = info[r][c]
                 self.canvas.setPixel(r, c, R, G, B)
         self.canvas = self.matrix.SwapOnVSync
+
+
+if __name__ == "__main__":
+    colors = {
+                "red": (255, 0, 0),
+                "black": (0, 0, 0),
+                "white": (255, 255, 255)
+            }
+
+    output = []
+    for r in range(32):
+        output.append([])
+        for c in range(32):
+            if r == 0 or r == 31 or c == 0 or c == 31:
+                output[r].append(colors['red'])
+            else:
+                output[r].append(colors['black'])
+
+    display = LedDisplay()
+    display.show(output)
