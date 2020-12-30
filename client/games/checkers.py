@@ -323,19 +323,64 @@ class Checkers:
 
         elif type(self.output).__name__ == "LedDisplay":
             colors = {
-                "red": (255, 0, 0),
+                
                 "black": (0, 0, 0),
-                "white": (255, 255, 255)
+                "grey": (100, 100, 100),
+                "red": (255, 0, 0),
+                "orange": (255, 255, 0),
+                "blue": (0, 0, 255),
+                "purple": (255, 0, 255),
+                "green": (0, 255, 0)
+
             }
 
             output = []
             for r in range(32):
                 output.append([])
                 for c in range(32):
-                    if r == 0 or r == 31 or c == 0 or c == 31:
-                        output[r].append(colors['red'])
+                    if ((r % 8 < 4) and (c % 8 < 4)) or ((r % 8 >= 4) and (c % 8 >= 4)):
+                        output[r].append(colors["grey"])
                     else:
-                        output[r].append(colors['black'])
+                        output[r].append(colors["black"])
+
+            for r in range(8):
+                for c in range(8):
+                    if board[r][c]:
+                        if board[r][c] == "X":
+                            pixels = [ 
+                            (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
+                            (r*4+1,c*4), (r*4+1,c*4+3),
+                            (r*4+2,c*4), (r*4+2,c*4+3),
+                            (r*4+3,c*4),  (r*4+3,c*4+1), (r*4+3,c*4+2), (r*4+3,c*4+3), 
+                            ]
+                            
+                            for row, column in pixels:
+                                output[column][row] = colors["green"]
+                        else:
+                            pixels = [ 
+                            (r*4+1, c*4+1), 
+                            (r*4+1, c*4+2),
+                            (r*4+2, c*4+1),
+                            (r*4+2, c*4+2),
+                            ]
+
+                            diagonal = [
+                            (r*4+1, c*4+2),
+                            (r*4+2, c*4+1)
+                            ]
+
+                            if board[r][c] > 0:
+                                for row, column in pixels:
+                                    output[column][row] = colors["red"]
+                                if board[r][c] == 2:
+                                    for row, column in diagonal:
+                                        output[column][row] = colors["orange"]
+                            else:
+                                for row, column in pixels:
+                                    output[column][row] = colors["blue"]
+                                if board[r][c] == -2:
+                                    for row, column in diagonal:
+                                        output[column][row] = colors["purple"]
 
         else:
             print("Unsupported output")
