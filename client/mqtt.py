@@ -299,7 +299,7 @@ if __name__ == "__main__":
 
     while True:
         game = selectGame(GAMES)
-        game.__init__()
+        game.__init__(OUTPUT)
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """
