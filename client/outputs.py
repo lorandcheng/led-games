@@ -69,9 +69,9 @@ if __name__ == "__main__":
             [ 0,  0,  0,  0,  0,  0,  0,  2], 
             [ 0,  0,  0, -1,  0,  0,  0,  0], 
             [ 0,  0,  0,  0,  1,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ "X",  0,  0,  0,  0,  0,  0,  0], 
             [ 0,  1,  0,  0,  0,  0,  0,  0], 
-            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  "X",  0,  0,  0,  0,  0,  0], 
     ]
 
     colors = {
@@ -81,7 +81,8 @@ if __name__ == "__main__":
                 "red": (255, 0, 0),
                 "orange": (255, 255, 0),
                 "blue": (0, 0, 255),
-                "purple": (255, 0, 255)
+                "purple": (255, 0, 255),
+                "green": (0, 255, 0)
 
     }
 
@@ -97,33 +98,41 @@ if __name__ == "__main__":
     for r in range(8):
         for c in range(8):
             if BOARD[r][c]:
-            
-                pixels = [ 
-                (r*4+1, c*4+1), 
-                (r*4+1, c*4+2),
-                (r*4+2, c*4+1),
-                (r*4+2, c*4+2),
-                ]
-
-
-
-                diagonal = [
-                (r*4+1, c*4+2),
-                (r*4+2, c*4+1)
-                ]
-
-                if BOARD[r][c] > 0:
+                if BOARD[r][c] == "X":
+                    pixels = [ 
+                    (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
+                    (r*4+1,c*4), (r*4+1,c*4+3),
+                    (r*4+2,c*4), (r*4+2,c*4+3),
+                    (r*4+3,c*4),  (r*4+3,c*4+1), (r*4+3,c*4+2), (r*4+3,c*4+3), 
+                    ]
+                    
                     for row, column in pixels:
-                        output[column][row] = colors["red"]
-                    if BOARD[r][c] == 2:
-                        for row, column in diagonal:
-                            output[column][row] = colors["orange"]
+                        output[column][row] == colors["green"]
                 else:
-                    for row, column in pixels:
-                        output[column][row] = colors["blue"]
-                    if BOARD[r][c] == -2:
-                        for row, column in diagonal:
-                            output[column][row] = colors["purple"]
+                    pixels = [ 
+                    (r*4+1, c*4+1), 
+                    (r*4+1, c*4+2),
+                    (r*4+2, c*4+1),
+                    (r*4+2, c*4+2),
+                    ]
+
+                    diagonal = [
+                    (r*4+1, c*4+2),
+                    (r*4+2, c*4+1)
+                    ]
+
+                    if BOARD[r][c] > 0:
+                        for row, column in pixels:
+                            output[column][row] = colors["red"]
+                        if BOARD[r][c] == 2:
+                            for row, column in diagonal:
+                                output[column][row] = colors["orange"]
+                    else:
+                        for row, column in pixels:
+                            output[column][row] = colors["blue"]
+                        if BOARD[r][c] == -2:
+                            for row, column in diagonal:
+                                output[column][row] = colors["purple"]
 
     display = LedDisplay()
     display.show(output)
