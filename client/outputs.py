@@ -63,24 +63,57 @@ class LedDisplay:
 if __name__ == "__main__":
 
 
+    BOARD = [
+            [-2,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  2], 
+            [ 0,  0,  0, -1,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  1,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+            [ 0,  1,  0,  0,  0,  0,  0,  0], 
+            [ 0,  0,  0,  0,  0,  0,  0,  0], 
+    ]
+
     colors = {
-                "red": (255, 0, 0),
+                
                 "black": (0, 0, 0),
-                "grey": (100, 100, 100)
-            }
+                "grey": (100, 100, 100),
+                "red": (255, 0, 0),
+                "orange": (255, 130, 0),
+                "blue": (0, 0, 255),
+                "purple": (130, 0, 255)
+
+    }
 
     output = []
     for r in range(32):
         output.append([])
         for c in range(32):
             if ((r % 8 < 4) and (c % 8 < 4)) or ((r % 8 >= 4) and (c % 8 >= 4)):
-                output[r].append(colors['grey'])
+                output[r].append(colors["grey"])
             else:
-                output[r].append(colors['black'])
+                output[r].append(colors["black"])
 
+    for r in range(8):
+        for c in range(8):
+            pixels = [ 
+            (r*4+1, c*4+1), 
+            (r*4+1, c*4+2),
+            (r*4+2, c*4+1),
+            (r*4+2, c*4+2),
+            ]
 
+            if BOARD[r][c] == 1:
+                color = colors["red"]
+            elif BOARD[r][c] == 2:
+                color = colors["orange"]
+            elif BOARD[r][c] == -1:
+                color = colors["blue"]
+            elif BOARD[r][c] == -2:
+                color = colors["purple"]
 
-
+            for row, column in pixels:
+                output[row][column] = color
 
 
 
