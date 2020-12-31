@@ -234,18 +234,19 @@ class Checkers:
 
         # print first view
         for r,c in locations:
-            tempBoard[r][c] = "*"
-        tempBoard[row][col] = "X"
+            tempBoard[r][c] = str(tempBoard[r][c]) + "*"
+        tempBoard[row][col] = str(tempBoard[r][c]) + "X"
         self.printBoard(tempBoard)
 
         # allow user to loop through inputs and select location
         while True:
             if oldIndex != listener.index:
                 # refresh view
+                tempBoard = copy.deepcopy(self.BOARD)
                 row, col = locations[listener.index]
                 for r,c in locations:
-                    tempBoard[r][c] = "*"
-                tempBoard[row][col] = "X"
+                    tempBoard[r][c] = str(tempBoard[r][c]) + "*"
+                tempBoard[row][col] = str(tempBoard[r][c]) + "X"
                 self.printBoard(tempBoard)
                 oldIndex = listener.index
             if listener.selected:
@@ -253,7 +254,7 @@ class Checkers:
 
         # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
-        tempBoard[row][col] = "X"
+        tempBoard[row][col] = str(tempBoard[r][c]) + "X"
         self.printBoard(tempBoard)
         # return selected coordinates
         return (row, col)
@@ -330,7 +331,8 @@ class Checkers:
                 "orange": (255, 255, 0),
                 "blue": (0, 0, 255),
                 "purple": (255, 0, 255),
-                "green": (0, 255, 0)
+                "green": (0, 255, 0),
+                "dark green": (0, 100, 0)
 
             }
 
@@ -345,8 +347,8 @@ class Checkers:
 
             for r in range(8):
                 for c in range(8):
-                    if board[r][c] and board[r][c] != "*":
-                        if board[r][c] == "X":
+                    if board[r][c]:
+                        if len(board[r][c]) > 1:
                             pixels = [ 
                             (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
                             (r*4+1,c*4), (r*4+1,c*4+3),
@@ -355,8 +357,11 @@ class Checkers:
                             ]
                             
                             for row, column in pixels:
-                                output[column][row] = colors["green"]
-                        
+                                if board[r][c][1] == "X":
+                                    output[column][row] = colors["green"]
+                                else:
+                                    output[column][row] = colors["dark green"]
+
                         pixels = [ 
                         (r*4+1, c*4+1), 
                         (r*4+1, c*4+2),
@@ -369,16 +374,18 @@ class Checkers:
                         (r*4+2, c*4+1)
                         ]
 
-                        if board[r][c] > 0:
+                        piece = int(str(board[r][c])[0])
+
+                        if piece > 0:
                             for row, column in pixels:
                                 output[column][row] = colors["red"]
-                            if board[r][c] == 2:
+                            if piece == 2:
                                 for row, column in diagonal:
                                     output[column][row] = colors["orange"]
                         else:
                             for row, column in pixels:
                                 output[column][row] = colors["blue"]
-                            if board[r][c] == -2:
+                            if piece == -2:
                                 for row, column in diagonal:
                                     output[column][row] = colors["purple"]
 
