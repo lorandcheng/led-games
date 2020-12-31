@@ -1,5 +1,6 @@
 import atexit
 import random
+import sys
 import time
 
 import paho.mqtt.client as mqtt
@@ -277,13 +278,20 @@ def leave(username):
     info.wait_for_publish()
 
 if __name__ == "__main__":
-    
-
     OUTPUT = TerminalDisplay()
-    GAMES = [
-        checkers.Checkers(OUTPUT),
-        battleship.Battleship(OUTPUT)
-    ]
+    
+    if sys.platform == "linux" or sys.platform == "linux2":
+        LED = LedDisplay()
+        GAMES = [
+            checkers.Checkers(LED),
+            battleship.Battleship(LED)
+        ]
+    else:
+        GAMES = [
+            checkers.Checkers(OUTPUT),
+            battleship.Battleship(OUTPUT)
+        ]
+
     USERNAME = ""
 
     """
@@ -299,7 +307,10 @@ if __name__ == "__main__":
 
     while True:
         game = selectGame(GAMES)
-        game.__init__(OUTPUT)
+        if sys.platform == "linux" or sys.platform == "linux2":
+            game.__init__(LED)
+        else:
+            game.__init__(OUTPUT)
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """

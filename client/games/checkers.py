@@ -433,6 +433,5 @@ class Checkers:
 
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = True
-        self.output.show("ending turn")
 
         return self.BOARD
