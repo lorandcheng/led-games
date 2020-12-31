@@ -348,7 +348,7 @@ class Checkers:
             for r in range(8):
                 for c in range(8):
                     if board[r][c]:
-                        if len(str(board[r][c])) > 1:
+                        if type(board[r][c]) == str > 1:
                             pixels = [ 
                             (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
                             (r*4+1,c*4), (r*4+1,c*4+3),
@@ -357,7 +357,7 @@ class Checkers:
                             ]
                             
                             for row, column in pixels:
-                                if board[r][c][1] == "X":
+                                if str(board[r][c])[1] == "X":
                                     output[column][row] = colors["green"]
                                 else:
                                     output[column][row] = colors["dark green"]
