@@ -348,6 +348,7 @@ class Checkers:
             for r in range(8):
                 for c in range(8):
                     if board[r][c]:
+                        print("Piece: ", board[r][c])
                         if type(board[r][c]) == str:
                             pixels = [ 
                             (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
