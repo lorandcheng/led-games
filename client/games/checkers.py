@@ -363,8 +363,10 @@ class Checkers:
                                     output[column][row] = colors["dark green"]
                             
                             piece = int(board[r][c][:-1])
+                            print("Piece if:", piece)
                         else:
                             piece = board[r][c]
+                            print("Piece else:", piece)
 
                         pixels = [ 
                         (r*4+1, c*4+1), 
