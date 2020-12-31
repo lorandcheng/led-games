@@ -246,7 +246,7 @@ class Checkers:
                 row, col = locations[listener.index]
                 for r,c in locations:
                     tempBoard[r][c] = str(tempBoard[r][c]) + "*"
-                tempBoard[row][col] = str(tempBoard[r][c]) + "X"
+                tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
                 self.printBoard(tempBoard)
                 oldIndex = listener.index
             if listener.selected:
