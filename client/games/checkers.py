@@ -387,7 +387,7 @@ class Checkers:
                             if piece == 2:
                                 for row, column in diagonal:
                                     output[column][row] = colors["orange"]
-                        else:
+                        elif piece < 0:
                             for row, column in pixels:
                                 output[column][row] = colors["blue"]
                             if piece == -2:

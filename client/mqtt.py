@@ -302,8 +302,6 @@ if __name__ == "__main__":
 
     usernameGenerator = UsernameGenerator(OUTPUT)
     USERNAME = usernameGenerator.getUsername()
-    print(f"You chose the username: {USERNAME}")
-    time.sleep(2)
 
     atexit.register(leave, USERNAME)
 
