@@ -348,7 +348,7 @@ class Checkers:
             for r in range(8):
                 for c in range(8):
                     if board[r][c]:
-                        if len(board[r][c]) > 1:
+                        if len(str(board[r][c])) > 1:
                             pixels = [ 
                             (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
                             (r*4+1,c*4), (r*4+1,c*4+3),
