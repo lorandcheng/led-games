@@ -7,10 +7,10 @@ MQTT SERVER STEPS
 2. Listen for incoming user connections on "ledGames/users/status"
     - when a new user connects, add them to USERS list
     - reject already used usernames
-    - TODO remove users who leave
+    - remove users who leave
 3. Listen for incoming lobby connections on "ledGames/lobby/status"
     - when a new user joins the lobby, send out an updated lobby list
-    - TODO remove users from lobby
+    - remove users from lobby
 
 """
 
@@ -19,10 +19,12 @@ import paho.mqtt.client as mqtt
 USERS = []
 LOBBY = []
 
+
 def parseMessage(msg):
     message = str(msg.payload, "utf-8")
     parsedMessage = tuple(map(str, message.split(", ")))
     return parsedMessage
+
 
 def users(client, userdata, msg):
     """
@@ -51,6 +53,7 @@ def users(client, userdata, msg):
         except:
             pass
 
+
 def lobby(client, userdata, msg):
 
     print(str(msg.payload, 'utf-8'))
@@ -68,6 +71,7 @@ def lobby(client, userdata, msg):
                 print(entry)
                 LOBBY.remove(entry)
 
+
 def onConnect(client, userdata, flags, rc):
     print("Connection returned " + str(rc))
     client.subscribe("ledGames/users/status")
@@ -80,15 +84,16 @@ def onConnect(client, userdata, flags, rc):
 def onMessage(client, userdata, msg):
     print("onMessage")
 
+
 def mqttInit():   
     client = mqtt.Client()
     client.on_connect = onConnect
     client.on_message = onMessage
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
     client.loop_start()
-    while True:
-        pass
 
 
 if __name__ == '__main__':
     mqttInit()
+    while True:
+        pass

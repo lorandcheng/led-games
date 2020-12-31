@@ -1,12 +1,13 @@
 import atexit
 import random
+import sys
 import time
 
 import paho.mqtt.client as mqtt
 
 from games import battleship, checkers
 from inputs import Menu, Reader
-from outputs import TerminalDisplay
+from outputs import TerminalDisplay, LedDisplay
 from parsersM import parseMessage
 
 
@@ -18,7 +19,10 @@ def selectGame(games):
     return games[index]
 
 class mqttClient:
-    def __init__(self):
+    """
+    Summary: Bare-bones mqtt client class
+    """
+    def __init__(self):   
         self.client = mqtt.Client()
         self.client.on_connect = self.onConnect
         self.client.on_message = self.onMessage
@@ -36,6 +40,9 @@ class mqttClient:
         print("disconnecting")
 
 class UsernameGenerator(mqttClient):
+    """
+    Summary: Prompts user to enter a username until it is approved by the server
+    """
     def __init__(self, output):
         super().__init__()
         self.output = output
@@ -80,6 +87,9 @@ class UsernameGenerator(mqttClient):
         self.client.disconnect()
 
 class Lobby(mqttClient):
+    """
+    Summary: Class to handle matchmaking and opponent selection
+    """
     def __init__(self, username, game, output):
         super().__init__()
         self.output = output
@@ -198,6 +208,9 @@ class Lobby(mqttClient):
         self.client.disconnect()
 
 class Game(mqttClient):
+    """
+    Summary: Class to handle game modules and gameplay
+    """
     def __init__(self, game, username, opponent, color, output):
         self.game = game
         self.username = username
@@ -256,6 +269,9 @@ class Game(mqttClient):
 
 
 def leave(username):
+    """
+    Summary: cleanup function on program exit, removes username from server list
+    """
     print("exiting program")
     client = mqtt.Client()
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
@@ -264,13 +280,20 @@ def leave(username):
     info.wait_for_publish()
 
 if __name__ == "__main__":
-    
-
     OUTPUT = TerminalDisplay()
-    GAMES = [
-        checkers.Checkers(),
-        battleship.Battleship()
-    ]
+    
+    if sys.platform == "linux" or sys.platform == "linux2":
+        LED = LedDisplay()
+        GAMES = [
+            checkers.Checkers(LED),
+            battleship.Battleship(LED)
+        ]
+    else:
+        GAMES = [
+            checkers.Checkers(OUTPUT),
+            battleship.Battleship(OUTPUT)
+        ]
+
     USERNAME = ""
 
     """
@@ -286,7 +309,10 @@ if __name__ == "__main__":
 
     while True:
         game = selectGame(GAMES)
-        game.__init__()
+        if sys.platform == "linux" or sys.platform == "linux2":
+            game.__init__(LED)
+        else:
+            game.__init__(OUTPUT)
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """
