@@ -312,9 +312,9 @@ class Checkers:
                         row += ' b |'
                     elif board[r][c] == -1:
                         row += ' r |'
-                    elif board[r][c] == '*':
+                    elif str(board[r][c])[-1] == '*':
                         row += ' * |'
-                    elif board[r][c] == 'X':
+                    elif str(board[r][c])[-1] == 'X':
                         row += ' X |'
                     else:
                         row += '   |'
@@ -358,7 +358,7 @@ class Checkers:
                             ]
                             
                             for row, column in pixels:
-                                if str(board[r][c])[1] == "X":
+                                if str(board[r][c])[-1] == "X":
                                     output[column][row] = colors["green"]
                                 else:
                                     output[column][row] = colors["dark green"]
