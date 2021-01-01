@@ -237,27 +237,27 @@ class Checkers:
             tempBoard[r][c] = str(tempBoard[r][c]) + "*"
         tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
         self.printBoard(tempBoard)
-
+        print("1:", tempBoard)
         # allow user to loop through inputs and select location
-        selectBoard = copy.deepcopy(self.BOARD)
         while True:
             if oldIndex != listener.index:
                 # refresh view
-                selectBoard = copy.deepcopy(self.BOARD)
+                tempBoard = copy.deepcopy(self.BOARD)
                 row, col = locations[listener.index]
                 for r,c in locations:
-                    selectBoard[r][c] = str(selectBoard[r][c]) + "*"
-                selectBoard[row][col] = str(selectBoard[r][c])[:-1] + "X"
-                self.printBoard(selectBoard)
+                    tempBoard[r][c] = str(tempBoard[r][c]) + "*"
+                tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
+                self.printBoard(tempBoard)
+                print("2:", tempBoard)
                 oldIndex = listener.index
             if listener.selected:
-                tempBoard = selectBoard
                 break
 
         # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
         tempBoard[row][col] = str(tempBoard[r][c]) + "X"
         self.printBoard(tempBoard)
+        print("3:", tempBoard)
         # return selected coordinates
         return (row, col)
 
@@ -299,7 +299,7 @@ class Checkers:
             board (2D list): the board stored in a 2D array
         """
         self.output.clear()
-        print("\n\n\nBoard:", board)
+
         if type(self.output).__name__ == "TerminalDisplay":
             output = "\n"
             output += "+---+---+---+---+---+---+---+---+\n"
