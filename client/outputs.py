@@ -68,6 +68,8 @@ class LedDisplay:
 
                     time.sleep(0.05)
                     self.canvas = self.matrix.SwapOnVSync(self.canvas)
+            else:
+                graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
             
 
         elif type(info) == list:
