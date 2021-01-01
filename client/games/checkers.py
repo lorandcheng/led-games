@@ -235,7 +235,7 @@ class Checkers:
         # print first view
         for r,c in locations:
             tempBoard[r][c] = str(tempBoard[r][c]) + "*"
-        tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
+        tempBoard[row][col] = str(tempBoard[row][col])[:-1] + "X"
         self.printBoard(tempBoard)
         print("1:", tempBoard)
         # allow user to loop through inputs and select location
@@ -246,7 +246,7 @@ class Checkers:
                 row, col = locations[listener.index]
                 for r,c in locations:
                     tempBoard[r][c] = str(tempBoard[r][c]) + "*"
-                tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
+                tempBoard[row][col] = str(tempBoard[row][col])[:-1] + "X"
                 self.printBoard(tempBoard)
                 print("2:", tempBoard)
                 oldIndex = listener.index
@@ -255,7 +255,7 @@ class Checkers:
 
         # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
-        tempBoard[row][col] = str(tempBoard[r][c]) + "X"
+        tempBoard[row][col] = str(tempBoard[row][col]) + "X"
         self.printBoard(tempBoard)
         print("3:", tempBoard)
         # return selected coordinates
