@@ -239,17 +239,19 @@ class Checkers:
         self.printBoard(tempBoard)
 
         # allow user to loop through inputs and select location
+        selectBoard = copy.deepcopy(self.BOARD)
         while True:
             if oldIndex != listener.index:
                 # refresh view
-                tempBoard = copy.deepcopy(self.BOARD)
+                selectBoard = copy.deepcopy(self.BOARD)
                 row, col = locations[listener.index]
                 for r,c in locations:
-                    tempBoard[r][c] = str(tempBoard[r][c]) + "*"
-                tempBoard[row][col] = str(tempBoard[r][c])[:-1] + "X"
-                self.printBoard(tempBoard)
+                    selectBoard[r][c] = str(selectBoard[r][c]) + "*"
+                selectBoard[row][col] = str(selectBoard[r][c])[:-1] + "X"
+                self.printBoard(selectBoard)
                 oldIndex = listener.index
             if listener.selected:
+                tempBoard = selectBoard
                 break
 
         # display final selection
