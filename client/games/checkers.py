@@ -297,7 +297,7 @@ class Checkers:
             board (2D list): the board stored in a 2D array
         """
         self.output.clear()
-
+        print("\n\n\nBoard:", board)
         if type(self.output).__name__ == "TerminalDisplay":
             output = "\n"
             output += "+---+---+---+---+---+---+---+---+\n"
@@ -345,11 +345,9 @@ class Checkers:
                     else:
                         output[r].append(colors["black"])
 
-            print("\n\n\n\nHERE")
             for r in range(8):
                 for c in range(8):
                     if board[r][c]:
-                        print("Piece: ", board[r][c])
                         if type(board[r][c]) == str:
                             pixels = [ 
                             (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
@@ -365,7 +363,6 @@ class Checkers:
                                     output[column][row] = colors["dark green"]
                             
                             piece = int(board[r][c][:-1])
-                            print("string piece:", piece)
                         else:
                             piece = board[r][c]
 
