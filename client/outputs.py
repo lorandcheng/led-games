@@ -45,7 +45,7 @@ class LedDisplay:
 
         # Specifications for Font style of text
         self.font = graphics.Font()
-        self.font.LoadFont("rpi-rgb-led-matrix/fonts/7x13.bdf")
+        self.font.LoadFont("rpi-rgb-led-matrix/fonts/4x6.bdf")
         self.textColor = graphics.Color(255, 255, 0)
 
         self.canvas = self.matrix.CreateFrameCanvas()
