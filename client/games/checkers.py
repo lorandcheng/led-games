@@ -237,7 +237,6 @@ class Checkers:
             tempBoard[r][c] = str(tempBoard[r][c]) + "*"
         tempBoard[row][col] = str(tempBoard[row][col])[:-1] + "X"
         self.printBoard(tempBoard)
-        print("1:", tempBoard)
         # allow user to loop through inputs and select location
         while True:
             if oldIndex != listener.index:
@@ -248,7 +247,6 @@ class Checkers:
                     tempBoard[r][c] = str(tempBoard[r][c]) + "*"
                 tempBoard[row][col] = str(tempBoard[row][col])[:-1] + "X"
                 self.printBoard(tempBoard)
-                print("2:", tempBoard)
                 oldIndex = listener.index
             if listener.selected:
                 break
@@ -257,7 +255,6 @@ class Checkers:
         tempBoard = copy.deepcopy(self.BOARD) 
         tempBoard[row][col] = str(tempBoard[row][col]) + "X"
         self.printBoard(tempBoard)
-        print("3:", tempBoard)
         # return selected coordinates
         return (row, col)
 
