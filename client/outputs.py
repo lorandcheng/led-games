@@ -46,21 +46,37 @@ class LedDisplay:
         # Specifications for Font style of text
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/7x13.bdf")
+        self.textColor = graphics.Color(255, 255, 0)
 
         self.canvas = self.matrix.CreateFrameCanvas()
     
     def clear(self):
         self.matrix.Clear()
+        self.canvas.Clear()
 
     def show(self, info):
         if type(info) == str:
-            print("I am showing this string:", info)
+            print("Displaying string:", info)
+            if len(info) > 4:
+                pos = self.canvas.width
+                while True:
+                    self.canvas.Clear()
+                    len = graphics.DrawText(self.canvas, font, pos, 10, textColor, my_text)
+                    pos -= 1
+                    if (pos + len < 0):
+                        pos = self.canvas.width
+
+                    time.sleep(0.05)
+                    self.canvas = self.matrix.SwapOnVSync(self.canvas)
+            
+
         elif type(info) == list:
             for r in range(self.matrix.height):
                 for c in range(self.matrix.width):
                     R, G, B = info[r][c]
                     self.canvas.SetPixel(r, c, R, G, B)
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
+
         else:
             print("Invalid input: must be a string or a list")
             raise ValueError
