@@ -53,98 +53,21 @@ class LedDisplay:
         self.matrix.Clear()
 
     def show(self, info):
-        for r in range(self.matrix.height):
-            for c in range(self.matrix.width):
-                R, G, B = info[r][c]
-                self.canvas.SetPixel(r, c, R, G, B)
-        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        if type(info) == str:
+            print("I am showing this string:", info)
+        elif type(info) == list:
+            for r in range(self.matrix.height):
+                for c in range(self.matrix.width):
+                    R, G, B = info[r][c]
+                    self.canvas.SetPixel(r, c, R, G, B)
+            self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        else:
+            print("Invalid input: must be a string or a list")
+            raise ValueError
 
 
 if __name__ == "__main__":
-
-
-    # BOARD = [
-    #         [-2,  0,  0,  0,  0,  0,  0,  0], 
-    #         [ 0,  0,  0,  0,  0,  0,  0,  0], 
-    #         [ 0,  0,  0,  0,  0,  0,  0,  2], 
-    #         [ 0,  0,  0, -1,  0,  0,  0,  0], 
-    #         [ 0,  0,  0,  0,  1,  0,  0,  0], 
-    #         [ "X",  0,  0,  0,  0,  0,  0,  0], 
-    #         [ 0,  1,  0,  0,  0,  0,  0,  0], 
-    #         [ 0,  "X",  0,  0,  0,  0,  0,  0], 
-    # ]
-
-    BOARD = [
-        [ 0, -1,  0, -1,  0, -1,  0, -1], 
-        [-1,  0, -1,  0, -1,  0, -1,  0], 
-        [ 0, -1,  0, -1,  0, -1,  0, -1], 
-        [ 0,  0,  0,  0,  0,  0,  0,  0], 
-        [ 0,  "*",  0,  0,  0,  0,  0,  0], 
-        [ 1,  0,  1,  0,  1,  0,  1,  0], 
-        [ 0,  1,  0,  1,  0,  1,  0,  1], 
-        [ 1,  0,  1,  0,  1,  0,  1,  0], 
-    ]
-
-    colors = {
-                
-                "black": (0, 0, 0),
-                "grey": (100, 100, 100),
-                "red": (255, 0, 0),
-                "orange": (255, 255, 0),
-                "blue": (0, 0, 255),
-                "purple": (255, 0, 255),
-                "green": (0, 255, 0)
-
-    }
-
-    output = []
-    for r in range(32):
-        output.append([])
-        for c in range(32):
-            if ((r % 8 < 4) and (c % 8 < 4)) or ((r % 8 >= 4) and (c % 8 >= 4)):
-                output[r].append(colors["grey"])
-            else:
-                output[r].append(colors["black"])
-
-    for r in range(8):
-        for c in range(8):
-            if BOARD[r][c] and board[r][c] != "*":
-                if BOARD[r][c] == "X":
-                    pixels = [ 
-                    (r*4,c*4),  (r*4,c*4+1), (r*4,c*4+2), (r*4,c*4+3), 
-                    (r*4+1,c*4), (r*4+1,c*4+3),
-                    (r*4+2,c*4), (r*4+2,c*4+3),
-                    (r*4+3,c*4),  (r*4+3,c*4+1), (r*4+3,c*4+2), (r*4+3,c*4+3), 
-                    ]
-                    
-                    for row, column in pixels:
-                        output[column][row] = colors["green"]
-                else:
-                    pixels = [ 
-                    (r*4+1, c*4+1), 
-                    (r*4+1, c*4+2),
-                    (r*4+2, c*4+1),
-                    (r*4+2, c*4+2),
-                    ]
-
-                    diagonal = [
-                    (r*4+1, c*4+2),
-                    (r*4+2, c*4+1)
-                    ]
-
-                    if BOARD[r][c] > 0:
-                        for row, column in pixels:
-                            output[column][row] = colors["red"]
-                        if BOARD[r][c] == 2:
-                            for row, column in diagonal:
-                                output[column][row] = colors["orange"]
-                    else:
-                        for row, column in pixels:
-                            output[column][row] = colors["blue"]
-                        if BOARD[r][c] == -2:
-                            for row, column in diagonal:
-                                output[column][row] = colors["purple"]
-
+    output = "Testing strings"
     display = LedDisplay()
     display.show(output)
     time.sleep(20)

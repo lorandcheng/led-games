@@ -128,20 +128,20 @@ class Lobby(mqttClient):
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
                     # choose a random color and map to 1 and -1
-                    self.color = random.randint(0,1)
+                    self.color = random.choice([0, 1])
                     if self.color == 0:
                         self.color = -1
                     # send username, accepting code, and opponent's color
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1, {self.color*-1}")
                     self.selected = self.requester
                     print("accepting opponent")
-                    time.sleep(2)
+                    time.sleep(1)
                     break
                     
                 # if the request is denied, send deny message and return to choosing an opponent
                 else:
                     print("denying opponent", self.requester)
-                    time.sleep(2)
+                    time.sleep(1)
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, -1")
                     self.requester = ""
 
@@ -153,8 +153,6 @@ class Lobby(mqttClient):
                 # wait for response
                 while self.opponentResponse == 0:
                     pass
-                print('got response')
-                time.sleep(3)
                 # if opponent accepted, finalize
                 if self.opponentResponse == 1:
                     break
@@ -185,7 +183,7 @@ class Lobby(mqttClient):
         else:
             # -1 if opponent rejected, 1 if opponent confirmed my request
             self.opponentResponse = code
-            print("recieved respones "+str(code)) 
+            print("recieved response "+str(code))
         
 
 
