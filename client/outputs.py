@@ -61,7 +61,7 @@ class LedDisplay:
                 pos = self.canvas.width
                 while True:
                     self.canvas.Clear()
-                    length = graphics.DrawText(self.canvas, font, pos, 10, textColor, my_text)
+                    length = graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
                     pos -= 1
                     if (pos + length < 0):
                         pos = self.canvas.width
