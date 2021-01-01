@@ -69,7 +69,7 @@ class LedDisplay:
                     time.sleep(0.05)
                     self.canvas = self.matrix.SwapOnVSync(self.canvas)
             else:
-                graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
+                graphics.DrawText(self.canvas, self.font, 2, 10, self.textColor, info)
             
 
         elif type(info) == list:
@@ -85,7 +85,7 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
-    output = "Testing strings"
+    output = "Test"
     display = LedDisplay()
     display.show(output)
     time.sleep(20)
