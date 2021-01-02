@@ -105,7 +105,7 @@ if __name__ == "__main__":
     index = 0
 
     # cycle through selecting each option
-    for cycle in range(len(lines)):
+    for cycle in range(14):
         display.clear()
         output = lines.copy()
         for i in range(len(lines)):
@@ -116,7 +116,7 @@ if __name__ == "__main__":
                 output[i] = " "+lines[i]
         if index > (rows-1):
             print("scrolling")
-            output = output[index-(rows-1):]
+            output = output[index-(rows-1):] + output[:index-(rows-1)]
         display.show(tuple(output))
         index +=1
         time.sleep(1)
