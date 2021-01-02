@@ -18,19 +18,16 @@ class TerminalDisplay:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def show(self, info):
-        print(info)
+        if type(info) == tuple:
+            for elem in info:
+                print(elem)
+
+        if type(info) == list:
+            for elem in info:
+                print(elem)
 
 class LedDisplay:
     def __init__(self):
-        # Configuration for the matrix
-        options = RGBMatrixOptions()
-        options.rows = 32
-        options.cols = 32
-        options.chain_length = 1
-        options.parallel = 1
-        options.gpio_slowdown = 5
-        options.hardware_mapping = 'adafruit-hat' 
-
         # Configuration for the matrix
         options = RGBMatrixOptions()
         options.rows = 32
@@ -60,24 +57,7 @@ class LedDisplay:
             HEIGHT = 6 # random constant depending on which font is chosen
             index = HEIGHT # First line in which text can be placed on matrix
             
-
             for elem in info:
-                # if len(elem) > 8:
-                #     pos = self.canvas.width
-
-                #     while True:
-                #         self.canvas.Clear()
-                #         length = graphics.DrawText(self.canvas, self.font, pos, index, self.textColor, elem)
-                #         pos -= 1
-                #         if (pos + length < 0):
-                #             pos = self.canvas.width
-
-                #         time.sleep(0.05)
-                #         self.canvas = self.matrix.SwapOnVSync(self.canvas)
-
-                #     length = graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem) # print what you can after it scrolls
-                    
-                # else:
                 graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem)
                 index += HEIGHT # move to next line on matrix
 
