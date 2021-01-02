@@ -58,46 +58,48 @@ class LedDisplay:
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
         if type(info) == tuple:
             index = 10 # First line in which text can be placed on matrix
-            LENGTH = 10 # random constant depending on which font is chosen
+            HEIGHT = 10 # random constant depending on which font is chosen
 
             for elem in info:
-                if len(elem) > 8:
-                    pos = self.canvas.width
+                # if len(elem) > 8:
+                #     pos = self.canvas.width
 
-                    while True:
-                        self.canvas.Clear()
-                        length = graphics.DrawText(self.canvas, self.font, pos, index, self.textColor, elem)
-                        pos -= 1
-                        if (pos + length < 0):
-                            pos = self.canvas.width
+                #     while True:
+                #         self.canvas.Clear()
+                #         length = graphics.DrawText(self.canvas, self.font, pos, index, self.textColor, elem)
+                #         pos -= 1
+                #         if (pos + length < 0):
+                #             pos = self.canvas.width
 
-                        time.sleep(0.05)
-                        self.canvas = self.matrix.SwapOnVSync(self.canvas)
+                #         time.sleep(0.05)
+                #         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-                    length = graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem) # print what you can after it scrolls
+                #     length = graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem) # print what you can after it scrolls
                     
-                else:
-                    graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem)
-                    self.canvas = self.matrix.SwapOnVSync(self.canvas)
+                # else:
+                graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem)
+                index += HEIGHT # move to next line on matrix
 
-                index += LENGTH # move to next line on matrix
+            self.canvas = self.matrix.SwapOnVSync(self.canvas)
+
+                
 
 
-        if type(info) == str:
-            if len(info) > 8:
-                pos = self.canvas.width
-                while True:
-                    self.canvas.Clear()
-                    length = graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
-                    pos -= 1
-                    if (pos + length < 0):
-                        pos = self.canvas.width
+        # if type(info) == str:
+        #     if len(info) > 8:
+        #         pos = self.canvas.width
+        #         while True:
+        #             self.canvas.Clear()
+        #             length = graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
+        #             pos -= 1
+        #             if (pos + length < 0):
+        #                 pos = self.canvas.width
 
-                    time.sleep(0.05)
-                    self.canvas = self.matrix.SwapOnVSync(self.canvas)
-            else:
-                graphics.DrawText(self.canvas, self.font, 0, 10, self.textColor, info)
-                self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        #             time.sleep(0.05)
+        #             self.canvas = self.matrix.SwapOnVSync(self.canvas)
+        #     else:
+        #         graphics.DrawText(self.canvas, self.font, 0, 10, self.textColor, info)
+        #         self.canvas = self.matrix.SwapOnVSync(self.canvas)
             
 
         elif type(info) == list:
@@ -108,7 +110,7 @@ class LedDisplay:
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
         else:
-            print("Invalid input: must be a string or a list")
+            print("Invalid input: must be a tuple or a list")
             raise ValueError
 
 
