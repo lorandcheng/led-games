@@ -116,7 +116,7 @@ if __name__ == "__main__":
                 output[i] = " "+lines[i]
         if index > (rows-1):
             print("scrolling")
-            output = output[index-(rows-1):] + output[:index-(rows-1)]
+            output = output[index-(rows-1):]
         display.show(tuple(output))
         index +=1
         index %= len(lines)
