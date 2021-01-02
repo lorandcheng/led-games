@@ -44,6 +44,7 @@ class LedDisplay:
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/4x6.bdf")
         self.textColor = graphics.Color(100, 100, 100)
+        self.fontHeight = 6
 
         self.canvas = self.matrix.CreateFrameCanvas()
     
@@ -54,18 +55,16 @@ class LedDisplay:
     def show(self, info):
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
         if type(info) == tuple:
-            HEIGHT = 6 # random constant depending on which font is chosen
-            index = HEIGHT # First line in which text can be placed on matrix
+            self.fontHeight = 6 # random constant depending on which font is chosen
+            index = self.fontHeight # First line in which text can be placed on matrix
             
             for elem in info:
                 graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem)
-                index += HEIGHT # move to next line on matrix
+                index += self.fontHeight # move to next line on matrix
 
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
-                
-
-
+    
         # if type(info) == str:
         #     if len(info) > 8:
         #         pos = self.canvas.width
@@ -94,10 +93,13 @@ class LedDisplay:
             print("Invalid input: must be a tuple or a list")
             raise ValueError
 
+        def getNumRows(self):
+            return int(self.matrix.height/self.fontHeight)
 
 if __name__ == "__main__":
 
     display = LedDisplay()
+    rows = display.getNumRows()
 
     lines = ["Line1","Line2","Line3","Line4","Line5","Line6","Line7"]
     index = 0
@@ -112,6 +114,8 @@ if __name__ == "__main__":
                 print(i)
             else:
                 output[i] = " "+lines[i]
+        if index > rows:
+            output = output[index-rows:]
         display.show(tuple(output))
         index +=1
         time.sleep(1)
