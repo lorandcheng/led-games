@@ -93,8 +93,8 @@ class LedDisplay:
             print("Invalid input: must be a tuple or a list")
             raise ValueError
 
-        def getNumRows(self):
-            return int(self.matrix.height/self.fontHeight)
+    def getNumRows(self):
+        return int(self.matrix.height/self.fontHeight)
 
 if __name__ == "__main__":
 
