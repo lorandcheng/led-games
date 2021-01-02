@@ -96,7 +96,7 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
-    output = ("Line1","LongerLine2")
+    output = ("Line1","Line2","Line3","Line4","Line5","Line6","Line7")
     display = LedDisplay()
     display.show(output)
     time.sleep(20)
