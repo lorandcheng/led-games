@@ -46,7 +46,7 @@ class LedDisplay:
         # Specifications for Font style of text
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/4x6.bdf")
-        self.textColor = graphics.Color(255, 255, 0)
+        self.textColor = graphics.Color(100, 100, 100)
 
         self.canvas = self.matrix.CreateFrameCanvas()
     
@@ -57,7 +57,7 @@ class LedDisplay:
     def show(self, info):
         if type(info) == str:
             print("Displaying string:", info)
-            if len(info) > 4:
+            if len(info) > 8:
                 pos = self.canvas.width
                 while True:
                     self.canvas.Clear()
@@ -69,7 +69,7 @@ class LedDisplay:
                     time.sleep(0.05)
                     self.canvas = self.matrix.SwapOnVSync(self.canvas)
             else:
-                graphics.DrawText(self.canvas, self.font, 2, 10, self.textColor, info)
+                graphics.DrawText(self.canvas, self.font, 0, 10, self.textColor, info)
                 self.canvas = self.matrix.SwapOnVSync(self.canvas)
             
 
@@ -86,7 +86,7 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
-    output = "Test"
+    output = "Username"
     display = LedDisplay()
     display.show(output)
     time.sleep(20)
