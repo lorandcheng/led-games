@@ -43,6 +43,8 @@ class Listener:
     def onRelease(self, key):
         pass
 
+    def __del__(self):
+        self.key.stop()
 
 class Reader(Listener):
     def __init__(self, output, prompt=""):

@@ -96,7 +96,20 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
-    output = ("Line1","Line2","Line3","Line4","Line5","Line6","Line7")
+
     display = LedDisplay()
-    display.show(output)
+
+    lines = ["Line1","Line2","Line3","Line4","Line5","Line6","Line7"]
+    output = lines.copy()
+    index = 0
+
+    # cycle through selecting each option
+    for i in range(len(lines)):
+        if i == index:
+            output[i] = ">"+lines[i]
+        else:
+            output[i] = " "+lines[i]
+    display.show(tuple(output))
     time.sleep(20)
+
+    
