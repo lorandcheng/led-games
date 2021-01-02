@@ -114,7 +114,7 @@ if __name__ == "__main__":
                 print(i)
             else:
                 output[i] = " "+lines[i]
-        if index > rows:
+        if index >= rows:
             output = output[index-rows:]
         display.show(tuple(output))
         index +=1
