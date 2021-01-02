@@ -114,8 +114,9 @@ if __name__ == "__main__":
                 print(i)
             else:
                 output[i] = " "+lines[i]
-        if index >= rows:
-            output = output[index-rows:]
+        if index > (rows-1):
+            print("scrolling")
+            output = output[index-(rows-1):]
         display.show(tuple(output))
         index +=1
         time.sleep(1)
