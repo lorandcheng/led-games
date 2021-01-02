@@ -119,6 +119,7 @@ if __name__ == "__main__":
             output = output[index-(rows-1):] + output[:index-(rows-1)]
         display.show(tuple(output))
         index +=1
+        index %= len(lines)
         time.sleep(1)
     time.sleep(20)
 
