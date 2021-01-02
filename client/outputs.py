@@ -56,7 +56,6 @@ class LedDisplay:
 
     def show(self, info):
         if type(info) == str:
-            print("Displaying string:", info)
             if len(info) > 8:
                 pos = self.canvas.width
                 while True:

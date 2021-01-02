@@ -3,8 +3,6 @@ import time
 
 from pynput import keyboard
 
-from outputs import TerminalDisplay
-
 class Listener:
     """
     Class usage:
