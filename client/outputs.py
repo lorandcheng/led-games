@@ -57,8 +57,9 @@ class LedDisplay:
     def show(self, info):
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
         if type(info) == tuple:
-            index = 10 # First line in which text can be placed on matrix
-            HEIGHT = 10 # random constant depending on which font is chosen
+            HEIGHT = 6 # random constant depending on which font is chosen
+            index = HEIGHT # First line in which text can be placed on matrix
+            
 
             for elem in info:
                 # if len(elem) > 8:
