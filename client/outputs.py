@@ -112,7 +112,7 @@ if __name__ == "__main__":
                 output[i] = " "+lines[i]
         display.show(tuple(output))
         index +=1
-        time.sleep(2)
+        time.sleep(1)
     time.sleep(20)
 
     
