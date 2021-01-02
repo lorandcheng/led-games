@@ -104,10 +104,12 @@ if __name__ == "__main__":
 
     # cycle through selecting each option
     for cycle in range(len(lines)):
+        display.clear()
         output = lines.copy()
         for i in range(len(lines)):
             if i == index:
                 output[i] = ">"+lines[i]
+                print(i)
             else:
                 output[i] = " "+lines[i]
         display.show(tuple(output))
