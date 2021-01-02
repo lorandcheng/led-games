@@ -104,12 +104,15 @@ if __name__ == "__main__":
     index = 0
 
     # cycle through selecting each option
-    for i in range(len(lines)):
-        if i == index:
-            output[i] = ">"+lines[i]
-        else:
-            output[i] = " "+lines[i]
-    display.show(tuple(output))
+    for cycle in range(len(lines)):
+        for i in range(len(lines)):
+            if i == index:
+                output[i] = ">"+lines[i]
+            else:
+                output[i] = " "+lines[i]
+        display.show(tuple(output))
+        index +=1
+        time.sleep(2)
     time.sleep(20)
 
     
