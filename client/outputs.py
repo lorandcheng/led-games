@@ -113,7 +113,7 @@ class LedDisplay:
 
 
 if __name__ == "__main__":
-    output = "Username"
+    output = ("Line1","LongerLine2")
     display = LedDisplay()
     display.show(output)
     time.sleep(20)
