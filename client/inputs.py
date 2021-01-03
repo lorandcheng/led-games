@@ -47,9 +47,12 @@ class Listener:
         self.key.stop()
 
 class Reader(Listener):
-    def __init__(self, output, prompt=""):
+    def __init__(self, output, prompt=()):
         self.prompt = prompt
         self.str = ""
+
+        #TODO: remove the ' ' option for usernames, handle exception of pressing enter without a username, edit terminal output class to handle tuples, limit username length for scrolling 
+
         self.chars = [" ", "_"]
         self.chars += list(string.ascii_lowercase+string.digits)
         self.output = output
@@ -60,14 +63,14 @@ class Reader(Listener):
     
     def readStr(self):
         self.output.clear()
-        self.output.show(self.prompt)
+        self.output.show(tuple(self.prompt))
+        time.sleep(3)
         self.output.show(self.chars[self.index])
         oldIndex = self.index
         while True:
             if oldIndex != self.index:
                 self.output.clear()
-                self.output.show(self.prompt)
-                self.output.show(self.str+self.chars[self.index])
+                self.output.show(str(self.str+self.chars[self.index]))
                 oldIndex = self.index
             if self.selected:
                 if self.chars[self.index] == " ":
@@ -191,18 +194,18 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    # prompt = "Enter a name"
-    # reader = Reader(prompt, OUTPUT)
-    # print("Starting reader")
-    # reader.readStr()
-    # print("You entered:", reader.getStr())
+    # prompt = ("Enter", "a name")
+    reader = Reader(OUTPUT, ("Enter", "a name"))
+    print("Starting reader")
+    reader.readStr()
+    print("You entered:", reader.getStr())
 
     """
     DEMO MENU CODE
     """
-    prompt = "Choose an option"
-    options = ["option 1", "option 2", "option 3", "option 4", "option 5", "option option 6", "option option 7"]
-    menu = Menu(OUTPUT, prompt, options, indexing=True)
-    index, selection = menu.select()
-    print("You chose:", selection, "at index", index)
-    del menu
+    # prompt = "Choose an option"
+    # options = ["option 1", "option 2", "option 3", "option 4", "option 5", "option option 6", "option option 7"]
+    # menu = Menu(OUTPUT, prompt, options, indexing=True)
+    # index, selection = menu.select()
+    # print("You chose:", selection, "at index", index)
+    # del menu
