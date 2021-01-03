@@ -302,10 +302,7 @@ if __name__ == "__main__":
 
     while True:
         game = selectGame(GAMES)
-        if sys.platform == "linux" or sys.platform == "linux2":
-            game.__init__(LED)
-        else:
-            game.__init__(OUTPUT)
+        game.__init__(OUTPUT)
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """
