@@ -60,9 +60,9 @@ class Reader(Listener):
     
     def readStr(self):
         self.output.clear()
-        self.output.show(self.prompt)
+        self.output.show(tuple(self.prompt))
         time.sleep(3)
-        self.output.show(tuple(self.chars[self.index]))
+        self.output.show(self.chars[self.index])
         oldIndex = self.index
         while True:
             if oldIndex != self.index:
