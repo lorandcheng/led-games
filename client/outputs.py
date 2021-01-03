@@ -56,8 +56,10 @@ class LedDisplay:
         self.canvas.Clear()
 
     def show(self, info):
+        if type(info) == str:
+            print(info)
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
-        if type(info) == tuple:
+        elif type(info) == tuple:
             self.fontHeight = 6 # random constant depending on which font is chosen
             index = self.fontHeight # First line in which text can be placed on matrix
             
