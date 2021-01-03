@@ -94,27 +94,46 @@ class Menu(Listener):
         self.len = len(newOptions)
 
     def _printOptions(self):
-        # self.output.clear()
-        # self.output.show(self.prompt)
-        # for i in range(len(self.options)):
-        #     if i == self.index:
-        #         self.output.show('* ' + self.options[i])
-        #     else:
-        #         self.output.show('  ' + self.options[i])
         
         rows = self.output.getNumRows()
         
         self.output.clear()
         toPrint = self.options.copy()
-        for i in range(len(self.options)):
-            if i == self.index:
-                toPrint[i] = ">"+self.options[i]
-            else:
-                toPrint[i] = " "+self.options[i]
-        if self.index > (rows-1):
-            toPrint = toPrint[self.index-(rows-1):]
-        self.output.show(tuple(toPrint))
 
+        for i in range(len(self.options)):
+            if i != self.index:
+                toPrint[i] = " "+self.options[i]
+        
+        
+        # Scrolling code
+        if len( self.options[self.index] ) >= 7:
+            scrollIndex = 0
+            oldIndex = self.index
+
+            while self.index == oldIndex:
+                self.output.clear()
+
+                toPrint[self.index] = toPrint[self.index][1:]
+
+                toPrint[self.index] = ">"+toPrint[self.index]
+                
+                if self.index > (rows-1):
+                    toPrint = toPrint[self.index-(rows-1):]
+
+                self.output.show(tuple(toPrint))
+                time.sleep(0.1)
+                scrollIndex += 1
+
+                if scrollIndex == len(self.options[self.index]):
+                    scrollIndex = 0
+                
+                toPrint[self.index] = toPrint[self.index][1:]
+        else:
+            toPrint[self.index] = ">"+toPrint[self.index]
+
+            if self.index > (rows-1):
+                toPrint = toPrint[self.index-(rows-1):]
+            self.output.show(tuple(toPrint))
 
     def select(self):
         self.selected = 0
