@@ -50,6 +50,9 @@ class Reader(Listener):
     def __init__(self, output, prompt=()):
         self.prompt = prompt
         self.str = ""
+
+        #TODO: remove the ' ' option for usernames, handle exception of pressing enter without a username, edit terminal output class to handle tuples, limit username length for scrolling 
+
         self.chars = [" ", "_"]
         self.chars += list(string.ascii_lowercase+string.digits)
         self.output = output
