@@ -191,8 +191,8 @@ if __name__ == '__main__':
     """
     DEMO READER CODE
     """
-    prompt = ("Enter", "a name")
-    reader = Reader(prompt, OUTPUT)
+    # prompt = ("Enter", "a name")
+    reader = Reader(("Enter", "a name"), OUTPUT)
     print("Starting reader")
     reader.readStr()
     print("You entered:", reader.getStr())
