@@ -18,11 +18,14 @@ class TerminalDisplay:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     def show(self, info):
-        if type(info) == tuple:
+        if type(info) == str:
+            print(info)
+
+        elif type(info) == tuple:
             for elem in info:
                 print(elem)
 
-        if type(info) == list:
+        elif type(info) == list:
             for elem in info:
                 print(elem)
     
@@ -56,8 +59,6 @@ class LedDisplay:
         self.canvas.Clear()
 
     def show(self, info):
-        if type(info) == str:
-            print(info)
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
         elif type(info) == tuple:
             self.fontHeight = 6 # random constant depending on which font is chosen
