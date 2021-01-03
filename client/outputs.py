@@ -21,11 +21,11 @@ class TerminalDisplay:
         if type(info) == str:
             print(info)
 
-        elif type(info) == tuple:
+        if type(info) == tuple:
             for elem in info:
                 print(elem)
 
-        elif type(info) == list:
+        if type(info) == list:
             for elem in info:
                 print(elem)
     
