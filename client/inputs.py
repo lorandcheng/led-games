@@ -47,7 +47,7 @@ class Listener:
         self.key.stop()
 
 class Reader(Listener):
-    def __init__(self, output, prompt=""):
+    def __init__(self, output, prompt=()):
         self.prompt = prompt
         self.str = ""
         self.chars = [" ", "_"]

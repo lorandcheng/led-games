@@ -71,7 +71,7 @@ class LedDisplay:
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     
-        if type(info) == str:
+        elif type(info) == str:
             if len(info) > 8:
                 pos = self.canvas.width
                 while True:
