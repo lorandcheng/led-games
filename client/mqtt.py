@@ -55,7 +55,7 @@ class UsernameGenerator(mqttClient):
         # loop until username is verified
         while self.verified != 1:
              # create reader
-            prompt = "Enter your username:"
+            prompt = ("Enter", "a name")
             reader = Reader(self.output, prompt)
             # get username input
             self.username = reader.readStr()
@@ -278,19 +278,16 @@ def leave(username):
     info.wait_for_publish()
 
 if __name__ == "__main__":
-    OUTPUT = TerminalDisplay()
     
     if sys.platform == "linux" or sys.platform == "linux2":
-        LED = LedDisplay()
-        GAMES = [
-            checkers.Checkers(LED),
-            battleship.Battleship(LED)
-        ]
+        OUTPUT = LedDisplay()
     else:
-        GAMES = [
-            checkers.Checkers(OUTPUT),
-            battleship.Battleship(OUTPUT)
-        ]
+        OUTPUT = TerminalDisplay()
+
+    GAMES = [
+        checkers.Checkers(OUTPUT),
+        battleship.Battleship(OUTPUT)
+    ]
 
     USERNAME = ""
 

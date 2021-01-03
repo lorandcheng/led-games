@@ -119,13 +119,13 @@ class Menu(Listener):
                 self.output.clear()
                 str = ">" + toPrint[index][scrollIndex:] + toPrint[index][:scrollIndex]
                 toPrint[index] = str
+                # vertical scroll
                 if index > (rows-1):
                     trunc = toPrint[index-(rows-1):]
                     self.output.show(tuple(trunc))
                 else:
                     self.output.show(tuple(toPrint))
-                
-                toPrint[index] = toPrint[index][1:]
+
                 time.sleep(0.5)
                 scrollIndex += 1
                 if scrollIndex > len(toPrint[index]):
@@ -134,10 +134,6 @@ class Menu(Listener):
                 
         # Non-scrolling
         else:
-            for i in range(len(self.options)):
-                if i != self.index:
-                    toPrint[i] = " " + self.options[i]
-
             toPrint[self.index] = ">" + toPrint[self.index]
 
             if self.index > (rows-1):
