@@ -25,6 +25,9 @@ class TerminalDisplay:
         if type(info) == list:
             for elem in info:
                 print(elem)
+    
+    def getNumRows(self):
+        return 1000
 
 class LedDisplay:
     def __init__(self):
@@ -98,7 +101,7 @@ class LedDisplay:
 
 if __name__ == "__main__":
 
-    display = LedDisplay()
+    display = TerminalDisplay()
     rows = display.getNumRows()
 
     lines = ["Line1","Line2","Line3","Line4","Line5","Line6","Line7"]
@@ -111,11 +114,9 @@ if __name__ == "__main__":
         for i in range(len(lines)):
             if i == index:
                 output[i] = ">"+lines[i]
-                print(i)
             else:
                 output[i] = " "+lines[i]
         if index > (rows-1):
-            print("scrolling")
             output = output[index-(rows-1):]
         display.show(tuple(output))
         index +=1
