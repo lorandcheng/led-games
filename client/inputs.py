@@ -121,8 +121,10 @@ class Menu(Listener):
                 
                 if index > (rows-1):
                     trunc = toPrint[index-(rows-1):]
-
-                self.output.show(tuple(trunc))
+                    self.output.show(tuple(trunc))
+                else:
+                    self.output.show(tuple(toPrint))
+                
                 time.sleep(0.5)
                 
         # Non-scrolling
