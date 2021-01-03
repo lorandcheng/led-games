@@ -67,7 +67,7 @@ class Reader(Listener):
         while True:
             if oldIndex != self.index:
                 self.output.clear()
-                self.output.show(tuple(self.str+self.chars[self.index]))
+                self.output.show(self.str+self.chars[self.index])
                 oldIndex = self.index
             if self.selected:
                 if self.chars[self.index] == " ":
