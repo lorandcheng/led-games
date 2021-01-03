@@ -115,6 +115,10 @@ class Menu(Listener):
             while self.index == oldIndex:
                 self.output.clear()
                 toPrint = self.options.copy()
+                
+                for i in range(len(self.options)):
+                    if i != self.index:
+                        toPrint[i] = " "+self.options[i]
 
                 toPrint[oldIndex] = original[scrollIndex:]
 
