@@ -197,7 +197,7 @@ class Menu(Listener):
 if __name__ == '__main__':
     from outputs import TerminalDisplay, LedDisplay
 
-    OUTPUT = TerminalDisplay()
+    OUTPUT = LedDisplay()
     """
     DEMO LISTENER CODE
     """
