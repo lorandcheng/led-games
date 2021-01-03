@@ -131,7 +131,7 @@ class Menu(Listener):
                 time.sleep(0.5)
                 scrollIndex += 1
 
-                if scrollIndex > len(self.options[index]):
+                if scrollIndex > len(self.options[index])+chars-1:
                     scrollIndex = 0
                 
         # Non-scrolling
