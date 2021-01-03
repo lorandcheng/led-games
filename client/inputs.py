@@ -111,12 +111,13 @@ class Menu(Listener):
                 toPrint[i] = " " + toPrint[i]
         # If the length of the selected option is greater than the number of characters that can fit, scroll the line
         if len( self.options[self.index] ) >= chars:
+            scrollIndex = 0
             for i in range(chars-1):
                     toPrint[index] += " "
 
             while self.index == index and not self.selected:
                 self.output.clear()
-                toPrint[index] = toPrint[index][1:] + toPrint[index][:1]
+                toPrint[index] = toPrint[index][scrollIndex:] + toPrint[index][:scrollIndex]
                 toPrint[index] = ">" + toPrint[index]
                 
                 if index > (rows-1):
@@ -125,7 +126,11 @@ class Menu(Listener):
                 else:
                     self.output.show(tuple(toPrint))
                 
+                toPrint[index] = toPrint[index][1:]
                 time.sleep(0.5)
+                scrollIndex += 1
+                if scrollIndex > len(toPrint[index]):
+                    scrollIndex = 0
                 
         # Non-scrolling
         else:
