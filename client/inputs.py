@@ -101,6 +101,20 @@ class Menu(Listener):
                 self.output.show('* ' + self.options[i])
             else:
                 self.output.show('  ' + self.options[i])
+        
+        rows = self.output.getNumRows()
+        
+        self.output.clear()
+        toPrint = self.options.copy()
+        for i in range(len(self.options)):
+            if i == self.index:
+                toPrint[i] = ">"+self.options[i]
+            else:
+                toPrint[i] = " "+self.options[i]
+        if self.index > (rows-1):
+            toPrint = toPrint[self.index-(rows-1):]
+        self.output.show(tuple(toPrint))
+
 
     def select(self):
         self.selected = 0
@@ -130,9 +144,9 @@ class Menu(Listener):
         self.key.stop()
 
 if __name__ == '__main__':
-    from outputs import TerminalDisplay
+    from outputs import TerminalDisplay, LedDisplay
 
-    OUTPUT = TerminalDisplay()
+    OUTPUT = LedDisplay()
     """
     DEMO LISTENER CODE
     """
