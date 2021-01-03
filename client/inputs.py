@@ -196,7 +196,7 @@ if __name__ == '__main__':
     DEMO MENU CODE
     """
     prompt = "Choose an option"
-    options = ["option 1", "option 2", "option 3", "option 4", "option 5"]
+    options = ["option 1", "option 2", "option 3", "option 4", "option 5", "option option 6", "option option 7"]
     menu = Menu(OUTPUT, prompt, options, indexing=True)
     index, selection = menu.select()
     print("You chose:", selection, "at index", index)
