@@ -21,11 +21,11 @@ class TerminalDisplay:
         if type(info) == str:
             print(info)
 
-        if type(info) == tuple:
+        elif type(info) == tuple:
             for elem in info:
                 print(elem)
 
-        if type(info) == list:
+        elif type(info) == list:
             for elem in info:
                 print(elem)
     
@@ -60,7 +60,7 @@ class LedDisplay:
 
     def show(self, info):
         # first attempt at code that will print multiple lines, could be rerwitten to be easier
-        elif type(info) == tuple:
+        if type(info) == tuple:
             self.fontHeight = 6 # random constant depending on which font is chosen
             index = self.fontHeight # First line in which text can be placed on matrix
             
