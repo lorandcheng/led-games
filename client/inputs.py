@@ -121,7 +121,7 @@ class Menu(Listener):
                     toPrint = toPrint[self.index-(rows-1):]
 
                 self.output.show(tuple(toPrint))
-                time.sleep(0.1)
+                time.sleep(0.5)
                 scrollIndex += 1
 
                 if scrollIndex == len(self.options[self.index]):
