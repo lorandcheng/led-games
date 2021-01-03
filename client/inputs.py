@@ -146,8 +146,8 @@ class Menu(Listener):
         self.selected = 0
         self.exit = False
         self.selected = 0
-        self._printOptions()
         oldIndex = self.index
+        self._printOptions()
         while True:
             if self.exit:
                 return 0
