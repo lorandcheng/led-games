@@ -94,53 +94,53 @@ class Menu(Listener):
         self.len = len(newOptions)
 
     def _printOptions(self):
-        
-        rows = self.output.getNumRows()
-        
+        # define the number and width of rows on the display
+        rows, chars = self.output.getTextDimensions()
+        # clear the display
         self.output.clear()
+        # copy the options to print
         toPrint = self.options.copy()
+        # copy the index so it stays constant during this function
+        index = self.index
 
-        for i in range(len(self.options)):
-            if i != self.index:
-                toPrint[i] = " "+self.options[i]
-        
-        
-        # Scrolling code
-        if len( self.options[self.index] ) >= 7:
+        # If the length of the selected option is greater than the number of characters that can fit, scroll the line
+        if len( self.options[self.index] ) >= chars:
             scrollIndex = 0
-            oldIndex = self.index
-            
-            original = self.options[self.index]
-            
-            while self.index == oldIndex:
+
+            while self.index == index and not self.selected:
                 self.output.clear()
                 toPrint = self.options.copy()
                 
-                for i in range(len(self.options)):
-                    if i != oldIndex:
-                        toPrint[i] = " "+self.options[i]
+                for i in range(len(toPrint)):
+                    if i != index:
+                        toPrint[i] = " " + toPrint[i]
 
-                toPrint[oldIndex] = original[scrollIndex:]
+                toPrint[index] = self.options[index][scrollIndex:]
 
-                toPrint[oldIndex] = ">"+toPrint[oldIndex]
+                toPrint[index] = ">" + toPrint[index]
                 
-                if oldIndex > (rows-1):
-                    toPrint = toPrint[oldIndex-(rows-1):]
+                if index > (rows-1):
+                    toPrint = toPrint[index-(rows-1):]
 
                 self.output.show(tuple(toPrint))
                 time.sleep(0.5)
                 scrollIndex += 1
 
-                if scrollIndex > len(self.options[oldIndex]):
+                if scrollIndex > len(self.options[index]):
                     scrollIndex = 0
                 
-                #toPrint[oldIndex] = toPrint[oldIndex][1:]
+        # Non-scrolling
         else:
-            toPrint[self.index] = ">"+toPrint[self.index]
+            for i in range(len(self.options)):
+                if i != self.index:
+                    toPrint[i] = " " + self.options[i]
+
+            toPrint[self.index] = ">" + toPrint[self.index]
 
             if self.index > (rows-1):
                 toPrint = toPrint[self.index-(rows-1):]
             self.output.show(tuple(toPrint))
+
 
     def select(self):
         self.selected = 0
@@ -161,7 +161,7 @@ class Menu(Listener):
                     else:
                         return self.options[self.index]
                 except:
-                    self.output.show("List was updated since your selection")
+                    print("List was updated since your selection")
 
     def exitMenu(self):
         self.exit = True

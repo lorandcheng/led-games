@@ -29,8 +29,8 @@ class TerminalDisplay:
             for elem in info:
                 print(elem)
     
-    def getNumRows(self):
-        return 1000
+    def getTextDimensions(self):
+        return 1000, 1000
 
 class LedDisplay:
     def __init__(self):
@@ -50,6 +50,7 @@ class LedDisplay:
         self.font = graphics.Font()
         self.font.LoadFont("rpi-rgb-led-matrix/fonts/4x6.bdf")
         self.textColor = graphics.Color(100, 100, 100)
+        self.fontWidth = 4
         self.fontHeight = 6
 
         self.canvas = self.matrix.CreateFrameCanvas()
@@ -99,8 +100,8 @@ class LedDisplay:
             print("Invalid input: must be a tuple or a list")
             raise ValueError
 
-    def getNumRows(self):
-        return int(self.matrix.height/self.fontHeight)
+    def getTextDimensions(self):
+        return int(self.matrix.height/self.fontHeight), int(self.matrix.width/self.fontWidth)
 
 if __name__ == "__main__":
 
