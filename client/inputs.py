@@ -115,21 +115,21 @@ class Menu(Listener):
             while self.index == oldIndex:
                 self.output.clear()
 
-                toPrint[self.index] = original[scrollIndex:]
+                toPrint[oldIndex] = original[scrollIndex:]
 
-                toPrint[self.index] = ">"+toPrint[self.index]
+                toPrint[oldIndex] = ">"+toPrint[oldIndex]
                 
-                if self.index > (rows-1):
-                    toPrint = toPrint[self.index-(rows-1):]
+                if oldIndex > (rows-1):
+                    toPrint = toPrint[oldIndex-(rows-1):]
 
                 self.output.show(tuple(toPrint))
                 time.sleep(0.5)
                 scrollIndex += 1
 
-                if scrollIndex > len(self.options[self.index]):
+                if scrollIndex > len(self.options[oldIndex]):
                     scrollIndex = 0
                 
-                toPrint[self.index] = toPrint[self.index][1:]
+                toPrint[oldIndex] = toPrint[oldIndex][1:]
         else:
             toPrint[self.index] = ">"+toPrint[self.index]
 
