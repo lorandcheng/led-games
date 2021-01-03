@@ -61,24 +61,10 @@ class Reader(Listener):
     def getStr(self):
         return self.str
     
-    def printPrompt(self):
-        self.output.clear()
-        if type(self.output).__name__ == "TerminalDisplay":
-            toPrint = " ".join(self.prompt)
-
-        elif type(self.output).__name__ == "LedDisplay":
-            # define the number and width of rows on the display
-            _, chars = self.output.getTextDimensions()
-            toPrint = []
-            for word in self.prompt:
-                toPrint.append(word.center(chars))
-            toPrint = tuple(toPrint)       
-        else:
-            print("Unsupported output")
-            raise ValueError
-
     def readStr(self):
-        self.printPrompt()
+        self.output.clear()
+        self.output.show(tuple(self.prompt))
+        time.sleep(3)
         self.output.show(self.chars[self.index])
         oldIndex = self.index
         while True:
