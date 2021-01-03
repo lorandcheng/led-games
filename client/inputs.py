@@ -96,7 +96,7 @@ class Menu(Listener):
         self.options = newOptions
         self.len = len(newOptions)
 
-    def _printOptions(self):
+    def printOptions(self):
         # define the number and width of rows on the display
         rows, chars = self.output.getTextDimensions()
         # clear the display
@@ -144,22 +144,39 @@ class Menu(Listener):
                 toPrint = toPrint[self.index-(rows-1):]
             self.output.show(tuple(toPrint))
 
+    def printPrompt(self):
+        self.output.clear()
+        if type(self.output).__name__ == "TerminalDisplay":
+            toPrint = " ".join(self.prompt)
+
+        elif type(self.output).__name__ == "LedDisplay":
+            # define the number and width of rows on the display
+            _, chars = self.output.getTextDimensions()
+            toPrint = []
+            for word in self.prompt:
+                toPrint.append(word.center(chars))
+            toPrint = tuple(toPrint)       
+        else:
+            print("Unsupported output")
+            raise ValueError
+        
+        self.output.show(toPrint)
+        time.sleep(3)
 
     def select(self):
-        self.output.show(self.prompt)
-        time.sleep(2)
+        self.printPrompt()
 
         self.selected = 0
         self.exit = False
         self.selected = 0
         oldIndex = self.index
-        self._printOptions()
+        self.printOptions()
         while True:
             if self.exit:
                 return 0
             if oldIndex != self.index:
                 oldIndex = self.index
-                self._printOptions()
+                self.printOptions()
             if self.selected:
                 try:
                     if self.indexing:
@@ -178,7 +195,7 @@ class Menu(Listener):
 if __name__ == '__main__':
     from outputs import TerminalDisplay, LedDisplay
 
-    OUTPUT = LedDisplay()
+    OUTPUT = TerminalDisplay()
     """
     DEMO LISTENER CODE
     """
