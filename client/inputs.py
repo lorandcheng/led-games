@@ -117,9 +117,8 @@ class Menu(Listener):
 
             while self.index == index and not self.selected:
                 self.output.clear()
-                toPrint[index] = toPrint[index][scrollIndex:] + toPrint[index][:scrollIndex]
-                toPrint[index] = ">" + toPrint[index]
-                
+                str = ">" + toPrint[index][scrollIndex:] + toPrint[index][:scrollIndex]
+
                 if index > (rows-1):
                     trunc = toPrint[index-(rows-1):]
                     self.output.show(tuple(trunc))
