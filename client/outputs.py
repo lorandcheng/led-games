@@ -71,21 +71,21 @@ class LedDisplay:
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
     
-        # if type(info) == str:
-        #     if len(info) > 8:
-        #         pos = self.canvas.width
-        #         while True:
-        #             self.canvas.Clear()
-        #             length = graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
-        #             pos -= 1
-        #             if (pos + length < 0):
-        #                 pos = self.canvas.width
+        if type(info) == str:
+            if len(info) > 8:
+                pos = self.canvas.width
+                while True:
+                    self.canvas.Clear()
+                    length = graphics.DrawText(self.canvas, self.font, pos, 10, self.textColor, info)
+                    pos -= 1
+                    if (pos + length < 0):
+                        pos = self.canvas.width
 
-        #             time.sleep(0.05)
-        #             self.canvas = self.matrix.SwapOnVSync(self.canvas)
-        #     else:
-        #         graphics.DrawText(self.canvas, self.font, 0, 10, self.textColor, info)
-        #         self.canvas = self.matrix.SwapOnVSync(self.canvas)
+                    time.sleep(0.05)
+                    self.canvas = self.matrix.SwapOnVSync(self.canvas)
+            else:
+                graphics.DrawText(self.canvas, self.font, 0, 10, self.textColor, info)
+                self.canvas = self.matrix.SwapOnVSync(self.canvas)
             
 
         elif type(info) == list:
