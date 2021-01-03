@@ -121,7 +121,7 @@ class Menu(Listener):
                 toPrint[index] = self.options[index][scrollIndex:]
                 for i in range(chars-1):
                     toPrint[index] += " "
-                toPrint[index] = self.options[index][:scrollIndex]
+                toPrint[index] += self.options[index][:scrollIndex]
                 toPrint[index] = ">" + toPrint[index]
                 
                 if index > (rows-1):
