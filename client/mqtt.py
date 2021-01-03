@@ -105,7 +105,7 @@ class Lobby(mqttClient):
         self.client.subscribe(f"ledGames/{self.username}/requests")
         self.client.message_callback_add(f"ledGames/{self.username}/requests", self.myCallback)
 
-        self.menu = Menu(self.output, "Choose an opponent:")
+        self.menu = Menu(self.output, ("Choose", "an", "opponent:"))
 
 
         
