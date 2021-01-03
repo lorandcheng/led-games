@@ -145,8 +145,8 @@ class Menu(Listener):
             if self.exit:
                 return 0
             if oldIndex != self.index:
-                self._printOptions()
                 oldIndex = self.index
+                self._printOptions()
             if self.selected:
                 try:
                     if self.indexing:
