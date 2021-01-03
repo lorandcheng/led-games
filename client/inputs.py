@@ -114,6 +114,7 @@ class Menu(Listener):
             
             while self.index == oldIndex:
                 self.output.clear()
+                toPrint = self.options.copy()
 
                 toPrint[oldIndex] = original[scrollIndex:]
 
@@ -129,7 +130,7 @@ class Menu(Listener):
                 if scrollIndex > len(self.options[oldIndex]):
                     scrollIndex = 0
                 
-                toPrint[oldIndex] = toPrint[oldIndex][1:]
+                #toPrint[oldIndex] = toPrint[oldIndex][1:]
         else:
             toPrint[self.index] = ">"+toPrint[self.index]
 
