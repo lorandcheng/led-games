@@ -126,7 +126,7 @@ class Menu(Listener):
                 time.sleep(0.5)
                 scrollIndex += 1
 
-                if scrollIndex == len(self.options[self.index]):
+                if scrollIndex > len(self.options[self.index]):
                     scrollIndex = 0
                 
                 toPrint[self.index] = toPrint[self.index][1:]
