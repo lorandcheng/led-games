@@ -94,13 +94,13 @@ class Menu(Listener):
         self.len = len(newOptions)
 
     def _printOptions(self):
-        self.output.clear()
-        self.output.show(self.prompt)
-        for i in range(len(self.options)):
-            if i == self.index:
-                self.output.show('* ' + self.options[i])
-            else:
-                self.output.show('  ' + self.options[i])
+        # self.output.clear()
+        # self.output.show(self.prompt)
+        # for i in range(len(self.options)):
+        #     if i == self.index:
+        #         self.output.show('* ' + self.options[i])
+        #     else:
+        #         self.output.show('  ' + self.options[i])
         
         rows = self.output.getNumRows()
         
