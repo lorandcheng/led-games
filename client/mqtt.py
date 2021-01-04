@@ -278,6 +278,7 @@ def leave(username):
     client.loop_start()
     info = client.publish("ledGames/users/status", f"{username}, 0")
     info.wait_for_publish()
+    time.sleep(10)
 
 if __name__ == "__main__":
     
@@ -314,7 +315,6 @@ if __name__ == "__main__":
         opponent, color = lobby.lobby()
         print(f"You started a match with {opponent}")
         print(f"Your color is {color}")
-        time.sleep(2)
 
         """
         DEMO GAME CODE (do not comment out previous demo code)
