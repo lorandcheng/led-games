@@ -82,7 +82,7 @@ class Reader(Listener):
                 else:
                     self.str += self.chars[self.index]
                     self.index = 0
-                    
+
                 self.selected = 0
     
     def __del__(self):
@@ -132,7 +132,7 @@ class Menu(Listener):
                 else:
                     self.output.show(tuple(toPrint))
 
-                time.sleep(0.5)
+                time.sleep(0.2)
                 scrollIndex += 1
                 if scrollIndex > len(toPrint[index]):
                     scrollIndex = 0
