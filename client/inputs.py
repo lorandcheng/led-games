@@ -53,7 +53,7 @@ class Reader(Listener):
 
         #TODO: remove the ' ' option for usernames, handle exception of pressing enter without a username, edit terminal output class to handle tuples, limit username length for scrolling 
 
-        self.chars = [" ", "_"]
+        self.chars = ["_"]
         self.chars += list(string.ascii_lowercase+string.digits)
         self.output = output
         super().__init__(len(self.chars))
@@ -73,8 +73,11 @@ class Reader(Listener):
                 self.output.show(str(self.str+self.chars[self.index]))
                 oldIndex = self.index
             if self.selected:
-                if self.chars[self.index] == " ":
-                    return self.str
+                if self.chars[self.index] == "_":
+                    if len(self.str) == 0:
+                        return self.str
+                    else:
+                        self.output.show(("Enter", "a valid", "username"))
                 self.str += self.chars[self.index]
                 self.index = 0
                 self.selected = 0
