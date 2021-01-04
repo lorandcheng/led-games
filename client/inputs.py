@@ -24,23 +24,25 @@ class Listener:
     def onPress(self, key):
         self.keypress = True
         if not self.selected and self.len != 0:
+            index = self.index
             try:
                 k = key.char # single-char keys
             except: 
                 k = key.name # other keys
         
             if k == "up" or k == "left":
-                self.index -= 1
+                index -= 1
             elif k == "down" or k == "right":
-                self.index += 1
+                index += 1
             elif k == "enter":
                 self.selected = True
                 return
             
-            if self.index > self.len-1:
-                self.index = 0
-            elif self.index < 0:
-                self.index = self.len-1
+            if index > self.len-1:
+                index = 0
+            elif index < 0:
+                index = self.len-1
+            self.index = index
 
     def onRelease(self, key):
         pass
