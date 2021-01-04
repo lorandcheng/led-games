@@ -17,7 +17,7 @@ class Listener:
             )
         self.key.start()
         self.index = 0
-        self.selected = 0
+        self.selected = False
         self.len = length
         self.keypress = False
 
@@ -34,7 +34,7 @@ class Listener:
             elif k == "down" or k == "right":
                 self.index += 1
             elif k == "enter":
-                self.selected = 1
+                self.selected = True
                 return
             
             if self.index > self.len-1:
@@ -87,6 +87,7 @@ class Reader(Listener):
 
     def readStr(self):
         self.printPrompt()
+        self.selected = False
         self.output.show(self.chars[self.index])
         oldIndex = self.index
         while True:
@@ -105,7 +106,7 @@ class Reader(Listener):
                     self.str += self.chars[self.index]
                     self.index = 0
 
-                self.selected = 0
+                self.selected = False
     
     def __del__(self):
         self.key.stop()
@@ -192,7 +193,7 @@ class Menu(Listener):
 
     def select(self):
         self.printPrompt()
-        self.selected = 0
+        self.selected = False
         oldIndex = self.index
         self.printOptions()
         while True:
