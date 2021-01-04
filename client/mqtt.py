@@ -69,7 +69,7 @@ class UsernameGenerator(mqttClient):
                 # if self.verified == 1, then getUsername returns the verified username
                 # if self.verified == -1, the outer while loop repeats
             if self.verified == -1:
-                self.output.show("Username taken")
+                self.output.show(("Username", "taken"))
                 time.sleep(2)
 
         return self.username
@@ -137,13 +137,11 @@ class Lobby(mqttClient):
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, 1, {self.color*-1}")
                     self.selected = self.requester
                     print("accepting opponent")
-                    time.sleep(1)
                     break
                     
                 # if the request is denied, send deny message and return to choosing an opponent
                 else:
                     print("denying opponent", self.requester)
-                    time.sleep(1)
                     self.client.publish(f"ledGames/{self.requester}/requests", f"{self.username}, -1")
                     self.requester = ""
 
