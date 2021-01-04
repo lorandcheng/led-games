@@ -115,7 +115,7 @@ class Lobby(mqttClient):
 
         # wait until lobby is received and other players are present
         if self.menu.options == []:
-            self.output.show("Waiting", "for", "players")
+            self.output.show(("Waiting", "for", "players"))
             while self.menu.options == []:
                 pass
 
