@@ -77,6 +77,7 @@ class Reader(Listener):
                     if len(self.str) != 0:
                         return self.str
                     else:
+                        self.output.clear()
                         self.output.show(("Enter", "a valid", "username"))
                 self.str += self.chars[self.index]
                 self.index = 0
