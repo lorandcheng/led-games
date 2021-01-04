@@ -66,7 +66,7 @@ class LedDisplay:
             index = self.fontHeight # First line in which text can be placed on matrix
             
             for elem in info:
-                graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem)
+                graphics.DrawText(self.canvas, self.font, 0, index, self.textColor, elem.center(int(self.matrix.width/self.fontWidth))
                 index += self.fontHeight # move to next line on matrix
 
             self.canvas = self.matrix.SwapOnVSync(self.canvas)
