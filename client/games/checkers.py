@@ -325,7 +325,7 @@ class Checkers:
             colors = {
                 
                 "black": (0, 0, 0),
-                "grey": (100, 100, 100),
+                "grey": (50, 50, 50),
                 "red": (255, 0, 0),
                 "orange": (255, 255, 0),
                 "blue": (0, 0, 255),
@@ -379,16 +379,16 @@ class Checkers:
 
                         if piece > 0:
                             for row, column in pixels:
-                                output[column][row] = colors["red"]
+                                output[column][row] = colors["blue"]
                             if piece == 2:
                                 for row, column in diagonal:
-                                    output[column][row] = colors["orange"]
+                                    output[column][row] = colors["purple"]
                         elif piece < 0:
                             for row, column in pixels:
-                                output[column][row] = colors["blue"]
+                                output[column][row] = colors["red"]
                             if piece == -2:
                                 for row, column in diagonal:
-                                    output[column][row] = colors["purple"]
+                                    output[column][row] = colors["orange"]
 
         else:
             print("Unsupported output")
