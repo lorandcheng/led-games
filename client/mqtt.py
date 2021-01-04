@@ -114,8 +114,10 @@ class Lobby(mqttClient):
         self.client.publish("ledGames/lobby/status", f"{self.username}, {self.game}, 1")
 
         # wait until lobby is received and other players are present
-        while self.menu.options == []:
-            pass
+        if self.menu.options == []:
+            self.output.show("Waiting", "for", "players")
+            while self.menu.options == []:
+                pass
 
         # choose an opponent
         while True:
@@ -303,6 +305,7 @@ if __name__ == "__main__":
     while True:
         game = selectGame(GAMES)
         game.__init__(OUTPUT)
+        OUTPUT.clear()
         """
         DEMO LOBBY CODE (do not comment out previous demo code)
         """
