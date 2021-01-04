@@ -190,9 +190,6 @@ class Menu(Listener):
 
     def select(self):
         self.printPrompt()
-
-        self.selected = 0
-        self.exit = False
         self.selected = 0
         oldIndex = self.index
         self.printOptions()
