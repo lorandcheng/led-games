@@ -79,8 +79,10 @@ class Reader(Listener):
                     else:
                         self.output.clear()
                         self.output.show(("Enter", "a valid", "username"))
-                self.str += self.chars[self.index]
-                self.index = 0
+                else:
+                    self.str += self.chars[self.index]
+                    self.index = 0
+                    
                 self.selected = 0
     
     def __del__(self):
