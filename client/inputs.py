@@ -19,8 +19,10 @@ class Listener:
         self.index = 0
         self.selected = 0
         self.len = length
+        self.keypress = False
 
     def onPress(self, key):
+        self.keypress = True
         if not self.selected and self.len != 0:
             try:
                 k = key.char # single-char keys
@@ -181,7 +183,9 @@ class Menu(Listener):
             raise ValueError
         
         self.output.show(toPrint)
-        time.sleep(3)
+        self.keypress = False
+        while not self.keypress and not self.exit:
+            pass
         self.output.clear()
 
     def select(self):
