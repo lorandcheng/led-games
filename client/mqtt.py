@@ -151,7 +151,8 @@ class Lobby(mqttClient):
             else:
                 self.client.publish(f"ledGames/{self.selected}/requests", f"{self.username}, 0") 
                 self.opponentResponse = 0
-                print('waiting for response')
+                self.output.clear()
+                self.output.show(('waiting', 'for', 'response'))
                 # wait for response
                 while self.opponentResponse == 0:
                     pass
@@ -323,7 +324,7 @@ if __name__ == "__main__":
         gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
         gameplay.play()
 
-        menu = Menu(OUTPUT, f"Do you want to continue?", ["y", "n"])
+        menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
         selection = menu.select()
 
         if selection == "n":
