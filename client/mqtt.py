@@ -12,7 +12,7 @@ from parsersM import parseMessage
 
 
 def selectGame(games):
-    prompt = "Choose a game:"
+    prompt = ("Choose", "a game")
     options = [game.name for game in games]
     menu = Menu(OUTPUT, prompt, options, indexing=True)
     index,_ = menu.select()
@@ -123,7 +123,7 @@ class Lobby(mqttClient):
             self.selected = self.menu.select()
             # if menu was exited because an opponent sent me a request, process the request
             if self.selected == 0:
-                menu = Menu(self.output, f"Accept game with {self.requester}?", ["y", "n"])
+                menu = Menu(self.output, ("Accept", "game", "with", f"{self.requester}?"), ["y", "n"])
                 selection = menu.select()
                 # if the request is accepted, send accept message and finalize opponent
                 if selection == "y":
