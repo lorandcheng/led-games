@@ -93,6 +93,7 @@ class Lobby(mqttClient):
     def __init__(self, username, game, output):
         super().__init__()
         self.output = output
+        self.output.clear()
         self.username = username
         self.game = game
         self.selected = "" # name of user that I selected
@@ -150,7 +151,7 @@ class Lobby(mqttClient):
                 self.client.publish(f"ledGames/{self.selected}/requests", f"{self.username}, 0") 
                 self.opponentResponse = 0
                 self.output.clear()
-                self.output.show(('waiting', 'for', 'response'))
+                self.output.show(('Waiting', 'for', 'response'))
                 # wait for response
                 while self.opponentResponse == 0:
                     pass
@@ -184,7 +185,7 @@ class Lobby(mqttClient):
         else:
             # -1 if opponent rejected, 1 if opponent confirmed my request
             self.opponentResponse = code
-            print("recieved response "+str(code))
+            print("recieved response " + str(code))
         
 
 
@@ -281,52 +282,45 @@ def leave(username):
     time.sleep(5)
 
 if __name__ == "__main__":
-    
+    # set output to LED matrix if on the raspberry pi, otherwise use terminal display
     if sys.platform == "linux" or sys.platform == "linux2":
         OUTPUT = LedDisplay()
     else:
         OUTPUT = TerminalDisplay()
 
+    # initialize game classes
     GAMES = [
         checkers.Checkers(OUTPUT),
         battleship.Battleship(OUTPUT)
     ]
 
-    USERNAME = ""
-
-    """
-    DEMO USERNAME_GENERATOR CODE
-    """
-
+    # prompt user to enter a valid username
     usernameGenerator = UsernameGenerator(OUTPUT)
     USERNAME = usernameGenerator.getUsername()
 
+    # register the cleanup function to remove user from server list
     atexit.register(leave, USERNAME)
 
     while True:
+        # prompt user to select a game, then initialize the game module
         game = selectGame(GAMES)
         game.__init__(OUTPUT)
-        OUTPUT.clear()
-        """
-        DEMO LOBBY CODE (do not comment out previous demo code)
-        """
 
+        # join the lobby with username and game, select an opponent and assign colors
         lobby = Lobby(USERNAME, game.name, OUTPUT)
         opponent, color = lobby.lobby()
         del lobby
         print(f"You started a match with {opponent}")
         print(f"Your color is {color}")
 
-        """
-        DEMO GAME CODE (do not comment out previous demo code)
-        """
-
+        # main gameplay
         gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
         gameplay.play()
+        del gameplay
 
+        # prompt user to play again or exit program
         menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
         selection = menu.select()
-
         if selection == "n":
             break
 

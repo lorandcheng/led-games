@@ -53,8 +53,8 @@ class Reader(Listener):
         self.prompt = prompt
         self.str = ""
 
-        #TODO: remove the ' ' option for usernames, handle exception of pressing enter without a username, edit terminal output class to handle tuples, limit username length for scrolling 
-
+        #TODO: limit username length for scrolling ?
+        
         self.chars = ["_"]
         self.chars += list(string.ascii_lowercase+string.digits)
         self.output = output
@@ -80,7 +80,9 @@ class Reader(Listener):
             raise ValueError
         
         self.output.show(toPrint)
-        time.sleep(3)
+        self.keypress = False
+        while not self.keypress:
+            pass
         self.output.clear()
 
     def readStr(self):
