@@ -313,6 +313,7 @@ if __name__ == "__main__":
 
         lobby = Lobby(USERNAME, game.name, OUTPUT)
         opponent, color = lobby.lobby()
+        del lobby
         print(f"You started a match with {opponent}")
         print(f"Your color is {color}")
 
@@ -326,7 +327,6 @@ if __name__ == "__main__":
         menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
         selection = menu.select()
 
-        time.sleep(10)
         if selection == "n":
             break
 
