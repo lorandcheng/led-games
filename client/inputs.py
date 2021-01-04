@@ -132,7 +132,7 @@ class Menu(Listener):
                 else:
                     self.output.show(tuple(toPrint))
 
-                time.sleep(0.3)
+                time.sleep(0.4)
                 scrollIndex += 1
                 if scrollIndex > len(toPrint[index]):
                     scrollIndex = 0
