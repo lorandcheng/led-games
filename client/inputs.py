@@ -74,7 +74,7 @@ class Reader(Listener):
                 oldIndex = self.index
             if self.selected:
                 if self.chars[self.index] == "_":
-                    if len(self.str) == 0:
+                    if len(self.str) != 0:
                         return self.str
                     else:
                         self.output.show(("Enter", "a valid", "username"))
