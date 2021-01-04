@@ -278,7 +278,7 @@ def leave(username):
     client.loop_start()
     info = client.publish("ledGames/users/status", f"{username}, 0")
     info.wait_for_publish()
-    time.sleep(10)
+    time.sleep(5)
 
 if __name__ == "__main__":
     
@@ -326,6 +326,7 @@ if __name__ == "__main__":
         menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
         selection = menu.select()
 
+        time.sleep(10)
         if selection == "n":
             break
 
