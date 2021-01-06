@@ -10,39 +10,66 @@ class Listener:
     The calling code should wait in a while loop and break when Listener.selected == 1
     In the while loop, the menu display should be updated according to the selected index Listener.index
     """
-    def __init__(self, length):
+    def __init__(self, length=1):
         self.key = keyboard.Listener(
             on_press = self.onPress,
             on_release = self.onRelease
             )
         self.key.start()
         self.index = 0
+        self.rChange = 0
+        self.cChange = 0
+        self.rotate = False
         self.selected = False
         self.len = length
         self.keypress = False
+        print("listener setup done")
 
     def onPress(self, key):
         self.keypress = True
         if not self.selected and self.len != 0:
             index = self.index
+            rChange = self.rChange
+            cChange = self.cChange
+
             try:
                 k = key.char # single-char keys
             except: 
                 k = key.name # other keys
         
-            if k == "up" or k == "left":
+            if k == "up":
                 index -= 1
-            elif k == "down" or k == "right":
+                rChange -= 1
+            elif k == "left":
+                index -= 1
+                cChange -= 1
+            elif k == "down":
                 index += 1
+                rChange += 1
+            elif k == "right":
+                index += 1
+                cChange += 1
+            elif k == "shift_r" or k == "shift":
+                self.rotate = True
+                print("rotate")
             elif k == "enter":
                 self.selected = True
-                return
             
             if index > self.len-1:
                 index = 0
             elif index < 0:
                 index = self.len-1
+
             self.index = index
+            self.rChange = rChange
+            self.cChange = cChange
+
+    def resetChanges(self):
+        self.rChange = 0
+        self.cChange = 0
+
+    def resetRotate(self):
+        self.rotated = False
 
     def onRelease(self, key):
         pass
