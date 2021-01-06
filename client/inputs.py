@@ -23,7 +23,6 @@ class Listener:
         self.selected = False
         self.len = length
         self.keypress = False
-        print("listener setup done")
 
     def onPress(self, key):
         self.keypress = True
@@ -51,7 +50,6 @@ class Listener:
                 cChange += 1
             elif k == "shift_r" or k == "shift":
                 self.rotate = True
-                print("rotate")
             elif k == "enter":
                 self.selected = True
             
@@ -69,7 +67,7 @@ class Listener:
         self.cChange = 0
 
     def resetRotate(self):
-        self.rotated = False
+        self.rotate = False
 
     def onRelease(self, key):
         pass

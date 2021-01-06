@@ -41,6 +41,16 @@ class Battleship:
                 return True
         return False
 
+    def fixRotate(self, ship):
+        while ship[-1][0] > 9:
+            for elem in ship:
+                elem[0] -= 1
+        while ship[-1][1] > 9:
+            for elem in ship:
+                elem[1] -= 1
+        
+                
+    
     def placeShip(self, ship):
         tempBoard = copy.deepcopy(self.BOARD)
         if self.isEmpty(ship):
@@ -85,6 +95,19 @@ class Battleship:
                         elem[1] = r
                         elem[0] += pivot[0]
                         elem[1] += pivot[1]
+                    if self.invalid(ship):
+                        self.fixRotate(ship)
+                    tempBoard = copy.deepcopy(self.BOARD)
+                    if self.isEmpty(ship):
+                        for r,c in ship:
+                            tempBoard[r][c] = 1
+                    else:
+                        for r,c in ship:
+                            tempBoard[r][c] = -1
+                    self.printBoard(tempBoard)
+                    
+
+
 
             if self.isEmpty(ship):
                 done = True
@@ -127,9 +150,10 @@ class Battleship:
         """
         define the visualization for each output
         """
-        # self.output.clear()
+        self.output.clear()
         for row in board:
             print(row)
+        print('\n\n')
     
     def winner(self):
         """
