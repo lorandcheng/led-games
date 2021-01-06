@@ -331,7 +331,7 @@ class Checkers:
                 "blue": (0, 0, 255),
                 "purple": (200, 0, 255),
                 "green": (0, 255, 0),
-                "dark green": (0, 10, 0)
+                "dark green": (0, 50, 0)
 
             }
 
