@@ -5,10 +5,23 @@ class Battleship:
         self.output = output
         self.color = # default
         self.BOARD = # gameboard data
+        self.oBOARD = # opponent's board
         self.done = False
         """
         other inits
         """
+
+
+
+
+    def boardSetUp(self):
+        carrier = [[0,0],[0,1],[0,2],[0,3],[0,4]]
+        battle = [[0,0],[0,1],[0,2],[0,3]]
+        cruiser = [[0,0],[0,1],[0,2]]
+        sub = [[0,0],[0,1],[0,2]]
+        destroy = [[0,0],[0,1]]
+
+        
 
     def parseData(self, data):
         """
