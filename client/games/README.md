@@ -1,6 +1,6 @@
 # Game module API
 
-In order to seamlessly fit into the rest of the application, the game modules must be designed to meet the following requirements:
+In order to seamlessly fit into the rest of the application, the game modules must be designed to meet the following template:
 
 class Game:
     def __init__(self, output):
