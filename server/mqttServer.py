@@ -37,19 +37,18 @@ def users(client, userdata, msg):
     a = int(action)
     if a:
         if name in USERS:
-            print("denied")
+            print("user tried to join with existing username:", name)
             client.publish("ledGames/users", f'{name}, 0')
         else:
             client.publish("ledGames/users", f'{name}, 1')
             USERS.append(name)
-            print("user added: " + name)
-            print(USERS)
+            print("user added: ", name)
+            print("users: ", USERS)
     elif a == 0:
-        print("removing")
         try:
             USERS.remove(name)
-            print("user removed: " + name)
-            print(USERS)
+            print("user removed: ", name)
+            print("users: ", USERS)
         except:
             pass
 
@@ -60,15 +59,14 @@ def lobby(client, userdata, msg):
     name, game, action = parseMessage(msg)
     a = int(action)
     if a == 1:
-        print(name, "entered lobby")
+        print(name, "entered lobby to play", game)
         LOBBY.append((name, game))
-        print(LOBBY)
+        print("lobby updated:", LOBBY)
         client.publish("ledGames/lobby", str(LOBBY))
     elif a == 0:
         for entry in LOBBY:
             if entry[0] == name:
-                print("removing from lobby")
-                print(entry)
+                print("user removed from lobby:", name)
                 LOBBY.remove(entry)
 
 
@@ -82,18 +80,12 @@ def onConnect(client, userdata, flags, rc):
     
 
 def onMessage(client, userdata, msg):
-    print("onMessage")
+    print("onMessage")  
 
 
-def mqttInit():   
+if __name__ == '__main__':
     client = mqtt.Client()
     client.on_connect = onConnect
     client.on_message = onMessage
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
-    client.loop_start()
-
-
-if __name__ == '__main__':
-    mqttInit()
-    while True:
-        pass
+    client.loop_forever()
