@@ -59,6 +59,8 @@ class Checkers:
         self.updateScores()
         self.done = False
 
+    def needSetup(self):
+        return False
 
     def updateScores(self):
         """

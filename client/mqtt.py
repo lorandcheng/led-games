@@ -227,11 +227,16 @@ class Game(mqttClient):
         """
         Summary: main gameplay
         """
-
+        if game.needSetup():
+            data = game.setup()
+            self.sendData(data)
+            while not game.setup:
+                pass
+            self.turn = False
         # play first turn if you start
         if self.game.color == 1:
             data = self.game.playTurn()
-            self.sendTurn(data)
+            self.sendData(data)
         else:
             self.game.printBoard(self.game.BOARD)
 
@@ -244,7 +249,7 @@ class Game(mqttClient):
             data = self.game.playTurn()
 
             # send game info
-            self.sendTurn(data)
+            self.sendData(data)
             self.turn = False
         self.output.clear()
         
@@ -255,7 +260,7 @@ class Game(mqttClient):
         time.sleep(3)
 
 
-    def sendTurn(self, data):
+    def sendData(self, data):
         """
         Summary: sends game data to opponent after each turn
         """

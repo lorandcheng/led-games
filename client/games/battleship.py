@@ -15,7 +15,7 @@ class Battleship:
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
@@ -23,12 +23,16 @@ class Battleship:
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
         ]
-
-        self.oBOARD = []
         self.done = False
         """
         other inits
         """
+        self.oBOARD = []
+        self.setup = False
+
+    def needSetup(self):
+        return True
+
     def isEmpty(self, ship):
         for r,c in ship:
             if self.BOARD[r][c] == 1:
@@ -117,43 +121,104 @@ class Battleship:
         self.BOARD = tempBoard
 
 
-    def boardSetup(self):
-        # carrier = [[0,0],[0,1],[0,2],[0,3],[0,4]]
-        # battle = [[0,0],[0,1],[0,2],[0,3]]
-        # cruiser = [[0,0],[0,1],[0,2]]
-        # sub = [[0,0],[0,1],[0,2]]
-        # destroy = [[0,0],[0,1]]
-
+    def setup(self):
         shipSizes = [5,4,3,3,2]
         for size in shipSizes:
             ship = []
             for i in range(size):
                 ship.append([0,i])
             self.placeShip(ship)
-            # ship appears on board
-            # user moves ship to location
-            # location validated
-            # ship added to board
+        
+        return self.BOARD
         
 
     def parseData(self, data):
         """
         parse the data returned from playTurn after it has been sent as a string
         """
+        message = str(data.payload, 'utf-8')
+        if len(message) > 10:
+            message = message[2:len(message)-2]
+
+            rows = message.split("], [")
+            j = 0
+            for element in rows:
+                vals = element.split(", ")
+                
+                for i in range(10):
+                    self.oBOARD[j][i] = int(vals[i])
+                j+=1
+            self.setup = True
+        else:
+            message = message[1:len(message)-1]
+            coords = message.split(", ")
+            self.showTurn(coords)
+
+    def showTurn(self, coords):
+        """
+        animate opponent's turn
+        """
+        tempBoard = copy.deepcopy(self.BOARD)
+        r = int(coords[0])
+        c = int(coords[1])
+        if tempBoard[r][c] == 1:
+            tempBoard[r][c] = 2
+        elif tempBoard[r][c] == 0:
+            tempBoard[r][c] = -2
+        
+        self.printBoard(self.BOARD)
+        time.sleep(0.3)
+        self.printBoard(tempBoard)
+        time.sleep(0.3)
+        self.printBoard(self.BOARD)
+        time.sleep(0.3)
+        self.printBoard(tempBoard)
+        time.sleep(0.3)
+        self.printBoard(self.BOARD)
+        time.sleep(0.3)
+        self.printBoard(tempBoard)
+
+        self.BOARD = tempBoard
+
 
     def playTurn(self):
         """
         one turn of the game
         """
+        
+            
 
     def printBoard(self, board):
         """
         define the visualization for each output
         """
         self.output.clear()
-        for row in board:
-            print(row)
-        print('\n\n')
+        if type(self.output).__name__ == "TerminalDisplay":
+            output = "\n"
+            output += "+---+---+---+---+---+---+---+---+---+---+\n"
+            for r in range(10):
+                row = '|'
+                for c in range(10):
+                    if board[r][c] == 2:
+                        row += ' X |'
+                    elif board[r][c] == -2:
+                        row += ' . |'
+                    elif board[r][c] == 1:
+                        row += ' S |'
+                    elif board[r][c] == -1:
+                        row += ' ! |'
+                    else:
+                        row += '~~~|'
+                output += f"{row}\n+---+---+---+---+---+---+---+---+---+---+\n"
+
+        elif type(self.output).__name__ == "LedDisplay":
+            pass
+    
+        else:
+            print("Unsupported output")
+            raise ValueError
+
+        self.output.show(output)
     
     def winner(self):
         """
