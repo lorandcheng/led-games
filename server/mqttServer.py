@@ -88,4 +88,5 @@ if __name__ == '__main__':
     client.on_connect = onConnect
     client.on_message = onMessage
     client.connect(host="eclipse.usc.edu", port=11000, keepalive=60)
+    print("Starting mqtt server...")
     client.loop_forever()
