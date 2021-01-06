@@ -34,7 +34,7 @@ class Battleship:
             [ 0 , 0 , 1 , 1 , 1 , 2 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 ,-2 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
@@ -201,12 +201,12 @@ class Battleship:
         return tempBoard
 
     def selectLoc(self):
-        tempBoard = self.hideShips()
-        listener = inputs.Listener()
-
-        self.printBoard(tempBoard)
         row = 0
         col = 0
+        tempBoard = self.hideShips()
+        tempBoard[row][col] = str(tempBoard[row][col]) + "x"
+        self.printBoard(tempBoard)
+        listener = inputs.Listener()
         done = False
         while not done:
             while not listener.selected:
@@ -217,15 +217,15 @@ class Battleship:
 
                     if (0<=(row+r)<=9) and (0<=(col+c)<=9):
                         row += r
-                        col += c    
+                        col += c
                         tempBoard = self.hideShips()
                         tempBoard[row][col] = str(tempBoard[row][col]) + "x"
                         self.printBoard(tempBoard)
 
-            if int(tempBoard[row][col][0]) == 0:
+            if int(tempBoard[row][col][:-1]) == 0:
                 done = True
             else: 
-                listener.selected = True
+                listener.selected = False
         time.sleep(2)
     
     def playTurn(self):
