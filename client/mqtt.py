@@ -230,7 +230,7 @@ class Game(mqttClient):
         if game.needSetup():
             data = game.setup()
             self.sendData(data)
-            while not game.setup:
+            while not game.setupDone:
                 pass
             self.turn = False
         # play first turn if you start

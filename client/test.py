@@ -5,4 +5,4 @@ if __name__ == "__main__":
 
     output = TerminalDisplay()
     game = battleship.Battleship(output)
-    game.showTurn([3,3])
+    game.selectLoc()

@@ -27,8 +27,19 @@ class Battleship:
         """
         other inits
         """
-        self.oBOARD = []
-        self.setup = False
+        self.oBOARD = [
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 1 , 1 , 1 , 2 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
+        ]
+        self.setupDone = False
 
     def needSetup(self):
         return True
@@ -148,7 +159,7 @@ class Battleship:
                 for i in range(10):
                     self.oBOARD[j][i] = int(vals[i])
                 j+=1
-            self.setup = True
+            self.setupDone = True
         else:
             message = message[1:len(message)-1]
             coords = message.split(", ")
@@ -181,6 +192,42 @@ class Battleship:
         self.BOARD = tempBoard
 
 
+    def hideShips(self):
+        tempBoard = copy.deepcopy(self.oBOARD)
+        for r in range(10):
+            for c in range(10):
+                if tempBoard[r][c] == 1:
+                    tempBoard[r][c] = 0
+        return tempBoard
+
+    def selectLoc(self):
+        tempBoard = self.hideShips()
+        listener = inputs.Listener()
+
+        self.printBoard(tempBoard)
+        row = 0
+        col = 0
+        done = False
+        while not done:
+            while not listener.selected:
+                if listener.rChange or listener.cChange:
+                    r = listener.rChange
+                    c = listener.cChange
+                    listener.resetChanges()
+
+                    if (0<=(row+r)<=9) and (0<=(col+c)<=9):
+                        row += r
+                        col += c    
+                        tempBoard = self.hideShips()
+                        tempBoard[row][col] = str(tempBoard[row][col]) + "x"
+                        self.printBoard(tempBoard)
+
+            if int(tempBoard[row][col][0]) == 0:
+                done = True
+            else: 
+                listener.selected = True
+        time.sleep(2)
+    
     def playTurn(self):
         """
         one turn of the game
@@ -207,6 +254,8 @@ class Battleship:
                         row += ' S |'
                     elif board[r][c] == -1:
                         row += ' ! |'
+                    elif str(board[r][c])[-1] == 'x':
+                        row += ' @ |'
                     else:
                         row += '~~~|'
                 output += f"{row}\n+---+---+---+---+---+---+---+---+---+---+\n"
