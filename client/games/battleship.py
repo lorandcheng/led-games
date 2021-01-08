@@ -236,11 +236,8 @@ class Battleship:
             row, col = self.selectLoc()
             if self.oBOARD[row][col] == 1:
                 self.oBOARD[row][col] = 2
-                print("hit at", row, col)
             elif self.oBOARD[row][col] == 0:
                 self.oBOARD[row][col] = -2
-                print("missed at", row, col)
-            time.sleep(3)
             self.printBoard(self.hideShips())
             self.countShips()
         else:
