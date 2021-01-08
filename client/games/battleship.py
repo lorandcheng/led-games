@@ -191,7 +191,7 @@ class Battleship:
         row = 0
         col = 0
         tempBoard = self.hideShips()
-        tempBoard[row][col] = str(tempBoard[row][col]) + "x"
+        tempBoard[row][col] = str(tempBoard[row][col]) + "X"
         self.printBoard(tempBoard)
         listener = inputs.Listener()
         done = False
@@ -206,7 +206,7 @@ class Battleship:
                         row += r
                         col += c
                         tempBoard = self.hideShips()
-                        tempBoard[row][col] = str(tempBoard[row][col]) + "x"
+                        tempBoard[row][col] = str(tempBoard[row][col]) + "X"
                         self.printBoard(tempBoard)
 
             if int(tempBoard[row][col][:-1]) == 0:
@@ -270,15 +270,80 @@ class Battleship:
                         row += ' S |'
                     elif board[r][c] == -1:
                         row += ' ! |'
-                    elif str(board[r][c])[-1] == 'x':
+                    elif str(board[r][c])[-1] == 'X':
                         row += ' @ |'
                     else:
                         row += '~~~|'
                 output += f"{row}\n+---+---+---+---+---+---+---+---+---+---+\n"
 
         elif type(self.output).__name__ == "LedDisplay":
-            pass
-    
+            colors = {
+                "black": (0, 0, 0),
+                "grey": (80, 80, 80),
+                "red": (230, 0, 0),
+                "orange": (230, 150, 0),
+                "blue": (0, 0, 230),
+                "purple": (200, 0, 230),
+                "green": (0, 230, 0),
+                "dark green": (0, 50, 0)
+            }
+
+            output = []
+            for r in range(32):
+                output.append([])
+                for c in range(32):
+                    if r == 0 or r == 31 or c == 0 or c == 31:
+                        output[r][c] = colors["green"]
+                    else:
+                        output[r][c] = colors["blue"]
+
+            for r in range(10):
+                for c in range(10):
+                    if board[r][c]:
+                        if type(board[r][c]) == str:
+                            pixels = [ 
+                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                            (r*3+2,c*3+1),  (r*3+2,c*3+2),
+                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
+                            ]
+
+                            for row, column in pixels:
+                                if str(board[r][c])[-1] == "X":
+                                    output[column][row] = colors["green"]
+
+                        elif board[r][c] == 1 or board[r][c] == 2:
+                            pixels = [ 
+                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+2),
+                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
+                            ]
+
+                            for row, column in pixels:
+                                output[column][row] = colors["grey"]
+
+                            if board[r][c] == 2:
+                                pixels = [ 
+                                (r*3+1,c*3+1), (r*3+1,c*3+3),  
+                                (r*3+2,c*3+2),
+                                (r*3+3,c*3+1), (r*3+3,c*3+3), 
+                                ]
+
+                                for row, column in pixels:
+                                    output[column][row] = colors["red"]
+
+                        elif board[r][c] == -1:
+                            pixels = [ 
+                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+2),
+                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
+                            ]
+
+                            for row, column in pixels:
+                                output[column][row] = colors["red"]
+
+                        elif board[r][c] == -2:
+                            output[r*3+2][c*3+2] = colors["white"]
+
         else:
             print("Unsupported output")
             raise ValueError
