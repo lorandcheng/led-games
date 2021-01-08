@@ -40,6 +40,9 @@ class Battleship:
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
         ]
         self.setupDone = False
+        self.myShips = 0
+        self.oShips = 0
+        self.countShips()
 
     def needSetup(self):
         return True
@@ -64,8 +67,6 @@ class Battleship:
             for elem in ship:
                 elem[1] -= 1
         
-                
-    
     def placeShip(self, ship):
         tempBoard = copy.deepcopy(self.BOARD)
         if self.isEmpty(ship):
@@ -120,9 +121,6 @@ class Battleship:
                         for r,c in ship:
                             tempBoard[r][c] = -1
                     self.printBoard(tempBoard)
-                    
-
-
 
             if self.isEmpty(ship):
                 done = True
@@ -226,14 +224,42 @@ class Battleship:
                 done = True
             else: 
                 listener.selected = False
-        time.sleep(2)
+
+        return row, col
+
+    def countShips(self):
+        self.myShips = 0
+        self.oShips = 0
+        for r in range(10):
+            for c in range(10):
+                if self.BOARD[r][c] == 1:
+                    self.myShips += 1
+                if self.oBOARD[r][c] == 1:
+                    self.oShips += 1
+
     
     def playTurn(self):
         """
         one turn of the game
         """
+        self.countShips()
+        if self.myShips:
+            row, col = self.selectLoc()
+            if self.oBOARD[row][col] == 1:
+                self.oBOARD[row][col] = 2
+                print("hit at", row, col)
+            elif self.oBOARD[row][col] == 0:
+                self.oBOARD[row][col] = -2
+                print("missed at", row, col)
+            time.sleep(3)
+            self.printBoard(self.hideShips())
         
-            
+        else:
+            self.done = True
+        if self.oShips == 0:
+            self.done = True
+
+        return row, col
 
     def printBoard(self, board):
         """
@@ -273,4 +299,7 @@ class Battleship:
         """
         return true if game is over and player won
         """
-    
+        if self.myShips and self.done:
+            return True
+        else:
+            return False
