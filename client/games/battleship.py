@@ -292,10 +292,11 @@ class Battleship:
             for r in range(32):
                 output.append([])
                 for c in range(32):
+
                     if r == 0 or r == 31 or c == 0 or c == 31:
-                        output[r][c] = colors["green"]
+                        output[r].append(colors["green"])
                     else:
-                        output[r][c] = colors["blue"]
+                        output[r].append(colors["blue"])
 
             for r in range(10):
                 for c in range(10):
