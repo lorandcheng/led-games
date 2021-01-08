@@ -66,6 +66,7 @@ def lobby(client, userdata, msg):
             if entry[0] == name:
                 print("\nuser removed from lobby:", name)
                 LOBBY.remove(entry)
+                print("lobby:", LOBBY)
 
 
 def onConnect(client, userdata, flags, rc):
