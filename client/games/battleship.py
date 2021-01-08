@@ -120,7 +120,7 @@ class Battleship:
 
 
     def setup(self):
-        shipSizes = [2]# [5,4,3,3,2]
+        shipSizes = [5,4,3,3,2]
         for size in shipSizes:
             ship = []
             for i in range(size):
