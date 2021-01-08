@@ -283,7 +283,7 @@ class Battleship:
                 "red": (230, 0, 0),
                 "white": (150, 150, 150),
                 "blue": (0, 0, 100),
-                "purple": (200, 0, 230),
+                "blue green": (0, 50, 100),
                 "green": (0, 200, 0),
                 "dark green": (0, 100, 0)
             }
@@ -294,7 +294,9 @@ class Battleship:
                 for c in range(32):
 
                     if r == 0 or r == 31 or c == 0 or c == 31:
-                        output[r].append(colors["blue"])
+                        output[r].append(colors["blue green"])
+                    elif r%2 == 0 and c%2 == 0:
+                        output[r].append(colors["black"])
                     else:
                         output[r].append(colors["blue"])
 
@@ -343,7 +345,9 @@ class Battleship:
                                 output[column][row] = colors["red"]
 
                         elif board[r][c] == -2:
-                            output[r*3+2][c*3+2] = colors["white"]
+                            pixels = [(r*3+2,c*3+2)]
+                            for row, column in pixels:
+                                    output[column][row] = colors["white"]
 
         else:
             print("Unsupported output")
