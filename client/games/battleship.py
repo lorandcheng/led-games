@@ -183,6 +183,7 @@ class Battleship:
         self.printBoard(self.BOARD)
         time.sleep(0.2)
         self.printBoard(tempBoard)
+        time.sleep(1)
 
         self.BOARD = tempBoard
 
