@@ -343,9 +343,14 @@ class Battleship:
                                 output[column][row] = colors["red"]
 
                         elif board[r][c] == -2:
-                            pixels = [(r*3+2,c*3+2)]
+                            pixels = [ 
+                                (r*3+1,c*3+1), (r*3+1,c*3+3),  
+                                (r*3+2,c*3+2),
+                                (r*3+3,c*3+1), (r*3+3,c*3+3), 
+                                ]
+
                             for row, column in pixels:
-                                    output[column][row] = colors["white"]
+                                output[column][row] = colors["white"]
 
         else:
             print("Unsupported output")
