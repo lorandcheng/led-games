@@ -252,7 +252,7 @@ class Game(mqttClient):
             self.sendData(data)
             self.turn = False
         self.output.clear()
-        
+        print("done with game")
         if self.game.winner():
             self.output.show(("game", "over", "you won"))
         else:

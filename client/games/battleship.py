@@ -15,7 +15,7 @@ class Battleship:
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 1 , 1 , 1 , 1 , 0 , 0 , 0 , 0 ],
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
@@ -27,18 +27,7 @@ class Battleship:
         """
         other inits
         """
-        self.oBOARD = [
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 1 , 1 , 1 , 2 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 ,-2 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
-        ]
+        self.oBOARD = []
         self.setupDone = False
         self.myShips = 0
         self.oShips = 0
@@ -131,7 +120,7 @@ class Battleship:
 
 
     def setup(self):
-        shipSizes = [5,4,3,3,2]
+        shipSizes = [2]# [5,4,3,3,2]
         for size in shipSizes:
             ship = []
             for i in range(size):
@@ -256,6 +245,7 @@ class Battleship:
         
         else:
             self.done = True
+            return 0
         if self.oShips == 0:
             self.done = True
 
@@ -299,7 +289,7 @@ class Battleship:
         """
         return true if game is over and player won
         """
-        if self.myShips and self.done:
+        if self.myShips:
             return True
         else:
             return False
