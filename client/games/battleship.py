@@ -288,8 +288,8 @@ class Battleship:
                 "grey": (80, 80, 80),
                 "red": (230, 0, 0),
                 "white": (150, 150, 150),
-                "dark blue": (0, 0, 50),
-                "light blue": (100, 100, 200),
+                "dark blue": (0, 0, 20),
+                "light blue": (0, 0, 50),
                 "blue green": (0, 100, 100),
                 "green": (0, 200, 0),
                 "dark green": (0, 100, 0)
