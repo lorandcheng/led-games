@@ -58,6 +58,7 @@ class Checkers:
         self.blackCounter = 12
         self.updateScores()
         self.done = False
+        self.promoted = False
 
     def needSetup(self):
         return False
@@ -278,11 +279,13 @@ class Checkers:
                 self.redCounter -= 1
             else:
                 self.blackCounter -= 1
-        
+        # promote to king
         if rowF == 0 and piece == 1:
             piece = 2
+            self.promoted = True
         elif rowF == 7 and piece == -1:
             piece = -2
+            self.promoted = True
 
         # update board
         self.BOARD[final[0]][final[1]] = piece
@@ -425,13 +428,14 @@ class Checkers:
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = True
         else:
+            self.promoted = False
             # select piece to move
             pieces = self.findPieces()
             pieceLocation = self.selectLocation(pieces)
             # make move(s)
             possibleJumps = self.findJumps(pieceLocation)
             if possibleJumps:
-                while possibleJumps:
+                while possibleJumps and not self.promoted:
                     moveLocation = self.selectLocation(possibleJumps)
                     self.makeMove(pieceLocation, moveLocation)
                     pieceLocation = moveLocation
