@@ -282,10 +282,10 @@ class Battleship:
                 "grey": (80, 80, 80),
                 "red": (230, 0, 0),
                 "orange": (230, 150, 0),
-                "blue": (0, 0, 230),
+                "blue": (0, 0, 100),
                 "purple": (200, 0, 230),
-                "green": (0, 230, 0),
-                "dark green": (0, 50, 0)
+                "green": (0, 200, 0),
+                "dark green": (0, 100, 0)
             }
 
             output = []
@@ -294,7 +294,7 @@ class Battleship:
                 for c in range(32):
 
                     if r == 0 or r == 31 or c == 0 or c == 31:
-                        output[r].append(colors["green"])
+                        output[r].append(colors["dark green"])
                     else:
                         output[r].append(colors["blue"])
 
@@ -304,7 +304,7 @@ class Battleship:
                         if type(board[r][c]) == str:
                             pixels = [ 
                             (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+2),
+                            (r*3+2,c*3+1),  (r*3+2,c*3+3),
                             (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
                             ]
 
@@ -315,7 +315,7 @@ class Battleship:
                         elif board[r][c] == 1 or board[r][c] == 2:
                             pixels = [ 
                             (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+2),
+                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+3),
                             (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
                             ]
 
@@ -335,7 +335,7 @@ class Battleship:
                         elif board[r][c] == -1:
                             pixels = [ 
                             (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+2),
+                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+3),
                             (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
                             ]
 
