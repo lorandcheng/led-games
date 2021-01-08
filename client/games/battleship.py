@@ -27,7 +27,7 @@ class Battleship:
         """
         other inits
         """
-        self.oBOARD = []
+        self.oBOARD = copy.deepcopy(self.BOARD)
         self.setupDone = False
         self.myShips = 0
         self.oShips = 0
