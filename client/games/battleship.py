@@ -295,7 +295,7 @@ class Battleship:
 
                     if r == 0 or r == 31 or c == 0 or c == 31:
                         output[r].append(colors["blue green"])
-                    elif (r+1)%3 == 0 and (r+1)%3 == 0:
+                    elif (r+1)%3 == 0 and (c+1)%3 == 0:
                         output[r].append(colors["black"])
                     else:
                         output[r].append(colors["blue"])
