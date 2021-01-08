@@ -126,7 +126,7 @@ class Battleship:
             for i in range(size):
                 ship.append([0,i])
             self.placeShip(ship)
-        
+        self.output.show(("Waiting", "for", "opponent", "to", "finish"))
         return self.BOARD
         
 
@@ -241,6 +241,7 @@ class Battleship:
         one turn of the game
         """
         self.countShips()
+        self.printBoard(self.hideShips())
         if self.myShips:
             row, col = self.selectLoc()
             if self.oBOARD[row][col] == 1:
