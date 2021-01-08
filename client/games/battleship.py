@@ -320,7 +320,7 @@ class Battleship:
                             ]
 
                             for row, column in pixels:
-                                output[column][row] = colors["black"]
+                                output[column][row] = colors["grey"]
 
                             if board[r][c] == 2:
                                 pixels = [ 
