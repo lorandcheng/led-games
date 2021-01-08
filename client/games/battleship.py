@@ -242,7 +242,7 @@ class Battleship:
                 print("missed at", row, col)
             time.sleep(3)
             self.printBoard(self.hideShips())
-        
+            self.countShips()
         else:
             self.done = True
             return 0
