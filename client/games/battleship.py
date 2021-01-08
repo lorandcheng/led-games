@@ -289,7 +289,7 @@ class Battleship:
                 "red": (230, 0, 0),
                 "white": (150, 150, 150),
                 "dark blue": (0, 0, 20),
-                "light blue": (0, 0, 50),
+                "light blue": (0, 0, 100),
                 "blue green": (0, 100, 100),
                 "green": (0, 200, 0),
                 "dark green": (0, 100, 0)
@@ -301,7 +301,7 @@ class Battleship:
                 for c in range(32):
 
                     if r == 0 or r == 31 or c == 0 or c == 31:
-                        output[r].append(colors["blue green"])
+                        output[r].append(colors["light blue"])
                     elif (r+1)%3 == 0 and (c+1)%3 == 0:
                         output[r].append(colors["light blue"])
                     else:
