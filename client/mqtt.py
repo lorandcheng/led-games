@@ -270,8 +270,9 @@ class Game(mqttClient):
         """
         Summary: callback to receive game data from opponent
         """
-        self.game.parseData(msg)
-        self.turn = True
+        if not self.game.done:
+            self.game.parseData(msg)
+            self.turn = True
 
 
 def leave(username):
