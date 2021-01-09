@@ -126,7 +126,7 @@ class Battleship:
             for i in range(size):
                 ship.append([0,i])
             self.placeShip(ship)
-        self.output.show(("Waiting", "for", "opponent", "to", "finish"))
+        self.output.show(("Waiting", "for", "opponent", "to", "set up"))
         return self.BOARD
         
 
@@ -151,6 +151,7 @@ class Battleship:
             message = message[1:len(message)-1]
             coords = message.split(", ")
             self.animate(coords, self.BOARD)
+            print(self.BOARD)
 
     def animate(self, coords, board, hide=False):
         """
@@ -250,6 +251,7 @@ class Battleship:
         if self.myShips:
             row, col = self.selectLoc()
             self.animate((row, col), self.oBOARD, hide=True)
+            print(self.oBOARD)
             self.countShips()
         else:
             self.done = True
