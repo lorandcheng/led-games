@@ -311,56 +311,78 @@ class Battleship:
             for r in range(10):
                 for c in range(10):
                     if board[r][c]:
+                        # Selected
                         if type(board[r][c]) == str:
                             pixels = [ 
-                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+3),
-                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
-                            ]
+                                    (r*3+1,c*3+1), (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                                    (r*3+2,c*3+1),                (r*3+2,c*3+3),
+                                    (r*3+3,c*3+1), (r*3+3,c*3+2), (r*3+3,c*3+3)
+                                ]
 
                             for row, column in pixels:
-                                if str(board[r][c])[-1] == "X":
+                                if board[r][c][-1] == "X":
                                     output[column][row] = colors["green"]
-
-                        elif board[r][c] == 1 or board[r][c] == 2:
+                        # Ship
+                        elif board[r][c] == 1: 
                             pixels = [ 
-                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+3),
-                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
-                            ]
+                                    (r*3+1,c*3+1), (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                                    (r*3+2,c*3+1), (r*3+2,c*3+2), (r*3+2,c*3+3),
+                                    (r*3+3,c*3+1), (r*3+3,c*3+2), (r*3+3,c*3+3)
+                                ]
 
                             for row, column in pixels:
                                 output[column][row] = colors["grey"]
 
-                            if board[r][c] == 2:
-                                pixels = [ 
-                                (r*3+1,c*3+1), (r*3+1,c*3+3),  
-                                (r*3+2,c*3+2),
-                                (r*3+3,c*3+1), (r*3+3,c*3+3), 
-                                ]
-
-                                for row, column in pixels:
-                                    output[column][row] = colors["red"]
-
+                        # Invalid
                         elif board[r][c] == -1:
                             pixels = [ 
-                            (r*3+1,c*3+1),  (r*3+1,c*3+2), (r*3+1,c*3+3),  
-                            (r*3+2,c*3+1),  (r*3+2,c*3+2), (r*3+2,c*3+3),
-                            (r*3+3,c*3+1),  (r*3+3,c*3+2), (r*3+3,c*3+3), 
-                            ]
+                                    (r*3+1,c*3+1), (r*3+1,c*3+2), (r*3+1,c*3+3),  
+                                    (r*3+2,c*3+1), (r*3+2,c*3+2), (r*3+2,c*3+3),
+                                    (r*3+3,c*3+1), (r*3+3,c*3+2), (r*3+3,c*3+3)
+                                ]
 
                             for row, column in pixels:
                                 output[column][row] = colors["red"]
 
+                        # Hit
+                        elif board[r][c] == 2:
+                            pixels = [ 
+                                    (r*3+1,c*3+1),                (r*3+1,c*3+3),  
+                                                   (r*3+2,c*3+2),
+                                    (r*3+3,c*3+1),                (r*3+3,c*3+3)
+                                ]
+
+                            for row, column in pixels:
+                                output[column][row] = colors["red"]
+                            
+                            pixels = [ 
+                                                   (r*3+1,c*3+2),  
+                                    (r*3+2,c*3+1),                (r*3+2,c*3+3),
+                                                   (r*3+3,c*3+2)
+                                ]
+                            
+                            for row, column in pixels:
+                                output[column][row] = colors["black"]
+
+                        # Miss
                         elif board[r][c] == -2:
                             pixels = [ 
-                                (r*3+1,c*3+1), (r*3+1,c*3+3),  
-                                (r*3+2,c*3+2),
-                                (r*3+3,c*3+1), (r*3+3,c*3+3), 
+                                    (r*3+1,c*3+1),                (r*3+1,c*3+3),  
+                                                   (r*3+2,c*3+2),
+                                    (r*3+3,c*3+1),                (r*3+3,c*3+3)
                                 ]
 
                             for row, column in pixels:
                                 output[column][row] = colors["white"]
+                            
+                            pixels = [ 
+                                                   (r*3+1,c*3+2),  
+                                    (r*3+2,c*3+1),                (r*3+2,c*3+3),
+                                                   (r*3+3,c*3+2)
+                                ]
+                            
+                            for row, column in pixels:
+                                output[column][row] = colors["black"]
 
         else:
             print("Unsupported output")
