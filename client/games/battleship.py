@@ -166,8 +166,10 @@ class Battleship:
         r = int(coords[0])
         c = int(coords[1])
         if board[r][c] == 1:
+            board[r][c] = 2
             after[r][c] = 2
         elif board[r][c] == 0:
+            board[r][c] = -2
             after[r][c] = -2
         
         self.printBoard(before)
@@ -191,7 +193,7 @@ class Battleship:
         self.printBoard(after)
         time.sleep(1)
 
-        return after
+        return board
 
 
     def hideShips(self, board):
