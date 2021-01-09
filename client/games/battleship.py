@@ -162,9 +162,9 @@ class Battleship:
             tempBoard = copy.deepcopy(board)
         r = int(coords[0])
         c = int(coords[1])
-        if tempBoard[r][c] == 1:
+        if board[r][c] == 1:
             tempBoard[r][c] = 2
-        elif tempBoard[r][c] == 0:
+        elif board[r][c] == 0:
             tempBoard[r][c] = -2
         
         self.printBoard(board)
@@ -289,7 +289,7 @@ class Battleship:
                 "red": (230, 0, 0),
                 "white": (150, 150, 150),
                 "dark blue": (0, 0, 50),
-                "light blue": (20, 20, 100),
+                "light blue": (50, 50, 100),
                 "blue green": (0, 80, 80),
                 "green": (0, 200, 0),
                 "dark green": (0, 100, 0)
