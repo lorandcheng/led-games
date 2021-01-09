@@ -157,38 +157,40 @@ class Battleship:
         animate turn and update the board
         """
         if hide:
-            tempBoard = copy.deepcopy(self.hideShips(board))
+            before = copy.deepcopy(self.hideShips(board))
+            after = copy.deepcopy(self.hideShips(board))
         else:
-            tempBoard = copy.deepcopy(board)
+            before = copy.deepcopy(board)
+            after = copy.deepcopy(board)
         r = int(coords[0])
         c = int(coords[1])
         if board[r][c] == 1:
-            tempBoard[r][c] = 2
+            after[r][c] = 2
         elif board[r][c] == 0:
-            tempBoard[r][c] = -2
+            after[r][c] = -2
         
-        self.printBoard(board)
+        self.printBoard(before)
         time.sleep(1)
-        self.printBoard(tempBoard)
+        self.printBoard(after)
         time.sleep(0.2)
-        self.printBoard(board)
+        self.printBoard(before)
         time.sleep(0.2)
-        self.printBoard(tempBoard)
+        self.printBoard(after)
         time.sleep(0.2)
-        self.printBoard(board)
+        self.printBoard(before)
         time.sleep(0.2)
-        self.printBoard(tempBoard)
+        self.printBoard(after)
         time.sleep(0.2)
-        self.printBoard(board)
+        self.printBoard(before)
         time.sleep(0.2)
-        self.printBoard(tempBoard)
+        self.printBoard(after)
         time.sleep(0.2)
-        self.printBoard(board)
+        self.printBoard(before)
         time.sleep(0.2)
-        self.printBoard(tempBoard)
+        self.printBoard(after)
         time.sleep(1)
 
-        board = tempBoard
+        board = after
 
 
     def hideShips(self, board):
