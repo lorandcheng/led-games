@@ -150,13 +150,13 @@ class Battleship:
         else:
             message = message[1:len(message)-1]
             coords = message.split(", ")
-            self.showTurn(coords)
+            self.animate(coords, self.BOARD)
 
-    def showTurn(self, coords):
+    def animate(self, coords, board):
         """
-        animate opponent's turn
+        animate turn and update the board
         """
-        tempBoard = copy.deepcopy(self.BOARD)
+        tempBoard = copy.deepcopy(board)
         r = int(coords[0])
         c = int(coords[1])
         if tempBoard[r][c] == 1:
@@ -164,28 +164,28 @@ class Battleship:
         elif tempBoard[r][c] == 0:
             tempBoard[r][c] = -2
         
-        self.printBoard(self.BOARD)
+        self.printBoard(board)
         time.sleep(1)
         self.printBoard(tempBoard)
         time.sleep(0.2)
-        self.printBoard(self.BOARD)
+        self.printBoard(board)
         time.sleep(0.2)
         self.printBoard(tempBoard)
         time.sleep(0.2)
-        self.printBoard(self.BOARD)
+        self.printBoard(board)
         time.sleep(0.2)
         self.printBoard(tempBoard)
         time.sleep(0.2)
-        self.printBoard(self.BOARD)
+        self.printBoard(board)
         time.sleep(0.2)
         self.printBoard(tempBoard)
         time.sleep(0.2)
-        self.printBoard(self.BOARD)
+        self.printBoard(board)
         time.sleep(0.2)
         self.printBoard(tempBoard)
         time.sleep(1)
 
-        self.BOARD = tempBoard
+        board = tempBoard
 
 
     def hideShips(self):
@@ -244,11 +244,7 @@ class Battleship:
         self.printBoard(self.hideShips())
         if self.myShips:
             row, col = self.selectLoc()
-            if self.oBOARD[row][col] == 1:
-                self.oBOARD[row][col] = 2
-            elif self.oBOARD[row][col] == 0:
-                self.oBOARD[row][col] = -2
-            self.printBoard(self.hideShips())
+            self.animate((row, col), self.hideShips())
             self.countShips()
         else:
             self.done = True
