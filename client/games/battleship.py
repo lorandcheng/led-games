@@ -152,11 +152,14 @@ class Battleship:
             coords = message.split(", ")
             self.animate(coords, self.BOARD)
 
-    def animate(self, coords, board):
+    def animate(self, coords, board, hide=False):
         """
         animate turn and update the board
         """
-        tempBoard = copy.deepcopy(board)
+        if hide:
+            tempBoard = copy.deepcopy(self.hideShips(board))
+        else:
+            tempBoard = copy.deepcopy(board)
         r = int(coords[0])
         c = int(coords[1])
         if tempBoard[r][c] == 1:
@@ -188,8 +191,8 @@ class Battleship:
         board = tempBoard
 
 
-    def hideShips(self):
-        tempBoard = copy.deepcopy(self.oBOARD)
+    def hideShips(self, board):
+        tempBoard = copy.deepcopy(board)
         for r in range(10):
             for c in range(10):
                 if tempBoard[r][c] == 1:
@@ -199,7 +202,7 @@ class Battleship:
     def selectLoc(self):
         row = 0
         col = 0
-        tempBoard = self.hideShips()
+        tempBoard = self.hideShips(self.oBOARD)
         tempBoard[row][col] = str(tempBoard[row][col]) + "X"
         self.printBoard(tempBoard)
         listener = inputs.Listener()
@@ -214,7 +217,7 @@ class Battleship:
                     if (0<=(row+r)<=9) and (0<=(col+c)<=9):
                         row += r
                         col += c
-                        tempBoard = self.hideShips()
+                        tempBoard = self.hideShips(self.oBOARD)
                         tempBoard[row][col] = str(tempBoard[row][col]) + "X"
                         self.printBoard(tempBoard)
 
@@ -241,10 +244,10 @@ class Battleship:
         one turn of the game
         """
         self.countShips()
-        self.printBoard(self.hideShips())
+        self.printBoard(self.hideShips(self.oBOARD))
         if self.myShips:
             row, col = self.selectLoc()
-            self.animate((row, col), self.hideShips())
+            self.animate((row, col), self.oBOARD, hide=True)
             self.countShips()
         else:
             self.done = True
@@ -285,7 +288,7 @@ class Battleship:
                 "grey": (80, 80, 80),
                 "red": (230, 0, 0),
                 "white": (150, 150, 150),
-                "dark blue": (0, 0, 20),
+                "dark blue": (0, 0, 50),
                 "light blue": (20, 20, 100),
                 "blue green": (0, 80, 80),
                 "green": (0, 200, 0),
