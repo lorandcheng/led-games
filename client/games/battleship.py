@@ -150,7 +150,7 @@ class Battleship:
         else:
             message = message[1:len(message)-1]
             coords = message.split(", ")
-            self.BOARD = self.animate(coords, self.BOARD)
+            self.animate(coords, self.BOARD)
             print(self.BOARD)
 
     def animate(self, coords, board, hide=False):
@@ -192,8 +192,6 @@ class Battleship:
         time.sleep(0.2)
         self.printBoard(after)
         time.sleep(1)
-
-        return board
 
 
     def hideShips(self, board):
@@ -252,7 +250,7 @@ class Battleship:
         self.printBoard(self.hideShips(self.oBOARD))
         if self.myShips:
             row, col = self.selectLoc()
-            self.oBOARD = self.animate((row, col), self.oBOARD, hide=True)
+            self.animate((row, col), self.oBOARD, hide=True)
             print(self.oBOARD)
             self.countShips()
         else:
