@@ -325,6 +325,10 @@ class Battleship:
                             for row, column in pixels:
                                 if board[r][c][-1] == "X":
                                     output[column][row] = colors["green"]
+                                if board[r][c][:-1] == "2":
+                                    output[c*3+2][r*3+2] = colors["red"]
+                                elif board[r][c][:-1] == "-2":
+                                    output[c*3+2][r*3+2] = colors["white"]
                         # Ship
                         elif board[r][c] == 1: 
                             pixels = [ 
