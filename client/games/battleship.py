@@ -462,4 +462,65 @@ class Fleet:
     def shipCount(self):
         return self.shipCount
 
+if __name__ == "__main__":
+    """
+    DEMO SHIP AND FLEET CODE (have to comment out import inputs)
+    """
+    coords = [
+        [
+            (0,0), (0,1), (0,2), (0,3), (0,4)
+        ],
+        [
+            (1,0), (1,1), (1,2), (1,3)
+        ],
+        [
+            (2,0), (2,1), (2,2)
+        ],
+        [
+            (3,0), (3,1), (3,2)
+        ],
+        [
+            (4,0), (4,1)
+        ]
+    ]
     
+    fleet = Fleet(coords)
+
+    guesses = [
+        (0,0), (0,5), (4,0), (4,1), (0,1)
+    ]
+
+    for row, col in guesses:
+        hit, sunk = fleet.hit(row, col)
+        print("Guess:", row, col)
+        print("Hit?", hit)
+        print("Sunk?", sunk)
+        print("\n")
+
+    """
+    OUTPUT
+
+    Guess: 0 0
+    Hit? True
+    Sunk? False
+
+
+    Guess: 0 5
+    Hit? False
+    Sunk? False
+
+
+    Guess: 4 0
+    Hit? True
+    Sunk? False
+
+
+    Guess: 4 1
+    Hit? True
+    Sunk? True
+
+
+    Guess: 0 1
+    Hit? True
+    Sunk? False
+    """
