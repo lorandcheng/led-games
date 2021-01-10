@@ -406,8 +406,9 @@ class Battleship:
 class Ship:
     def __init__(self, size, coords):
         """
-        size: length of the ship
-        coords: list of coords of all the pieces of the ship
+        Args:
+            size: length of the ship
+            coords: list of coords of all the pieces of the ship
         """
         self.size = size
         self.coords = coords
@@ -415,6 +416,11 @@ class Ship:
         self.hits = 0
 
     def hit(self, row, col):
+        """
+        returns:
+            True: hit
+            False: miss
+        """
         if (row, col) in self.coords:
             self.hits += 1
             if self.hits == self.size:
