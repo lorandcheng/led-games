@@ -36,6 +36,16 @@ class Battleship:
     def needSetup(self):
         return True
 
+    def countShips(self):
+        self.myShips = 0
+        self.oShips = 0
+        for r in range(10):
+            for c in range(10):
+                if self.BOARD[r][c] == 1:
+                    self.myShips += 1
+                if self.oBOARD[r][c] == 1:
+                    self.oShips += 1
+
     def isEmpty(self, ship):
         for r,c in ship:
             if self.BOARD[r][c] == 1:
@@ -229,17 +239,6 @@ class Battleship:
                 listener.selected = False
 
         return row, col
-
-    def countShips(self):
-        self.myShips = 0
-        self.oShips = 0
-        for r in range(10):
-            for c in range(10):
-                if self.BOARD[r][c] == 1:
-                    self.myShips += 1
-                if self.oBOARD[r][c] == 1:
-                    self.oShips += 1
-
     
     def playTurn(self):
         """
@@ -403,3 +402,58 @@ class Battleship:
             return True
         else:
             return False
+
+class Ship:
+    def __init__(self, size, coords):
+        """
+        size: length of the ship
+        coords: list of coords of all the pieces of the ship
+        """
+        self.size = size
+        self.coords = coords
+        self.sunk = False
+        self.hits = 0
+
+    def hit(self, row, col):
+        if (row, col) in self.coords:
+            self.hits += 1
+            if self.hits == self.size:
+                self.sunk = True
+            return True
+        return False
+    
+    def isSunk(self):
+        return self.sunk
+
+class Fleet:
+    def __init__(self, coords):
+        """
+        coords: 2d list of coordinates of the different ships, ordered in descending size
+        """
+        self.carrier = Ship(5, coords[0])
+        self.battleship = Ship(4, coords[1])
+        self.cruiser = Ship(3, coords[2])
+        self.sub = Ship(3, coords[3])
+        self.destroyer = Ship(2, coords[4])
+        self.fleet = [self.carrier, self.battleship, self.cruiser, self.sub, self.destroyer]
+        self.shipCount = len(self.fleet)
+
+    def hit(self, row, col):
+        """
+        returns: 
+            True, True: hit and sunk
+            True, False: hit but not sunk
+            False, False: miss
+        """
+        for ship in self.fleet:
+            if ship.hit(row, col):
+                if ship.isSunk():
+                    self.shipCount -= 1
+                    return True, True
+                return True, False
+        return False, False
+
+    def shipCount(self):
+        return self.shipCount
+
+    
