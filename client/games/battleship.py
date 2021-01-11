@@ -32,6 +32,7 @@ class Battleship:
         self.myShips = 0
         self.oShips = 0
         self.countShips()
+        self.fleet = None
 
     def needSetup(self):
         return True
@@ -127,17 +128,23 @@ class Battleship:
                 listener.selected = False
 
         self.BOARD = tempBoard
+        return ship
 
 
     def setup(self):
         shipSizes = [5,4,3,3,2]
+        coords = []
         for size in shipSizes:
             ship = []
             for i in range(size):
                 ship.append([0,i])
-            self.placeShip(ship)
+            ship = self.placeShip(ship)
+            coords.append(ship)
+        self.fleet = Fleet(coords)
+
         self.output.show(("Waiting", "for", "opponent", "to", "set up"))
-        return self.BOARD
+        print(str(self.BOARD), str(coords))
+        return self.BOARD, coords
         
 
     def parseData(self, data):
@@ -146,9 +153,10 @@ class Battleship:
         """
         message = str(data.payload, 'utf-8')
         if len(message) > 10:
-            message = message[2:len(message)-2]
+            message = message[2:len(message)-3]
+            board, coords = message.split("]] [[[")
 
-            rows = message.split("], [")
+            rows = board.split("], [")
             j = 0
             for element in rows:
                 vals = element.split(", ")
@@ -156,7 +164,20 @@ class Battleship:
                 for i in range(10):
                     self.oBOARD[j][i] = int(vals[i])
                 j+=1
+
+            ships = coords.split("]], [[")
+            oCoords = []
+            for ship in ships:
+                shipCoords = []
+                elems = ship.split("], [")
+                for elem in elems:
+                    r,c = elem.split(", ")
+                    shipCoords.append([int(r),int(c)])
+                oCoords.append(shipCoords)
+            self.oFleet = Fleet(oCoords)
+
             self.setupDone = True
+
         else:
             message = message[1:len(message)-1]
             coords = message.split(", ")
@@ -174,9 +195,22 @@ class Battleship:
             after = copy.deepcopy(board)
         r = int(coords[0])
         c = int(coords[1])
-        if board[r][c] == 1:
-            board[r][c] = 2
-            after[r][c] = 2
+        if hide:
+            hit, sunk = self.oFleet.hit(r,c)
+        else:
+            hit, sunk = self.fleet.hit(r,c)
+        if hit:
+            if sunk:
+                if hide:
+                    ship = self.oFleet.getShip(r,c)
+                else:
+                    ship = self.fleet.getShip(r,c)
+                for row, col in ship:
+                    board[row][col] = -1
+                    after[row][col] = -1
+            else:
+                board[r][c] = 2
+                after[r][c] = 2
         elif board[r][c] == 0:
             board[r][c] = -2
             after[r][c] = -2
@@ -421,21 +455,30 @@ class Ship:
             True: hit
             False: miss
         """
-        if (row, col) in self.coords:
+        if [row, col] in self.coords:
             self.hits += 1
             if self.hits == self.size:
                 self.sunk = True
+            return True
+        return False
+
+    def onShip(self, row, col):
+        if [row, col] in self.coords:
             return True
         return False
     
     def isSunk(self):
         return self.sunk
 
+    def getCoords(self):
+        return self.coords
+
 class Fleet:
     def __init__(self, coords):
         """
         coords: 2d list of coordinates of the different ships, ordered in descending size
         """
+        self.coords = coords
         self.carrier = Ship(5, coords[0])
         self.battleship = Ship(4, coords[1])
         self.cruiser = Ship(3, coords[2])
@@ -462,25 +505,31 @@ class Fleet:
     def shipCount(self):
         return self.shipCount
 
+    def getShip(self, row, col):
+        for ship in self.fleet:
+            if ship.onShip(row, col):
+                return ship.getCoords()
+
+
 if __name__ == "__main__":
     """
     DEMO SHIP AND FLEET CODE (have to comment out import inputs)
     """
     coords = [
         [
-            (0,0), (0,1), (0,2), (0,3), (0,4)
+            [0,0], [0,1], [0,2], [0,3], [0,4]
         ],
         [
-            (1,0), (1,1), (1,2), (1,3)
+            [1,0], [1,1], [1,2], [1,3]
         ],
         [
-            (2,0), (2,1), (2,2)
+            [2,0], [2,1], [2,2]
         ],
         [
-            (3,0), (3,1), (3,2)
+            [3,0], [3,1], [3,2]
         ],
         [
-            (4,0), (4,1)
+            [4,0], [4,1]
         ]
     ]
     
