@@ -152,9 +152,10 @@ class Battleship:
         parse the data returned from playTurn after it has been sent as a string
         """
         message = str(data.payload, 'utf-8')
+        print(message)
         if len(message) > 10:
-            message = message[2:len(message)-3]
-            board, coords = message.split("]] [[[")
+            message = message[3:len(message)-4]
+            board, coords = message.split("]], [[[")
 
             rows = board.split("], [")
             j = 0
