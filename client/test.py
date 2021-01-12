@@ -16,49 +16,53 @@ class LocalGame:
             # Player 1 setup
             self.output.clear()
             self.output.show(('Player 1','Setup'))
+            lst.selected = False
             while not lst.selected:
                 pass
             data = str(self.player1.setup())
-            lst.selected = False
             self.player2.parseData(data)
 
             # Player 2 setup
             self.output.clear()
             self.output.show(('Player 2','Setup'))
+            lst.selected = False
             while not lst.selected:
                 pass
             data = str(self.player2.setup())
-            lst.selected = False
             self.player1.parseData(data)
 
-        while (not self.player1.done) and (not self.player2.done):
+        while not self.player2.done:
+            # Player 1 turn
             self.output.clear()
             self.output.show(('Player 1','Turn'))
+            lst.selected = False
             while not lst.selected:
                 pass
             turn = str(self.player1.playTurn())
-            lst.selected = False
             self.player2.parseData(turn)
 
+            # End if player 1 won
+            if self.player1.done:
+                break
+
+            # Player 2 turn    
             self.output.clear()
             self.output.show(('Player 2','Turn'))
+            lst.selected = False
             while not lst.selected:
                 pass
             turn = str(self.player2.playTurn())
-            lst.selected = False
             self.player1.parseData(turn)
-        print('ending')
-        
-        self.ouput.clear()
+
+        # Print winner
+        self.output.clear()
         if self.player1.winner():
             self.output.show(('Player 1', 'Won!'))
-            
         else:
             self.output.show(('Player 2', 'Won!'))
-        
-        
+        lst.selected = False
         while not lst.selected:
-                pass
+            pass
 
 if __name__ == "__main__":
    

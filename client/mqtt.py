@@ -322,7 +322,7 @@ if __name__ == "__main__":
     mode = setMode()
 
     if mode == 'local':
-
+        pass
     else:
         # prompt user to enter a valid username
         usernameGenerator = UsernameGenerator(OUTPUT)
