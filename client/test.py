@@ -1,56 +1,72 @@
-from games import battleship
+from games import battleship, checkers
 from outputs import TerminalDisplay, LedDisplay
+import copy
+from inputs import Menu, Reader, Listener
+
+class LocalGame:
+    def __init__(self, game, output):
+        self.output = output
+        self.player1 = game        
+        self.player2 = copy.deepcopy(game)
+        self.player1.color = 1
+
+    def playLocal(self):
+        lst = Listener(1)
+        if self.player1.needSetup():
+            # Player 1 setup
+            self.output.clear()
+            self.output.show(('Player 1','Setup'))
+            while not lst.selected:
+                pass
+            data = str(self.player1.setup())
+            lst.selected = False
+            self.player2.parseData(data)
+
+            # Player 2 setup
+            self.output.clear()
+            self.output.show(('Player 2','Setup'))
+            while not lst.selected:
+                pass
+            data = str(self.player2.setup())
+            lst.selected = False
+            self.player1.parseData(data)
+
+        while (not self.player1.done) and (not self.player2.done):
+            self.output.clear()
+            self.output.show(('Player 1','Turn'))
+            while not lst.selected:
+                pass
+            turn = str(self.player1.playTurn())
+            lst.selected = False
+            self.player2.parseData(turn)
+
+            self.output.clear()
+            self.output.show(('Player 2','Turn'))
+            while not lst.selected:
+                pass
+            turn = str(self.player2.playTurn())
+            lst.selected = False
+            self.player1.parseData(turn)
+        print('ending')
+        
+        self.ouput.clear()
+        if self.player1.winner():
+            self.output.show(('Player 1', 'Won!'))
+            
+        else:
+            self.output.show(('Player 2', 'Won!'))
+        
+        
+        while not lst.selected:
+                pass
 
 if __name__ == "__main__":
+   
+    output = TerminalDisplay()
+    game = checkers.Checkers(output)
 
-    # output = TerminalDisplay()
-    # game = battleship.Battleship(output)
+    
     # game.setup()
-
-    message = "[[1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], [[1, 0], [1, 1], [1, 2], [1, 3]], [[2, 0], [2, 1], [2, 2]], [[3, 0], [3, 1], [3, 2]], [[4, 0], [4, 1]]]"
-    if len(message) > 10:
-            message = message[2:len(message)-3]
-            board, coords = message.split("]] [[[")
-
-            oBOARD = [
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
-                [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
-            ]
-            rows = board.split("], [")
-            j = 0
-            for element in rows:
-                vals = element.split(", ")
-                
-                for i in range(10):
-                    oBOARD[j][i] = int(vals[i])
-                j+=1
-            print("BOARD:", oBOARD)
-            print("board elem:", oBOARD[0][0])
-
-            ships = coords.split("]], [[")
-            oCoords = []
-            for ship in ships:
-                shipCoords = []
-                elems = ship.split("], [")
-                for elem in elems:
-                    r,c = elem.split(", ")
-                    shipCoords.append([int(r),int(c)])
-                oCoords.append(shipCoords)
-
-            print("COORDS:", oCoords)
-            print("coords elem:", oCoords[0][0])
-
-
-
-
-
-
-
+    LIAF = LocalGame(game, output)
+    
+    LIAF.playLocal()

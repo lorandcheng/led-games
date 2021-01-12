@@ -18,6 +18,14 @@ def selectGame(games):
     index,_ = menu.select()
     return games[index]
 
+def setMode():
+    prompt = ("Choose", "a mode")
+    options = ['local', 'online']
+    menu = Menu(OUTPUT, prompt, options)
+    result = menu.select()
+    return result
+    
+
 class mqttClient:
     """
     Summary: Bare-bones mqtt client class
@@ -207,7 +215,7 @@ class Lobby(mqttClient):
     def __del__(self):
         self.client.disconnect()
 
-class Game(mqttClient):
+class OnlineGame(mqttClient):
     """
     Summary: Class to handle game modules and gameplay
     """
@@ -223,7 +231,7 @@ class Game(mqttClient):
         self.client.subscribe(f"ledGames/{self.username}/play")
         self.client.message_callback_add(f"ledGames/{self.username}/play", self.receiveTurn)
 
-    def play(self):
+    def playOnline(self):
         """
         Summary: main gameplay
         """
@@ -271,9 +279,18 @@ class Game(mqttClient):
         Summary: callback to receive game data from opponent
         """
         if not self.game.done:
+            msg = str(msg.payload, 'utf-8')
             self.game.parseData(msg)
             self.turn = True
 
+
+class LocalGame:
+    def __init__(self, game, output):
+        self.player1 = game.__init__(output)
+        self.player2 = game.__init__(output)
+        self.player2.color = 234
+        print(self.player2.color)
+        print(self.player2.color)
 
 def leave(username):
     """
@@ -302,33 +319,38 @@ if __name__ == "__main__":
         battleship.Battleship(OUTPUT)
     ]
 
-    # prompt user to enter a valid username
-    usernameGenerator = UsernameGenerator(OUTPUT)
-    USERNAME = usernameGenerator.getUsername()
+    mode = setMode()
 
-    # register the cleanup function to remove user from server list
-    atexit.register(leave, USERNAME)
+    if mode == 'local':
 
-    while True:
-        # prompt user to select a game, then initialize the game module
-        game = selectGame(GAMES)
-        game.__init__(OUTPUT)
+    else:
+        # prompt user to enter a valid username
+        usernameGenerator = UsernameGenerator(OUTPUT)
+        USERNAME = usernameGenerator.getUsername()
 
-        # join the lobby with username and game, select an opponent and assign colors
-        lobby = Lobby(USERNAME, game.name, OUTPUT)
-        opponent, color = lobby.lobby()
-        del lobby
-        print(f"You started a match with {opponent}")
-        print(f"Your color is {color}")
+        # register the cleanup function to remove user from server list
+        atexit.register(leave, USERNAME)
 
-        # main gameplay
-        gameplay = Game(game, USERNAME, opponent, color, OUTPUT)
-        gameplay.play()
-        del gameplay
+        while True:
+            # prompt user to select a game, then initialize the game module
+            game = selectGame(GAMES)
+            game.__init__(OUTPUT)
 
-        # prompt user to play again or exit program
-        menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
-        selection = menu.select()
-        if selection == "n":
-            break
+            # join the lobby with username and game, select an opponent and assign colors
+            lobby = Lobby(USERNAME, game.name, OUTPUT)
+            opponent, color = lobby.lobby()
+            del lobby
+            print(f"You started a match with {opponent}")
+            print(f"Your color is {color}")
+
+            # main gameplay
+            gameplay = OnlineGame(game, USERNAME, opponent, color, OUTPUT)
+            gameplay.playOnline()
+            del gameplay
+
+            # prompt user to play again or exit program
+            menu = Menu(OUTPUT, ("Do you", "want to", "keep", "playing?"), ["y", "n"])
+            selection = menu.select()
+            if selection == "n":
+                break
 

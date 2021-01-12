@@ -144,16 +144,14 @@ class Battleship:
         self.fleet = Fleet(coords)
 
         self.output.show(("Waiting", "for", "opponent", "to", "set up"))
-        print(str(self.BOARD), str(coords))
         return self.BOARD, coords
         
 
-    def parseData(self, data):
+    def parseData(self, message):
         """
         parse the data returned from playTurn after it has been sent as a string
         """
-        message = str(data.payload, 'utf-8')
-        print(message)
+        # print(message)
         if len(message) > 10:
             message = message[3:len(message)-4]
             board, coords = message.split("]], [[[")
