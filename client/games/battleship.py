@@ -33,6 +33,7 @@ class Battleship:
         self.oShips = 0
         self.countShips()
         self.fleet = None
+        self.oFleet = None
 
     def needSetup(self):
         return True
