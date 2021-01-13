@@ -4,6 +4,7 @@ import time
 # Other file imports
 sys.path.append('..')
 import inputs
+
 class Battleship:
     def __init__(self, output):
         self.output = output
@@ -197,7 +198,7 @@ class Battleship:
         # cosmetic detail
         if type(self.output).__name__ == "TerminalDisplay":
             before[r][c] = 0
-            
+
         if hit:
             if sunk:
                 if hide:

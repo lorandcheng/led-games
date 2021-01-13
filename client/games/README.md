@@ -4,13 +4,19 @@ In order to seamlessly fit into the rest of the application, the game modules mu
 
 class Game:
     def __init__(self, output):
-        self.name = 'GameName'
         self.output = output
         self.color = # default
         self.BOARD = # gameboard data
         self.done = False
+        # only if setup is required before players take turns playing
+        self.setupDone = False 
         """
         other inits
+        """
+
+    def needSetup(self):
+        """
+        return True if game needs setup. also set self.setupDone flag at some point (in parseData perhaps)
         """
 
     def parseData(self, data):
