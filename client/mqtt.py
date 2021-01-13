@@ -242,8 +242,8 @@ class OnlineGame(mqttClient):
         """
         Summary: main gameplay
         """
-        if game.needSetup():
-            data = game.setup()
+        if self.game.needSetup():
+            data = self.game.setup()
             self.sendData(data)
             while not game.setupDone:
                 pass
