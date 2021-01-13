@@ -3,7 +3,7 @@ import sys
 import time
 # Other file imports
 sys.path.append('..')
-# import inputs
+import inputs
 class Battleship:
     def __init__(self, output):
         self.name = 'Battleship'
@@ -23,17 +23,16 @@ class Battleship:
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]
         ]
+
+        self.setupDone = False
         self.done = False
         """
         other inits
         """
         self.oBOARD = copy.deepcopy(self.BOARD)
-        self.setupDone = False
-        self.myShips = 0
-        self.oShips = 0
-        self.countShips()
         self.fleet = None
         self.oFleet = None
+        self.oGuess = None
 
     def needSetup(self):
         return True
@@ -149,13 +148,14 @@ class Battleship:
 
     def parseData(self, message):
         """
-        parse the data returned from playTurn after it has been sent as a string
+        parses the data returned from playTurn() or setup() after it has been sent as a string
         """
         # print(message)
+        # parsing opponent's setup
         if len(message) > 10:
             message = message[3:len(message)-4]
             board, coords = message.split("]], [[[")
-
+            # parse opponent's board
             rows = board.split("], [")
             j = 0
             for element in rows:
@@ -164,7 +164,7 @@ class Battleship:
                 for i in range(10):
                     self.oBOARD[j][i] = int(vals[i])
                 j+=1
-
+            # parse opponents's fleet coordinates
             ships = coords.split("]], [[")
             oCoords = []
             for ship in ships:
@@ -178,10 +178,13 @@ class Battleship:
 
             self.setupDone = True
 
+        # parsing opponent's turn
         else:
             message = message[1:len(message)-1]
             coords = message.split(", ")
-            self.animate(coords, self.BOARD)
+            r = int(coords[0])
+            c = int(coords[1])
+            self.oGuess = (r, c)
 
     def animate(self, coords, board, hide=False):
         """
@@ -193,8 +196,8 @@ class Battleship:
         else:
             before = copy.deepcopy(board)
             after = copy.deepcopy(board)
-        r = int(coords[0])
-        c = int(coords[1])
+        r = coords[0]
+        c = coords[1]
         if hide:
             hit, sunk = self.oFleet.hit(r,c)
         else:
@@ -208,6 +211,8 @@ class Battleship:
                 for row, col in ship:
                     board[row][col] = -1
                     after[row][col] = -1
+                    # changing appearance to be all Xs underneath the flashing red
+                    before[row][col] = 2
             else:
                 board[r][c] = 2
                 after[r][c] = 2
@@ -245,6 +250,7 @@ class Battleship:
                     tempBoard[r][c] = 0
         return tempBoard
 
+
     def selectLoc(self):
         row = 0
         col = 0
@@ -274,12 +280,15 @@ class Battleship:
 
         return row, col
     
+
     def playTurn(self):
         """
         one turn of the game
         """
         self.printBoard(self.hideShips(self.oBOARD))
         if self.fleet.shipCount():
+            if self.oGuess:
+                self.animate(self.oGuess, self.BOARD)
             row, col = self.selectLoc()
             self.animate((row, col), self.oBOARD, hide=True)
         else:
@@ -289,6 +298,7 @@ class Battleship:
             self.done = True
 
         return row, col
+
 
     def printBoard(self, board):
         """
