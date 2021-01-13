@@ -24,7 +24,6 @@ class Checkers:
             self.blackCounter: score of black player  
             self.done: whether the game is over
         """
-        self.name = 'Checkers'
         self.output = output
         
         # Gameboard codes: -2 red king, -1 red,  0 empty,  1 black, 2 black king

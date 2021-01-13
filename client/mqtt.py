@@ -6,7 +6,9 @@ import time
 
 import paho.mqtt.client as mqtt
 
-from games import battleship, checkers
+# from games import checkers, battleship
+from games.battleship import Battleship
+from games.checkers import Checkers
 from inputs import Menu, Reader, Listener
 from outputs import TerminalDisplay, LedDisplay
 from parsersM import parseMessage
@@ -14,7 +16,7 @@ from parsersM import parseMessage
 
 def selectGame(games):
     prompt = ("Choose", "a game")
-    options = [game.name for game in games]
+    options = [game.__name__ for game in games]
     menu = Menu(OUTPUT, prompt, options, indexing=True)
     index,_ = menu.select()
     return games[index]
@@ -290,11 +292,11 @@ class OnlineGame(mqttClient):
 
 
 class LocalGame:
-    def __init__(self, game, output):
-        self.output = output
-        self.player1 = game        
-        self.player2 = copy.deepcopy(game)
+    def __init__(self, player1, player2, output):
+        self.player1 = player1    
+        self.player2 = player2
         self.player1.color = 1
+        self.output = output
 
     def playLocal(self):
         lst = Listener()
@@ -350,6 +352,7 @@ class LocalGame:
         while not lst.selected:
             pass
 
+
 def leave(username):
     """
     Summary: cleanup function on program exit, removes username from server list
@@ -373,23 +376,27 @@ if __name__ == "__main__":
 
     # initialize game classes
     GAMES = [
-        checkers.Checkers(OUTPUT),
-        battleship.Battleship(OUTPUT)
+        Checkers,
+        Battleship
     ]
 
     while True:
-        # prompt user to select a game, then initialize the game module
+        # prompt user to select a game
         game = selectGame(GAMES)
-        game.__init__(OUTPUT)
         # prompt user to select game mode
         mode = setMode()
 
         if mode == 'local':
+            # initialize a game instance for each player
+            player1 = game(OUTPUT)
+            player2 = game(OUTPUT)
             # play a local game
-            gameplay = LocalGame(game, OUTPUT)
+            gameplay = LocalGame(player1, player2, OUTPUT)
             gameplay.playLocal()
-
+            time.sleep(10)
         elif mode == 'online':
+            # initialize a game instance
+            player = game(OUTPUT)
             # prompt user to enter a valid username
             usernameGenerator = UsernameGenerator(OUTPUT)
             USERNAME = usernameGenerator.getUsername()
@@ -398,14 +405,14 @@ if __name__ == "__main__":
             atexit.register(leave, USERNAME)
 
             # join the lobby with username and game, select an opponent and assign colors
-            lobby = Lobby(USERNAME, game.name, OUTPUT)
+            lobby = Lobby(USERNAME, game.__name__, OUTPUT)
             opponent, color = lobby.lobby()
             del lobby
             print(f"You started a match with {opponent}")
             print(f"Your color is {color}")
 
             # play online
-            gameplay = OnlineGame(game, USERNAME, opponent, color, OUTPUT)
+            gameplay = OnlineGame(player, USERNAME, opponent, color, OUTPUT)
             gameplay.playOnline()
             del gameplay
 

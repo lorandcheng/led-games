@@ -6,7 +6,6 @@ sys.path.append('..')
 import inputs
 class Battleship:
     def __init__(self, output):
-        self.name = 'Battleship'
         self.output = output
         self.color = -1
 
@@ -36,16 +35,6 @@ class Battleship:
 
     def needSetup(self):
         return True
-
-    def countShips(self):
-        self.myShips = 0
-        self.oShips = 0
-        for r in range(10):
-            for c in range(10):
-                if self.BOARD[r][c] == 1:
-                    self.myShips += 1
-                if self.oBOARD[r][c] == 1:
-                    self.oShips += 1
 
     def isEmpty(self, ship):
         for r,c in ship:
@@ -196,12 +185,19 @@ class Battleship:
         else:
             before = copy.deepcopy(board)
             after = copy.deepcopy(board)
+
         r = coords[0]
         c = coords[1]
+
         if hide:
             hit, sunk = self.oFleet.hit(r,c)
         else:
             hit, sunk = self.fleet.hit(r,c)
+
+        # cosmetic detail
+        if type(self.output).__name__ == "TerminalDisplay":
+            before[r][c] = 0
+            
         if hit:
             if sunk:
                 if hide:
@@ -221,25 +217,14 @@ class Battleship:
             after[r][c] = -2
         
         self.printBoard(before)
-        time.sleep(1)
+        time.sleep(0.5)
+        for i in range(10):
+            self.printBoard(after)
+            time.sleep(0.1)
+            self.printBoard(before)
+            time.sleep(0.1)
         self.printBoard(after)
-        time.sleep(0.2)
-        self.printBoard(before)
-        time.sleep(0.2)
-        self.printBoard(after)
-        time.sleep(0.2)
-        self.printBoard(before)
-        time.sleep(0.2)
-        self.printBoard(after)
-        time.sleep(0.2)
-        self.printBoard(before)
-        time.sleep(0.2)
-        self.printBoard(after)
-        time.sleep(0.2)
-        self.printBoard(before)
-        time.sleep(0.2)
-        self.printBoard(after)
-        time.sleep(1)
+        time.sleep(0.5)
 
 
     def hideShips(self, board):
@@ -322,7 +307,7 @@ class Battleship:
                     elif str(board[r][c])[-1] == 'X':
                         row += ' @ |'
                     else:
-                        row += '~~~|'
+                        row += '   |'
                 output += f"{row}\n+---+---+---+---+---+---+---+---+---+---+\n"
 
         elif type(self.output).__name__ == "LedDisplay":
@@ -440,7 +425,7 @@ class Battleship:
         """
         return true if game is over and player won
         """
-        if self.myShips:
+        if self.fleet.shipCount():
             return True
         else:
             return False
