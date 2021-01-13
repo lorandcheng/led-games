@@ -3,7 +3,7 @@ import sys
 import time
 # Other file imports
 sys.path.append('..')
-import inputs
+# import inputs
 class Battleship:
     def __init__(self, output):
         self.name = 'Battleship'
@@ -278,16 +278,14 @@ class Battleship:
         """
         one turn of the game
         """
-        self.countShips()
         self.printBoard(self.hideShips(self.oBOARD))
-        if self.myShips:
+        if self.fleet.shipCount():
             row, col = self.selectLoc()
             self.animate((row, col), self.oBOARD, hide=True)
-            self.countShips()
         else:
             self.done = True
             return 0
-        if self.oShips == 0:
+        if self.oFleet.shipCount() == 0:
             self.done = True
 
         return row, col
@@ -485,7 +483,7 @@ class Fleet:
         self.sub = Ship(3, coords[3])
         self.destroyer = Ship(2, coords[4])
         self.fleet = [self.carrier, self.battleship, self.cruiser, self.sub, self.destroyer]
-        self.shipCount = len(self.fleet)
+        self.numShips = len(self.fleet)
 
     def hit(self, row, col):
         """
@@ -497,13 +495,13 @@ class Fleet:
         for ship in self.fleet:
             if ship.hit(row, col):
                 if ship.isSunk():
-                    self.shipCount -= 1
+                    self.numShips -= 1
                     return True, True
                 return True, False
         return False, False
 
     def shipCount(self):
-        return self.shipCount
+        return self.numShips
 
     def getShip(self, row, col):
         for ship in self.fleet:
@@ -535,41 +533,11 @@ if __name__ == "__main__":
     
     fleet = Fleet(coords)
 
-    guesses = [
-        (0,0), (0,5), (4,0), (4,1), (0,1)
-    ]
-
-    for row, col in guesses:
-        hit, sunk = fleet.hit(row, col)
-        print("Guess:", row, col)
-        print("Hit?", hit)
-        print("Sunk?", sunk)
-        print("\n")
-
-    """
-    OUTPUT
-
-    Guess: 0 0
-    Hit? True
-    Sunk? False
-
-
-    Guess: 0 5
-    Hit? False
-    Sunk? False
-
-
-    Guess: 4 0
-    Hit? True
-    Sunk? False
-
-
-    Guess: 4 1
-    Hit? True
-    Sunk? True
-
-
-    Guess: 0 1
-    Hit? True
-    Sunk? False
-    """
+    print("Ship count:", str(fleet.shipCount()))
+    for ship in coords:
+        for row, col in ship:
+            hit, sunk = fleet.hit(row, col)
+            print("\nGuess:", row, col)
+            print("Hit?", hit)
+            print("Sunk?", sunk)
+    print("\nShip count:", str(fleet.shipCount()))
