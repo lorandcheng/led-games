@@ -216,7 +216,7 @@ class Checkers:
         return 0 if len(locs) == 0 else locs
 
 
-    def selectLocation(self, locations):
+    def selectLocation(self, locations, back=False):
         """
         Summary: prompts user to cycle through given locations and select one. Arrow keys to cycle through, enter to select
 
@@ -251,6 +251,9 @@ class Checkers:
                 oldIndex = listener.index
             if listener.selected:
                 break
+            if back:
+                if listener.back:
+                    return 0
 
         # display final selection
         tempBoard = copy.deepcopy(self.BOARD) 
@@ -429,19 +432,31 @@ class Checkers:
             self.promoted = False
             # select piece to move
             pieces = self.findPieces()
-            pieceLocation = self.selectLocation(pieces)
-            # make move(s)
-            possibleJumps = self.findJumps(pieceLocation)
-            if possibleJumps:
-                while possibleJumps and not self.promoted:
-                    moveLocation = self.selectLocation(possibleJumps)
-                    self.makeMove(pieceLocation, moveLocation)
-                    pieceLocation = moveLocation
-                    possibleJumps = self.findJumps(pieceLocation)
-            else:
-                possibleMoves = self.findMoves(pieceLocation)
-                moveLocation = self.selectLocation(possibleMoves)
-                self.makeMove(pieceLocation, moveLocation)
+            final = False
+            while not final:
+                pieceLocation = self.selectLocation(pieces)
+                # make move(s)
+                possibleJumps = self.findJumps(pieceLocation)
+                if possibleJumps:
+                    jumps = 0
+                    moveLocation = 0
+                    while possibleJumps and not self.promoted:
+                        print(jumps == 0)
+                        moveLocation = self.selectLocation(possibleJumps, (jumps == 0))
+                        if moveLocation == 0:
+                            break
+                        self.makeMove(pieceLocation, moveLocation)
+                        pieceLocation = moveLocation
+                        possibleJumps = self.findJumps(pieceLocation)
+                        jumps += 1
+                else:
+                    possibleMoves = self.findMoves(pieceLocation)
+                    moveLocation = self.selectLocation(possibleMoves, True)
+                    if moveLocation:
+                        self.makeMove(pieceLocation, moveLocation)
+                
+                if moveLocation:
+                    final = True
 
         if self.blackCounter == 0 or self.redCounter == 0:
             self.done = True

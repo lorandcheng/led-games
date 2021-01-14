@@ -20,6 +20,7 @@ class Listener:
         self.rChange = 0
         self.cChange = 0
         self.rotate = False
+        self.back = False
         self.selected = False
         self.len = length
         self.keypress = False
@@ -50,6 +51,8 @@ class Listener:
                 cChange += 1
             elif k == "shift_r" or k == "shift":
                 self.rotate = True
+            elif k == "esc":
+                self.back = True
             elif k == "enter":
                 self.selected = True
             
@@ -247,21 +250,21 @@ class Menu(Listener):
 if __name__ == '__main__':
     from outputs import TerminalDisplay, LedDisplay
 
-    OUTPUT = LedDisplay()
+    OUTPUT = TerminalDisplay()
     """
     DEMO LISTENER CODE
     """
-    # listener = Listener(10)
-    # print("Starting keyboard listener")
-    # oldIndex = listener.index
-    # while True:
-    #     if oldIndex != listener.index:
-    #         print("\nUpdating menu")
-    #         print("Index value:", listener.index)
-    #         oldIndex = listener.index
-    #     if listener.selected:
-    #         break
-    # print("A selection has been made at index", listener.index)
+    listener = Listener(10)
+    print("Starting keyboard listener")
+    oldIndex = listener.index
+    while True:
+        if oldIndex != listener.index:
+            print("\nUpdating menu")
+            print("Index value:", listener.index)
+            oldIndex = listener.index
+        if listener.selected:
+            break
+    print("A selection has been made at index", listener.index)
 
     """
     DEMO READER CODE
@@ -275,9 +278,9 @@ if __name__ == '__main__':
     """
     DEMO MENU CODE
     """
-    prompt = ("Choose", "an", "option")
-    options = ["option 1", "option 2", "option 3", "option 4", "option 5", "option option 6", "option option 7"]
-    menu = Menu(OUTPUT, prompt, options, indexing=True)
-    index, selection = menu.select()
-    print("You chose:", selection, "at index", index)
-    del menu
+    # prompt = ("Choose", "an", "option")
+    # options = ["option 1", "option 2", "option 3", "option 4", "option 5", "option option 6", "option option 7"]
+    # menu = Menu(OUTPUT, prompt, options, indexing=True)
+    # index, selection = menu.select()
+    # print("You chose:", selection, "at index", index)
+    # del menu
