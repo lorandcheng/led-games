@@ -2,10 +2,12 @@
 
 In order to seamlessly fit into the rest of the application, the game modules must be designed to meet the following template:
 
-class Game:
+```
+
+class <GameName>:
     def __init__(self, output):
         self.output = output
-        self.color = # default
+        self.color = -1 # color is used to decide who starts 1 starts, -1 goes second
         self.BOARD = # gameboard data
         self.done = False
         # only if setup is required before players take turns playing
@@ -26,15 +28,25 @@ class Game:
 
     def playTurn(self):
         """
-        one turn of the game
+        one turn of the game, return value must be compatible as an input to parseData()
         """
 
     def printBoard(self, board):
         """
         define the visualization for each output
         """
+        self.output.clear()
+        if type(self.output).__name__ == "TerminalDisplay":
+            pass
+        elif type(self.output).__name__ == "LedDisplay":
+            colors = {}
+        else:
+            print("Unsupported output")
+            raise ValueError
     
     def winner(self):
         """
         return true if game is over and player won
         """
+
+```
