@@ -39,12 +39,15 @@ class Battleship:
 
     def idle(self):
         toggle = inputs.Listener(2)
+        oldIndex = toggle.index
         while not self.turn:
-            if toggle.index == 0:
-
-                self.printBoard(self.hideShips(self.oBOARD))
-            elif toggle.index == 1:
-                self.printBoard(self.BOARD)
+            if oldIndex != toggle.index:
+                if toggle.index == 0:
+                    
+                    self.printBoard(self.hideShips(self.oBOARD))
+                elif toggle.index == 1:
+                    self.printBoard(self.BOARD)
+                oldIndex = toggle.index
             
 
     def isEmpty(self, ship):
