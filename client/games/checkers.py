@@ -58,9 +58,14 @@ class Checkers:
         self.updateScores()
         self.done = False
         self.promoted = False
+        self.turn = False
 
     def needSetup(self):
         return False
+    
+    def idle(self):
+        while not self.turn:
+            pass
 
     def updateScores(self):
         """

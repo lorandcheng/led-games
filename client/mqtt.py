@@ -232,15 +232,14 @@ class OnlineGame(mqttClient):
 
         while not self.game.done:
             # wait for opponent to play and receive game info (in callback)
-            while self.turn == False:
-                pass
+            self.game.idle()
 
             # play your turn
             data = self.game.playTurn()
 
             # send game info
             self.sendData(data)
-            self.turn = False
+            self.game.turn = False
         self.output.clear()
         print("done with game")
         if self.game.winner():
