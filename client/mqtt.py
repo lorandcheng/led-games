@@ -208,7 +208,6 @@ class OnlineGame(mqttClient):
         self.opponent = opponent
         self.game.color = int(color)
         self.output = output
-        self.turn = False
 
         super().__init__()
         self.client.subscribe(f"ledGames/{self.username}/play")
@@ -223,7 +222,7 @@ class OnlineGame(mqttClient):
             self.sendData(data)
             while not self.game.setupDone:
                 pass
-            self.turn = False
+            self.game.turn = False
         # play first turn if you start
         if self.game.color == 1:
             data = self.game.playTurn()
@@ -264,7 +263,7 @@ class OnlineGame(mqttClient):
         if not self.game.done:
             msg = str(msg.payload, 'utf-8')
             self.game.parseData(msg)
-            self.turn = True
+            self.game.turn = True
 
 
 def leave(username):

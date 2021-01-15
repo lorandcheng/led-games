@@ -9,7 +9,7 @@ class Battleship:
     def __init__(self, output):
         self.output = output
         self.color = -1
-
+        self.turn = False
         # empty:0, ship:1, hit:2, invalid:-1, miss:-2
         self.BOARD = [
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ],
@@ -36,6 +36,8 @@ class Battleship:
 
     def needSetup(self):
         return True
+
+    def idle(self):
 
     def isEmpty(self, ship):
         for r,c in ship:
@@ -283,6 +285,7 @@ class Battleship:
         if self.oFleet.shipCount() == 0:
             self.done = True
 
+        self.turn = False
         return row, col
 
 
