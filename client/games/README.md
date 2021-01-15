@@ -10,8 +10,10 @@ class <GameName>:
         self.color = -1 # color is used to decide who starts 1 starts, -1 goes second
         self.BOARD = # gameboard data
         self.done = False
+        self.turn = False
         # only if setup is required before players take turns playing
         self.setupDone = False 
+        
         """
         other inits
         """
@@ -20,6 +22,13 @@ class <GameName>:
         """
         return True if game needs setup. also set self.setupDone flag at some point (in parseData perhaps)
         """
+
+    def idle(self):
+        while not self.turn:
+            pass
+            """
+            any actions done while waiting for opponent
+            """
 
     def parseData(self, data):
         """
